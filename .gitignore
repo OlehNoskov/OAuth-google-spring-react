@@ -1,6 +1,7 @@
 # Backend
 .idea
 target
+*.jar
 
 #Front-end
 # Logs
