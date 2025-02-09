@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: "OAuth-2.0-Google"
+    jwtSecret: Aslkdjalwidjaslmdnmcnvxleflisdjflskejflidsjflskjefasdsadsadasdqweqewqe123asdsadzxczcadw
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+
+server:
+  port: 8080
