@@ -23,7 +23,7 @@
         <mvn.compiler.version>21</mvn.compiler.version>
         <spring-boot.version>3.4.1</spring-boot.version>
         <lombok.version>1.18.36</lombok.version>
-        <jjwt.version>0.12.6</jjwt.version>
+        <jjwt.version>0.12.5</jjwt.version>
         <google.api.client.version>2.7.2</google.api.client.version>
     </properties>
 

@@ -14,9 +14,7 @@ import lombok.Setter;
 public class AccountDto {
 
     private String firstName;
-
     private String lastName;
-
     private String email;
 
     public static AccountDto convertToDto(Account account) {
