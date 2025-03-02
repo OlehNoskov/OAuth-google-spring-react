@@ -5,8 +5,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.pdp.nix.security.config.JWTUtils;
-import com.pdp.nix.security.dto.Account;
 import com.pdp.nix.security.dto.IdTokenRequestDto;
+import com.pdp.nix.security.persistence.entity.Account;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -45,9 +45,16 @@ public class AccountService {
             GoogleIdToken.Payload payload = idTokenObj.getPayload();
             String firstName = (String) payload.get("given_name");
             String lastName = (String) payload.get("family_name");
+            String picture = (String) payload.get("picture");
             String email = payload.getEmail();
 
-            return new Account(firstName, lastName, email);
+            return Account.builder()
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .email(email)
+                    .picture(picture)
+                    .build();
+
         } catch (GeneralSecurityException | IOException e) {
             return null;
         }

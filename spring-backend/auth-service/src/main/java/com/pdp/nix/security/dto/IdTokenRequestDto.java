@@ -1,13 +1,11 @@
 package com.pdp.nix.security.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Builder
+@Data
 @AllArgsConstructor
 public class IdTokenRequestDto {
 
