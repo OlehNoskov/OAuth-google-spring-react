@@ -1,0 +1,10 @@
+# Backend
+.idea
+**/target/
+*.jar
+
+#Front-end
+node_modules
+dist
+dist-ssr
+*.local
