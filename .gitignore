@@ -1,6 +1,6 @@
 # Backend
 .idea
-target
+**/target/
 *.jar
 *.java
 
