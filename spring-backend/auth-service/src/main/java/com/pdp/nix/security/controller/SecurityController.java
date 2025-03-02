@@ -4,6 +4,7 @@ import com.pdp.nix.security.dto.IdTokenRequestDto;
 import com.pdp.nix.security.service.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,4 +27,5 @@ public class SecurityController {
 
         return ResponseEntity.ok().build();
     }
+
 }
