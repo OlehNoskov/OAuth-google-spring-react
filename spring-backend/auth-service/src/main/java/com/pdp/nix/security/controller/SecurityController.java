@@ -1,5 +1,6 @@
 package com.pdp.nix.security.controller;
 
+import com.pdp.nix.security.dto.AccountDto;
 import com.pdp.nix.security.dto.IdTokenRequestDto;
 import com.pdp.nix.security.service.AccountService;
 import lombok.AllArgsConstructor;
@@ -16,16 +17,17 @@ public class SecurityController {
 
     @PostMapping("/auth")
     public ResponseEntity loginWithGoogleOauth2(@RequestBody IdTokenRequestDto token) {
-        String authToken = accountService.loginOAuthGoogle(token);
-        //final ResponseCookie cookie = ResponseCookie.from("AUTH-TOKEN", authToken)
-        //        .httpOnly(true)
-        //        .maxAge(7 * 24 * 3600)
-        //        .path("/")
-        //        .secure(false)
-        //        .build();
-        //response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-
+        accountService.loginOAuthGoogle(token);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/user/info")
+    public AccountDto getUserInfo() {
+        return AccountDto.builder()
+                .firstName("firstName")
+                .lastName("lastName")
+                .email("email")
+                .build();
     }
 
 }
