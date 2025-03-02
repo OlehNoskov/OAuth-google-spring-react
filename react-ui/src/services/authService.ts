@@ -9,9 +9,6 @@ export const login = async (credentialResponse: CredentialResponse) => {
         const response = await axios.post(BACKEND_API.LOG_IN, token, {
             withCredentials: true, // Send cookies for backend
         });
-
-        console.log(response.data);
-
         return response.status === 200;
 
     } catch (error) {

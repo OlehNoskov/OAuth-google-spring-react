@@ -7,7 +7,6 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.pdp.nix.security.config.JWTUtils;
 import com.pdp.nix.security.dto.AccountDto;
 import com.pdp.nix.security.dto.IdTokenRequestDto;
-import com.pdp.nix.security.persistence.entity.Account;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +28,12 @@ public class AccountService {
         this.jwtUtils = jwtUtils;
     }
 
-    public String loginOAuthGoogle(IdTokenRequestDto requestBody) {
+    public void loginOAuthGoogle(IdTokenRequestDto requestBody) {
         AccountDto accountDto = verifyIdToken(requestBody.getIdToken());
         if (accountDto == null) {
             throw new IllegalArgumentException();
         }
-        return jwtUtils.createToken(accountDto);
+        jwtUtils.createToken(accountDto);
     }
 
     public AccountDto verifyIdToken(String idToken) {
