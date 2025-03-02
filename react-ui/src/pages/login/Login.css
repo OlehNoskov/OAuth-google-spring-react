@@ -1,0 +1,15 @@
+.login-page {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    .login-card {
+        padding:  30px;
+    }
+
+    .login-header-card {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+}

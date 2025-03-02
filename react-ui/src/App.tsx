@@ -1,37 +1,33 @@
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import Login from "./components/Login.tsx";
-import Home from "./components/Home.tsx";
+import Login from "./pages/login/Login.tsx";
+import Home from "./pages/home/Home.tsx";
+import {IS_LOGGED_IN} from "./constants/constants.ts";
+import {GlobalStyles} from "react-magma-dom";
+
+import "./App.css"
 
 function App() {
     const [isLogin, setIsLogin] = useState(false);
 
     useEffect(() => {
-        console.log(isLogin);
-    }, [isLogin])
-
-    // useEffect(() => {
-    //     sessionStorage.setItem("isTrue", isLogin);
-    // }, [isLogin]);
-
-    // useEffect(() => {
-    //     const initLogin = async () => {
-    //         const name = await getUserData();
-    //         setIsLogin(!!name);
-    //     };
-    //     initLogin();
-    // }, []);
+        const isLoggedIn = window.localStorage.getItem(IS_LOGGED_IN);
+        setIsLogin(isLoggedIn === "true");
+    }, [])
 
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Login isLoggedIn={isLogin} setIsLogin={setIsLogin}/>}/>
-                <Route
-                    path="/home"
-                    element={isLogin ? <Home/> : <Navigate to="/"/>}
-                />
-            </Routes>
-        </BrowserRouter>
+        <div className="App">
+            <GlobalStyles/>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Login isLoggedIn={isLogin} setIsLogin={setIsLogin}/>}/>
+                    <Route
+                        path="/home"
+                        element={isLogin ? <Home/> : <Navigate to="/"/>}
+                    />
+                </Routes>
+            </BrowserRouter>
+        </div>
     );
 }
 
