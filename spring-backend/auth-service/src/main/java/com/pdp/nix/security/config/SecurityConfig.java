@@ -19,7 +19,7 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .authorizeHttpRequests(authorizeRequests -> {
-                    authorizeRequests.requestMatchers("/ping", "/login").permitAll();
+                    authorizeRequests.requestMatchers("/ping", "/auth").permitAll();
                     authorizeRequests.anyRequest().authenticated();
                 })
                 .oauth2Login(withDefaults())

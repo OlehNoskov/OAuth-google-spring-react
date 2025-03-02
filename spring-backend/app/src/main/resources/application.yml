@@ -9,6 +9,18 @@ spring:
           google:
             client-id: ${CLIENT_ID}
             client-secret: ${CLIENT_SECRET}
+            scope:
+              - profile
+              - email
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+  datasource:
+    url: jdbc:mariadb://localhost:3306/google_oauth
+    username: root
+    password: ${DATABASE_PASSWORD}
 
 server:
   port: 8080
+
+ui-config:
+  url: http://localhost:3000/

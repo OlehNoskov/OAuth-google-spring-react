@@ -1,7 +1,0 @@
-/home/noskov/IdeaProjects/OAuth-google-spring-react/spring-backend/auth-service/src/main/java/com/pdp/nix/security/SecurityController.java
-/home/noskov/IdeaProjects/OAuth-google-spring-react/spring-backend/auth-service/src/main/java/com/pdp/nix/security/config/SecurityConfig.java
-/home/noskov/IdeaProjects/OAuth-google-spring-react/spring-backend/auth-service/src/main/java/com/pdp/nix/security/config/WebConfig.java
-/home/noskov/IdeaProjects/OAuth-google-spring-react/spring-backend/auth-service/src/main/java/com/pdp/nix/security/dto/Account.java
-/home/noskov/IdeaProjects/OAuth-google-spring-react/spring-backend/auth-service/src/main/java/com/pdp/nix/security/dto/AccountDto.java
-/home/noskov/IdeaProjects/OAuth-google-spring-react/spring-backend/auth-service/src/main/java/com/pdp/nix/security/dto/IdTokenRequestDto.java
-/home/noskov/IdeaProjects/OAuth-google-spring-react/spring-backend/auth-service/src/main/java/com/pdp/nix/security/service/AccountService.java
