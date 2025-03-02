@@ -5,6 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.pdp.nix.security.config.JWTUtils;
+import com.pdp.nix.security.dto.AccountDto;
 import com.pdp.nix.security.dto.IdTokenRequestDto;
 import com.pdp.nix.security.persistence.entity.Account;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,14 +30,14 @@ public class AccountService {
     }
 
     public String loginOAuthGoogle(IdTokenRequestDto requestBody) {
-        Account account = verifyIdToken(requestBody.getIdToken());
-        if (account == null) {
+        AccountDto accountDto = verifyIdToken(requestBody.getIdToken());
+        if (accountDto == null) {
             throw new IllegalArgumentException();
         }
-        return jwtUtils.createToken(account);
+        return jwtUtils.createToken(accountDto);
     }
 
-    public Account verifyIdToken(String idToken) {
+    public AccountDto verifyIdToken(String idToken) {
         try {
             GoogleIdToken idTokenObj = verifier.verify(idToken);
             if (idTokenObj == null) {
@@ -48,7 +49,7 @@ public class AccountService {
             String picture = (String) payload.get("picture");
             String email = payload.getEmail();
 
-            return Account.builder()
+            return AccountDto.builder()
                     .firstName(firstName)
                     .lastName(lastName)
                     .email(email)

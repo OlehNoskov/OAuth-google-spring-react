@@ -1,6 +1,6 @@
 package com.pdp.nix.security.config;
 
-import com.pdp.nix.security.persistence.entity.Account;
+import com.pdp.nix.security.dto.AccountDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -28,12 +28,12 @@ public class JWTUtils {
 
     private static final long TOKEN_VALIDITY = 1000 * 60 * 60; //1 hour
 
-    public String createToken(Account account) {
+    public String createToken(AccountDto accountDto) {
         long now = (new Date()).getTime();
         Date expiration =  new Date(now + TOKEN_VALIDITY);
 
         return Jwts.builder()
-                .subject(account.getFirstName())
+                .subject(accountDto.getFirstName())
                 .issuedAt(new Date())
                 .expiration(expiration)
                 .signWith(SignatureAlgorithm.HS512, key)

@@ -12,6 +12,8 @@ spring:
             scope:
               - profile
               - email
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
   datasource:
     url: jdbc:mariadb://localhost:3306/google_oauth
     username: root
