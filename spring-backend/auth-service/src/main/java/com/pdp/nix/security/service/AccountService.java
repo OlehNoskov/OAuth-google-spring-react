@@ -4,7 +4,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.pdp.nix.security.config.JWTUtils;
 import com.pdp.nix.security.dto.AccountDto;
 import com.pdp.nix.security.dto.IdTokenRequestDto;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,22 +17,20 @@ import java.util.Collections;
 public class AccountService {
 
     private final GoogleIdTokenVerifier verifier;
-    private final JWTUtils jwtUtils;
 
-    public AccountService(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId,
-                          JWTUtils jwtUtils) {
+    public AccountService(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId) {
         NetHttpTransport transport = new NetHttpTransport();
         verifier = new GoogleIdTokenVerifier.Builder(transport, new GsonFactory())
                 .setAudience(Collections.singletonList(clientId)).build();
-        this.jwtUtils = jwtUtils;
     }
 
-    public void loginOAuthGoogle(IdTokenRequestDto requestBody) {
+    public AccountDto loginOAuthGoogle(IdTokenRequestDto requestBody) {
         AccountDto accountDto = verifyIdToken(requestBody.getIdToken());
         if (accountDto == null) {
             throw new IllegalArgumentException();
         }
-        jwtUtils.createToken(accountDto);
+
+        return accountDto;
     }
 
     public AccountDto verifyIdToken(String idToken) {
@@ -55,8 +52,10 @@ public class AccountService {
                     .picture(picture)
                     .build();
 
-        } catch (GeneralSecurityException | IOException e) {
-            return null;
+        } catch (GeneralSecurityException e) {
+            throw new IllegalArgumentException();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

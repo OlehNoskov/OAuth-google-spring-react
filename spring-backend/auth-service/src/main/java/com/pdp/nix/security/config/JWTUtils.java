@@ -1,6 +1,7 @@
 package com.pdp.nix.security.config;
 
 import com.pdp.nix.security.dto.AccountDto;
+import com.pdp.nix.security.persistence.entity.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,28 +16,28 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class JWTUtils {
 
+    private static final long TOKEN_VALIDITY = 86400000L;
     private final Key key;
 
     public JWTUtils(@Value("${spring.application.jwtSecret}") String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    private static final long TOKEN_VALIDITY = 1000 * 60 * 60; //1 hour
-
-    public String createToken(AccountDto accountDto) {
+    public String createToken(AccountDto account) {
         long now = (new Date()).getTime();
-        Date expiration =  new Date(now + TOKEN_VALIDITY);
 
         return Jwts.builder()
-                .subject(accountDto.getFirstName())
-                .issuedAt(new Date())
-                .expiration(expiration)
-                .signWith(SignatureAlgorithm.HS512, key)
+                .setSubject(account.getFirstName())
+                .setIssuedAt(new Date())
+                .expiration(new Date(now + TOKEN_VALIDITY))
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -45,8 +46,8 @@ public class JWTUtils {
             Claims claims = Jwts.parser()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                    .parseSignedClaims(token)
+                    .getPayload();
 
             List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(claims.get("role", String.class));
             return new UsernamePasswordAuthenticationToken(claims.getSubject(), token, authorities);

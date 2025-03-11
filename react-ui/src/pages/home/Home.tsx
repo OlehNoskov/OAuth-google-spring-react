@@ -1,34 +1,46 @@
-import React, {useState} from "react";
-import {getUserData} from "../../services/userService.ts";
+import React, {useEffect} from "react";
 import {Button} from "react-magma-dom";
-import {Account, EMPTY_ACCOUNT} from "../../interfaces/Account.ts";
+import {useNavigate} from "react-router-dom";
+import {USER} from "../../constants/constants.ts";
+import {Account} from "../../interfaces/Account.ts";
 
-function Home() {
+const Home = () => {
 
-    const [account, setAccount] = useState<Account>(EMPTY_ACCOUNT);
+    const navigate = useNavigate();
+    let user = window.localStorage.getItem(USER);
+    const currentUser: Account = JSON.parse(user);
 
-
-    const fetchUser = async () => {
-        const response: Account = await getUserData();
-        setAccount(response)
+    const logOut = () => {
+        window.localStorage.clear();
+        navigate("/")
     };
+
+
+    useEffect(() => {
+        console.log(currentUser)
+    }, []);
 
     return (
         <div>
             <div>Home dashboard</div>
-            <Button onClick={fetchUser}>CLICK</Button>
+            <p></p>
+
             <div>
-                {account.firstName}
+                {currentUser.firstName}
             </div>
             <div>
-                {account.lastName}
+                {currentUser.lastName}
             </div>
             <div>
-                {account.email}
+                {currentUser.email}
             </div>
+
+            <Button onClick={logOut}>
+                Log out
+            </Button>
 
         </div>
     );
-}
+};
 
 export default Home;
