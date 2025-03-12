@@ -4,10 +4,3 @@ export interface Account {
     email: string;
     picture: string;
 }
-
-export const EMPTY_ACCOUNT: Account = {
-    email: "",
-    firstName: "",
-    lastName: "",
-    picture: ""
-}

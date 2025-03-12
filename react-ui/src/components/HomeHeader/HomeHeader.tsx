@@ -1,19 +1,44 @@
 import React from 'react';
-import {Button} from "react-magma-dom";
-import {IS_LOGGED_IN} from "../../constants/constants.ts";
+import {AppBar, Button} from "react-magma-dom";
+import {Account} from "../../interfaces/Account.ts";
+import {useNavigate} from "react-router-dom";
+import styled from '@emotion/styled';
 
-const HomeHeader = () => {
+export interface HomeHeaderProps {
+    account: Account;
+}
+
+export const PhotoStyled = styled.div`
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const HomeHeader: React.FC<HomeHeaderProps> = (props) => {
+    const navigate = useNavigate();
 
     const logOut = () => {
-        window.localStorage.setItem(IS_LOGGED_IN, String(true));
-    }
+        window.localStorage.clear();
+        navigate("/")
+    };
 
     return (
-        <div className={"home-header"}>
+        <AppBar isInverse
+                style={{display: 'flex', justifyContent: 'end'}}>
+            <PhotoStyled>
+                <img className={"image"} src={props.account.picture} alt="account_photo"/>
+            </PhotoStyled>
+            <div style={{marginRight: '20px', marginLeft: '20px'}}>
+                {props.account.email}
+            </div>
             <Button onClick={logOut}>
                 Log out
             </Button>
-        </div>
+        </AppBar>
     );
 };
 
