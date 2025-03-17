@@ -4,9 +4,10 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.pdp.nix.security.config.JWTUtils;
 import com.pdp.nix.security.dto.AccountDto;
 import com.pdp.nix.security.dto.IdTokenRequestDto;
+import com.pdp.nix.security.persistence.entity.Account;
+import com.pdp.nix.security.persistence.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,25 +19,26 @@ import java.util.Collections;
 public class AccountService {
 
     private final GoogleIdTokenVerifier verifier;
-    private final JWTUtils jwtUtils;
+    private final AccountRepository accountRepository;
 
-    public AccountService(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId,
-                          JWTUtils jwtUtils) {
+    public AccountService(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId, AccountRepository accountRepository) {
         NetHttpTransport transport = new NetHttpTransport();
-        verifier = new GoogleIdTokenVerifier.Builder(transport, new GsonFactory())
+        this.verifier = new GoogleIdTokenVerifier.Builder(transport, new GsonFactory())
                 .setAudience(Collections.singletonList(clientId)).build();
-        this.jwtUtils = jwtUtils;
+        this.accountRepository = accountRepository;
+
     }
 
-    public void loginOAuthGoogle(IdTokenRequestDto requestBody) {
-        AccountDto accountDto = verifyIdToken(requestBody.getIdToken());
-        if (accountDto == null) {
+    public AccountDto loginOAuthGoogle(IdTokenRequestDto requestBody) {
+        Account account = verifyIdToken(requestBody.getIdToken());
+        if (account == null) {
             throw new IllegalArgumentException();
         }
-        jwtUtils.createToken(accountDto);
+
+        return AccountDto.convertToDto(createOrUpdateUser(account));
     }
 
-    public AccountDto verifyIdToken(String idToken) {
+    private Account verifyIdToken(String idToken) {
         try {
             GoogleIdToken idTokenObj = verifier.verify(idToken);
             if (idTokenObj == null) {
@@ -48,15 +50,28 @@ public class AccountService {
             String picture = (String) payload.get("picture");
             String email = payload.getEmail();
 
-            return AccountDto.builder()
+            return Account.builder()
                     .firstName(firstName)
                     .lastName(lastName)
                     .email(email)
                     .picture(picture)
                     .build();
 
-        } catch (GeneralSecurityException | IOException e) {
-            return null;
+        } catch (GeneralSecurityException e) {
+            throw new IllegalArgumentException();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    public Account createOrUpdateUser(Account account) {
+        return accountRepository.findByEmail(account.getEmail())
+                .map(existingAccount -> {
+                    existingAccount.setFirstName(account.getFirstName());
+                    existingAccount.setLastName(account.getLastName());
+                    existingAccount.setPicture(account.getPicture());
+                    return accountRepository.save(existingAccount);
+                })
+                .orElseGet(() -> accountRepository.save(account));
     }
 }

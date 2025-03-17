@@ -26,6 +26,7 @@
         <jjwt.version>0.12.5</jjwt.version>
         <google.api.client.version>2.7.2</google.api.client.version>
         <spring-data-jpa.version>3.4.3</spring-data-jpa.version>
+        <mysql.version>8.0.33</mysql.version>
     </properties>
 
     <modules>
@@ -63,8 +64,9 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mariadb.jdbc</groupId>
-            <artifactId>mariadb-java-client</artifactId>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

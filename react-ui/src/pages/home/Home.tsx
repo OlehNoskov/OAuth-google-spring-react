@@ -1,34 +1,18 @@
-import React, {useState} from "react";
-import {getUserData} from "../../services/userService.ts";
-import {Button} from "react-magma-dom";
-import {Account, EMPTY_ACCOUNT} from "../../interfaces/Account.ts";
+import React from "react";
+import {USER} from "../../constants/constants.ts";
+import HomeHeader from "../../components/HomeHeader/HomeHeader.tsx";
+import {Account} from "../../interfaces/Account.ts";
 
-function Home() {
+const Home = () => {
 
-    const [account, setAccount] = useState<Account>(EMPTY_ACCOUNT);
-
-
-    const fetchUser = async () => {
-        const response: Account = await getUserData();
-        setAccount(response)
-    };
+    let user = window.localStorage.getItem(USER);
+    const account: Account = JSON.parse(user);
 
     return (
-        <div>
-            <div>Home dashboard</div>
-            <Button onClick={fetchUser}>CLICK</Button>
-            <div>
-                {account.firstName}
-            </div>
-            <div>
-                {account.lastName}
-            </div>
-            <div>
-                {account.email}
-            </div>
-
-        </div>
+        <>
+            <HomeHeader account={account}/>
+        </>
     );
-}
+};
 
 export default Home;
