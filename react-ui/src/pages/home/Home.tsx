@@ -9,9 +9,9 @@ const Home = () => {
     const account: Account = JSON.parse(user);
 
     return (
-        <div>
+        <>
             <HomeHeader account={account}/>
-        </div>
+        </>
     );
 };
 
