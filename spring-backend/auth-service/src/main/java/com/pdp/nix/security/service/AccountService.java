@@ -6,7 +6,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.pdp.nix.security.dto.AccountDto;
 import com.pdp.nix.security.dto.IdTokenRequestDto;
-import com.pdp.nix.security.persistence.entity.Account;
+import com.pdp.nix.security.persistence.entity.AccountEntity;
 import com.pdp.nix.security.persistence.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,15 +30,15 @@ public class AccountService {
     }
 
     public AccountDto loginOAuthGoogle(IdTokenRequestDto requestBody) {
-        Account account = verifyIdToken(requestBody.getIdToken());
-        if (account == null) {
+        AccountEntity accountEntity = verifyIdToken(requestBody.getIdToken());
+        if (accountEntity == null) {
             throw new IllegalArgumentException();
         }
 
-        return AccountDto.convertToDto(createOrUpdateUser(account));
+        return AccountDto.convertToDto(createOrUpdateUser(accountEntity));
     }
 
-    private Account verifyIdToken(String idToken) {
+    private AccountEntity verifyIdToken(String idToken) {
         try {
             GoogleIdToken idTokenObj = verifier.verify(idToken);
             if (idTokenObj == null) {
@@ -50,7 +50,7 @@ public class AccountService {
             String picture = (String) payload.get("picture");
             String email = payload.getEmail();
 
-            return Account.builder()
+            return AccountEntity.builder()
                     .firstName(firstName)
                     .lastName(lastName)
                     .email(email)
@@ -64,14 +64,14 @@ public class AccountService {
         }
     }
 
-    public Account createOrUpdateUser(Account account) {
-        return accountRepository.findByEmail(account.getEmail())
-                .map(existingAccount -> {
-                    existingAccount.setFirstName(account.getFirstName());
-                    existingAccount.setLastName(account.getLastName());
-                    existingAccount.setPicture(account.getPicture());
-                    return accountRepository.save(existingAccount);
+    public AccountEntity createOrUpdateUser(AccountEntity accountEntity) {
+        return accountRepository.findByEmail(accountEntity.getEmail())
+                .map(existingAccountEntity -> {
+                    existingAccountEntity.setFirstName(accountEntity.getFirstName());
+                    existingAccountEntity.setLastName(accountEntity.getLastName());
+                    existingAccountEntity.setPicture(accountEntity.getPicture());
+                    return accountRepository.save(existingAccountEntity);
                 })
-                .orElseGet(() -> accountRepository.save(account));
+                .orElseGet(() -> accountRepository.save(accountEntity));
     }
 }

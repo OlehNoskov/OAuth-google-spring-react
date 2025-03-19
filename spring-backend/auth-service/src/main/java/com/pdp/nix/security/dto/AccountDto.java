@@ -1,6 +1,6 @@
 package com.pdp.nix.security.dto;
 
-import com.pdp.nix.security.persistence.entity.Account;
+import com.pdp.nix.security.persistence.entity.AccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,12 +15,12 @@ public class AccountDto {
     private String email;
     private String picture;
 
-    public static AccountDto convertToDto(Account account) {
+    public static AccountDto convertToDto(AccountEntity accountEntity) {
         return AccountDto.builder()
-                .firstName(account.getFirstName())
-                .lastName(account.getLastName())
-                .email(account.getEmail())
-                .picture(account.getPicture())
+                .firstName(accountEntity.getFirstName())
+                .lastName(accountEntity.getLastName())
+                .email(accountEntity.getEmail())
+                .picture(accountEntity.getPicture())
                 .build();
     }
 }

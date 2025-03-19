@@ -32,6 +32,7 @@
     <modules>
         <module>app</module>
         <module>auth-service</module>
+        <module>core-service</module>
     </modules>
 
     <dependencyManagement>
@@ -39,6 +40,11 @@
             <dependency>
                 <groupId>com.pdp.nix</groupId>
                 <artifactId>auth-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.pdp.nix</groupId>
+                <artifactId>core-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -18,7 +18,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
+public class AccountEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

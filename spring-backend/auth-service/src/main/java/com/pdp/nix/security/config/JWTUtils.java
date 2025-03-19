@@ -1,7 +1,6 @@
 package com.pdp.nix.security.config;
 
 import com.pdp.nix.security.dto.AccountDto;
-import com.pdp.nix.security.persistence.entity.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,9 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class JWTUtils {
