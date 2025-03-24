@@ -6,8 +6,8 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.pdp.nix.security.dto.AccountDto;
 import com.pdp.nix.security.dto.IdTokenRequestDto;
-import com.pdp.nix.security.persistence.entity.AccountEntity;
-import com.pdp.nix.security.persistence.repository.AccountRepository;
+import com.pdp.nix.security.persistence.entity.User;
+import com.pdp.nix.security.persistence.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,29 +16,29 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 
 @Service
-public class AccountService {
+public class UserService {
 
     private final GoogleIdTokenVerifier verifier;
-    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
-    public AccountService(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId, AccountRepository accountRepository) {
+    public UserService(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId, UserRepository userRepository) {
         NetHttpTransport transport = new NetHttpTransport();
         this.verifier = new GoogleIdTokenVerifier.Builder(transport, new GsonFactory())
                 .setAudience(Collections.singletonList(clientId)).build();
-        this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
 
     }
 
     public AccountDto loginOAuthGoogle(IdTokenRequestDto requestBody) {
-        AccountEntity accountEntity = verifyIdToken(requestBody.getIdToken());
-        if (accountEntity == null) {
+        User user = verifyIdToken(requestBody.getIdToken());
+        if (user == null) {
             throw new IllegalArgumentException();
         }
 
-        return AccountDto.convertToDto(createOrUpdateUser(accountEntity));
+        return AccountDto.convertToDto(createOrUpdateUser(user));
     }
 
-    private AccountEntity verifyIdToken(String idToken) {
+    private User verifyIdToken(String idToken) {
         try {
             GoogleIdToken idTokenObj = verifier.verify(idToken);
             if (idTokenObj == null) {
@@ -50,7 +50,7 @@ public class AccountService {
             String picture = (String) payload.get("picture");
             String email = payload.getEmail();
 
-            return AccountEntity.builder()
+            return User.builder()
                     .firstName(firstName)
                     .lastName(lastName)
                     .email(email)
@@ -64,14 +64,14 @@ public class AccountService {
         }
     }
 
-    public AccountEntity createOrUpdateUser(AccountEntity accountEntity) {
-        return accountRepository.findByEmail(accountEntity.getEmail())
-                .map(existingAccountEntity -> {
-                    existingAccountEntity.setFirstName(accountEntity.getFirstName());
-                    existingAccountEntity.setLastName(accountEntity.getLastName());
-                    existingAccountEntity.setPicture(accountEntity.getPicture());
-                    return accountRepository.save(existingAccountEntity);
+    public User createOrUpdateUser(User user) {
+        return userRepository.findByEmail(user.getEmail())
+                .map(existingUser -> {
+                    existingUser.setFirstName(user.getFirstName());
+                    existingUser.setLastName(user.getLastName());
+                    existingUser.setPicture(user.getPicture());
+                    return userRepository.save(existingUser);
                 })
-                .orElseGet(() -> accountRepository.save(accountEntity));
+                .orElseGet(() -> userRepository.save(user));
     }
 }

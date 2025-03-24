@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-@Table(schema = "accounts")
 @Entity
+@Table(name = "accounts")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountEntity {
+public class User {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

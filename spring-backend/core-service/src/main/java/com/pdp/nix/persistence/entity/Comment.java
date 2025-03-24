@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-@Table(schema = "comments")
 @Entity
+@Table(name = "comments")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentEntity {
+public class Comment {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
