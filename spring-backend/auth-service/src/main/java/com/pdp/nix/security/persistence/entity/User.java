@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "accounts")
+@Table(name = "users")
 @Data
 @Builder
 @NoArgsConstructor
