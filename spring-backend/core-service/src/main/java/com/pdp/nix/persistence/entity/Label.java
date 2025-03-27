@@ -22,8 +22,10 @@ public class Label {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+
     @Column(length = 15, unique = true)
     private String labelKey;
+
     @Column(length = 15)
     private String value;
 }

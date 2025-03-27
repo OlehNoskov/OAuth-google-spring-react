@@ -22,7 +22,9 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+
     @Column(nullable = false, name = "user_id")
     private String userId;
+
     private String text;
 }

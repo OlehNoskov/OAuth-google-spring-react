@@ -1,6 +1,6 @@
 package com.pdp.nix.security.config;
 
-import com.pdp.nix.security.dto.AccountDto;
+import com.pdp.nix.security.dto.UserDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -27,7 +27,7 @@ public class JWTUtils {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String createToken(AccountDto account) {
+    public String createToken(UserDto account) {
         long now = (new Date()).getTime();
 
         return Jwts.builder()

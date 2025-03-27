@@ -8,15 +8,15 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class AccountDto {
+public class UserDto {
 
     private String firstName;
     private String lastName;
     private String email;
     private String picture;
 
-    public static AccountDto convertToDto(User user) {
-        return AccountDto.builder()
+    public static UserDto convertToDto(User user) {
+        return UserDto.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())

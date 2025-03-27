@@ -4,8 +4,9 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.pdp.nix.security.dto.AccountDto;
+import com.pdp.nix.security.dto.UserDto;
 import com.pdp.nix.security.dto.IdTokenRequestDto;
+import com.pdp.nix.security.mapper.UserMapper;
 import com.pdp.nix.security.persistence.entity.User;
 import com.pdp.nix.security.persistence.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,22 +21,24 @@ public class UserService {
 
     private final GoogleIdTokenVerifier verifier;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserService(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId, UserRepository userRepository) {
+    public UserService(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId, UserRepository userRepository, UserMapper userMapper) {
         NetHttpTransport transport = new NetHttpTransport();
         this.verifier = new GoogleIdTokenVerifier.Builder(transport, new GsonFactory())
                 .setAudience(Collections.singletonList(clientId)).build();
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
 
     }
 
-    public AccountDto loginOAuthGoogle(IdTokenRequestDto requestBody) {
+    public UserDto loginOAuthGoogle(IdTokenRequestDto requestBody) {
         User user = verifyIdToken(requestBody.getIdToken());
         if (user == null) {
             throw new IllegalArgumentException();
         }
 
-        return AccountDto.convertToDto(createOrUpdateUser(user));
+        return userMapper.userToUserDto(createOrUpdateUser(user));
     }
 
     private User verifyIdToken(String idToken) {

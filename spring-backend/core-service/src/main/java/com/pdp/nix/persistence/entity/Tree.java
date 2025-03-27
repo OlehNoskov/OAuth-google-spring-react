@@ -35,20 +35,25 @@ public class Tree extends BaseEntity {
     private Long id;
     private String title;
     private String description;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     List<TreeNode> nodes;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Label> labels;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<User> owners;
+
     @Transient
     private List<Tree> children = new ArrayList<>();
+
     @OneToMany(mappedBy = "descendant", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

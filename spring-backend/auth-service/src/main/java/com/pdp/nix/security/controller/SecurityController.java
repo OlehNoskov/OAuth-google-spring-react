@@ -1,6 +1,6 @@
 package com.pdp.nix.security.controller;
 
-import com.pdp.nix.security.dto.AccountDto;
+import com.pdp.nix.security.dto.UserDto;
 import com.pdp.nix.security.dto.IdTokenRequestDto;
 import com.pdp.nix.security.service.UserService;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ public class SecurityController {
 
     @PostMapping("/auth")
     public ResponseEntity loginWithGoogleOauth2(@RequestBody IdTokenRequestDto idTokenRequestDto) {
-        AccountDto accountDto = userService.loginOAuthGoogle(idTokenRequestDto);
-        return ResponseEntity.ok().body(accountDto);
+        UserDto userDto = userService.loginOAuthGoogle(idTokenRequestDto);
+        return ResponseEntity.ok().body(userDto);
     }
 }

@@ -30,13 +30,17 @@ public class TreeNode {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+
     private String title;
+
     @Column(length = 1000)
     private String description;
-    @Enumerated(EnumType.STRING)
-    private NodeType type;
+
     @Column(nullable = false)
     private int depth;
+
+    @Enumerated(EnumType.STRING)
+    private NodeType type;
 
     @ManyToOne(targetEntity = Tree.class, cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "ancestor", nullable = false, foreignKey = @ForeignKey(name = "ancestor_fk"))
