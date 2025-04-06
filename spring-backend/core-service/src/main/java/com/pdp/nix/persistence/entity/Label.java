@@ -1,4 +1,4 @@
-package com.pdp.nix.security.persistence.entity;
+package com.pdp.nix.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,22 +12,20 @@ import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-@Table(schema = "accounts")
 @Entity
+@Table(name = "labels")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
-
+public class Label {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
-    @Column(name = "first_name")
-    private String firstName;
-    @Column(name = "last_name")
-    private String lastName;
-    private String email;
-    private String picture;
 
+    @Column(length = 15, unique = true)
+    private String labelKey;
+
+    @Column(length = 15)
+    private String value;
 }

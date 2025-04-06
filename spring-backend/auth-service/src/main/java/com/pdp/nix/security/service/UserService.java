@@ -4,10 +4,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.pdp.nix.security.dto.AccountDto;
+import com.pdp.nix.security.dto.UserDto;
 import com.pdp.nix.security.dto.IdTokenRequestDto;
-import com.pdp.nix.security.persistence.entity.Account;
-import com.pdp.nix.security.persistence.repository.AccountRepository;
+import com.pdp.nix.security.mapper.UserMapper;
+import com.pdp.nix.security.persistence.entity.User;
+import com.pdp.nix.security.persistence.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,29 +17,31 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 
 @Service
-public class AccountService {
+public class UserService {
 
     private final GoogleIdTokenVerifier verifier;
-    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public AccountService(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId, AccountRepository accountRepository) {
+    public UserService(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId, UserRepository userRepository, UserMapper userMapper) {
         NetHttpTransport transport = new NetHttpTransport();
         this.verifier = new GoogleIdTokenVerifier.Builder(transport, new GsonFactory())
                 .setAudience(Collections.singletonList(clientId)).build();
-        this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
 
     }
 
-    public AccountDto loginOAuthGoogle(IdTokenRequestDto requestBody) {
-        Account account = verifyIdToken(requestBody.getIdToken());
-        if (account == null) {
+    public UserDto loginOAuthGoogle(IdTokenRequestDto requestBody) {
+        User user = verifyIdToken(requestBody.getIdToken());
+        if (user == null) {
             throw new IllegalArgumentException();
         }
 
-        return AccountDto.convertToDto(createOrUpdateUser(account));
+        return userMapper.userToUserDto(createOrUpdateUser(user));
     }
 
-    private Account verifyIdToken(String idToken) {
+    private User verifyIdToken(String idToken) {
         try {
             GoogleIdToken idTokenObj = verifier.verify(idToken);
             if (idTokenObj == null) {
@@ -50,7 +53,7 @@ public class AccountService {
             String picture = (String) payload.get("picture");
             String email = payload.getEmail();
 
-            return Account.builder()
+            return User.builder()
                     .firstName(firstName)
                     .lastName(lastName)
                     .email(email)
@@ -64,14 +67,14 @@ public class AccountService {
         }
     }
 
-    public Account createOrUpdateUser(Account account) {
-        return accountRepository.findByEmail(account.getEmail())
-                .map(existingAccount -> {
-                    existingAccount.setFirstName(account.getFirstName());
-                    existingAccount.setLastName(account.getLastName());
-                    existingAccount.setPicture(account.getPicture());
-                    return accountRepository.save(existingAccount);
+    public User createOrUpdateUser(User user) {
+        return userRepository.findByEmail(user.getEmail())
+                .map(existingUser -> {
+                    existingUser.setFirstName(user.getFirstName());
+                    existingUser.setLastName(user.getLastName());
+                    existingUser.setPicture(user.getPicture());
+                    return userRepository.save(existingUser);
                 })
-                .orElseGet(() -> accountRepository.save(account));
+                .orElseGet(() -> userRepository.save(user));
     }
 }

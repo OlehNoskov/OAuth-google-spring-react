@@ -14,13 +14,14 @@
 
     <name>App :: Main module</name>
 
-    <properties>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.pdp.nix</groupId>
             <artifactId>auth-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.pdp.nix</groupId>
+            <artifactId>core-service</artifactId>
         </dependency>
     </dependencies>
 
@@ -44,6 +45,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
         </plugins>
     </build>
