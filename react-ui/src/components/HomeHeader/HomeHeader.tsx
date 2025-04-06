@@ -1,11 +1,11 @@
 import React from 'react';
 import {AppBar, Button} from "react-magma-dom";
-import {User} from "../../interfaces/User.ts";
+import {UserInterface} from "../../interfaces/UserInterface.ts";
 import {useNavigate} from "react-router-dom";
 import {EmailStyled, PhotoStyled} from "./HomeHeaderStyled.ts";
 
 export interface HomeHeaderProps {
-    user: User;
+    user: UserInterface;
 }
 
 const HomeHeader: React.FC<HomeHeaderProps> = (props) => {

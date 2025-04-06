@@ -1,16 +1,31 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {USER} from "../../constants/constants.ts";
 import HomeHeader from "../../components/HomeHeader/HomeHeader.tsx";
-import {User} from "../../interfaces/User.ts";
+import {EMPTY_USER, UserInterface} from "../../interfaces/UserInterface.ts";
+import {useNavigate} from "react-router-dom";
 
 const Home = () => {
+    const navigate = useNavigate();
+    const currentUser = window.localStorage.getItem(USER);
+    let initialUser: UserInterface = EMPTY_USER;
 
-    let currentUser = window.localStorage.getItem(USER);
-    const user: User = JSON.parse(currentUser ?? "{}");
+    if (currentUser) {
+        try {
+            initialUser = JSON.parse(currentUser);
+        } catch (error) {
+            console.error('Error parsing user data from storage:', error);
+        }
+    }
 
-    return (
+    useEffect(() => {
+        if (!initialUser.isLoggedIn) {
+            navigate('/');
+        }
+    }, [navigate]);
+
+    return initialUser && initialUser.isLoggedIn && (
         <>
-            <HomeHeader user={user}/>
+            <HomeHeader user={initialUser}/>
         </>
     );
 };
