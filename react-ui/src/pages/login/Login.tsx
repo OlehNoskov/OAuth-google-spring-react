@@ -8,7 +8,7 @@ import {Card, CardBody, Heading} from "react-magma-dom";
 import {StyledLoginPage} from "./LoginStyled.ts";
 import {UserInterface} from "../../interfaces/UserInterface.ts";
 
-const Login = () => {
+export const Login = () => {
 
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -46,5 +46,3 @@ const Login = () => {
         </StyledLoginPage>
     );
 };
-
-export default Login;

@@ -11,4 +11,6 @@ public interface TreeRepository extends JpaRepository<Tree, Long> {
 
     @Query("SELECT DISTINCT t FROM Tree t JOIN t.labels l WHERE l.labelKey IN :labelKeys")
     List<Tree> findByLabelKeys(@Param("labelKeys") List<String> labelKeys);
+
+    List<Tree> findByCreatedBy(String username);
 }

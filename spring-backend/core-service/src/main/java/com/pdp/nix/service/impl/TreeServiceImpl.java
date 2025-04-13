@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -45,6 +47,12 @@ public class TreeServiceImpl implements TreeService {
         log.info("Tree with id: {} was updated.", treeDto.getId());
 
         return treeMapper.toTreeDto(updatedTree);
+    }
+
+    @Override
+    public List<TreeDto> getAllTreeByUser(String username) {
+        List<Tree> trees = treeRepository.findByCreatedBy(username);
+        return treeMapper.toTreeDtoList(trees);
     }
 
     @Override

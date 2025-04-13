@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/tree")
 @AllArgsConstructor
@@ -40,5 +42,11 @@ public class TreeController {
     @RequestMapping("/delete/{treeId}")
     public void delete(@PathVariable Long treeId) {
         treeService.delete(treeId);
+    }
+
+    @GetMapping
+    @RequestMapping("/getAllByUser/{username}")
+    private List<TreeDto> getAllByUser(@PathVariable String username) {
+        return treeService.getAllTreeByUser(username);
     }
 }

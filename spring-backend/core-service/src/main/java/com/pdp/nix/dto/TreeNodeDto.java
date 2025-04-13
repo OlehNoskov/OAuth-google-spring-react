@@ -20,7 +20,7 @@ import static com.pdp.nix.constants.Constants.ZERO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TreeNodeDto {
-    private Long id;
+    //private Long id;
 
     @Max(255)
     private String title;
@@ -34,5 +34,5 @@ public class TreeNodeDto {
     @NotNull
     private NodeType type;
 
-    List<TreeNode> children;
+    List<TreeNodeDto> children;
 }
