@@ -1,7 +1,6 @@
 import React from 'react';
 import {DashboardStyled, SearchWrapper} from "./DashboardStyled.ts";
 import {Button, ButtonSize, InputSize, Search} from "react-magma-dom";
-import {getAllTreeByUsername} from "../../services/treeService.ts";
 import {DEFAULT_TREE} from "../../interfaces/TreeInterface.ts";
 import {TreeCard} from "../TreeCard/TreeCard.tsx";
 import {TreeCardsWrapper} from "../TreeCard/TreeCardStyled.ts";
@@ -9,9 +8,7 @@ import {TreeCardsWrapper} from "../TreeCard/TreeCardStyled.ts";
 export const Dashboard = () => {
     const handleSearch = (search: string) => {
 
-        const test = getAllTreeByUsername('test');
         console.log(search);
-        console.log(test);
     };
 
     return (
