@@ -31,8 +31,8 @@ public class JWTUtils {
         long now = (new Date()).getTime();
 
         return Jwts.builder()
-                .setSubject(account.getFirstName())
-                .setIssuedAt(new Date())
+                .subject(account.getFirstName())
+                .issuedAt(new Date())
                 .expiration(new Date(now + TOKEN_VALIDITY))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();

@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: mysql:latest
-    restart: always
+    restart: no
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       MYSQL_USER": "${MYSQL_USER}"

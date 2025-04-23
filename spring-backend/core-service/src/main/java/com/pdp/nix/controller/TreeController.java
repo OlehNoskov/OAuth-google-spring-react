@@ -28,7 +28,7 @@ public class TreeController {
 
     @GetMapping
     @RequestMapping("/get/{treeId}")
-    public TreeDto getTree(@PathVariable Long treeId) {
+    public TreeDto getTree(@PathVariable("treeId") Long treeId) {
         return treeService.getTreeNode(treeId);
     }
 
@@ -40,13 +40,13 @@ public class TreeController {
 
     @DeleteMapping
     @RequestMapping("/delete/{treeId}")
-    public void delete(@PathVariable Long treeId) {
+    public void delete(@PathVariable("treeId")  Long treeId) {
         treeService.delete(treeId);
     }
 
     @GetMapping
     @RequestMapping("/getAllByUser/{username}")
-    private List<TreeDto> getAllByUser(@PathVariable String username) {
+    private List<TreeDto> getAllByUser(@PathVariable("username") String username) {
         return treeService.getAllTreeByUser(username);
     }
 }
