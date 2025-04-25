@@ -3,7 +3,7 @@ export interface UserInterface {
     lastName: string;
     email: string;
     picture: string;
-    isLoggedIn: boolean;
+    isLoggedIn?: boolean;
 }
 
 export const EMPTY_USER: UserInterface = {

@@ -18,6 +18,9 @@ public class TreeDto {
 
     private Long id;
 
+    @Max(100)
+    private String createdBy;
+
     @Max(255)
     private String title;
 

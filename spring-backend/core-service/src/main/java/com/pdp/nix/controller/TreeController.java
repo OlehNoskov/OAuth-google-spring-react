@@ -28,8 +28,8 @@ public class TreeController {
 
     @GetMapping
     @RequestMapping("/get/{treeId}")
-    public TreeDto getTree(@PathVariable("treeId") Long treeId) {
-        return treeService.getTreeNode(treeId);
+    public TreeDto getTreeById(@PathVariable("treeId") Long treeId) {
+        return treeService.getTreeNodeById(treeId);
     }
 
     @PutMapping

@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const DashboardStyled = styled.div`
+export const HomeDashboardStyled = styled.div`
     display: flex;
     margin-top: 50px;
     margin-left: 200px;

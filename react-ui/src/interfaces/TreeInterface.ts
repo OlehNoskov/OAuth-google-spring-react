@@ -1,21 +1,30 @@
 import {NodeType} from "./NodeType.ts";
 import {TreeNodeInterface} from "./TreeNodeInterface.ts";
+import {UserInterface} from "./UserInterface.ts";
 
 export interface TreeInterface {
-    id: string;
+    id: number;
+    createdBy: string;
     title: string;
     description: string;
-    labels: string[];
-    users: string[];
+    labels: LabelInterface[];
+    users: UserInterface[];
     children: TreeNodeInterface[];
+}
+
+export interface LabelInterface {
+    id: string;
+    labelKey: string;
+    value: string;
 }
 
 export const DEFAULT_TREE: TreeInterface[] = [
     {
-        id: '1',
+        id: 1,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 1',
         description: 'Sample tree 1',
-        labels: [],
+        labels: [{id: '1', labelKey: 'Label 1', value: 'Value 1'}, {id: '2', labelKey: 'Label 2', value: 'Value 2'}],
         users: [],
         children: [
             {
@@ -35,7 +44,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         ]
     },
     {
-        id: '2',
+        id: 2,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 2',
         description: 'Sample tree 2',
         labels: [],
@@ -51,7 +61,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         ]
     },
     {
-        id: '3',
+        id: 3,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 3',
         description: 'Sample tree 3',
         labels: [],
@@ -75,7 +86,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         ]
     },
     {
-        id: '4',
+        id: 4,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 4',
         description: 'Tree with multiple layers',
         labels: [],
@@ -98,7 +110,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         ]
     },
     {
-        id: '5',
+        id: 5,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 5',
         description: 'Another sample tree',
         labels: [],
@@ -106,7 +119,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         children: []
     },
     {
-        id: '6',
+        id: 6,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 6',
         description: 'Empty tree',
         labels: [],
@@ -114,7 +128,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         children: []
     },
     {
-        id: '7',
+        id: 7,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 7',
         description: 'Tree with a flagged node',
         labels: [],
@@ -130,7 +145,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         ]
     },
     {
-        id: '8',
+        id: 8,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 8',
         description: 'Another example',
         labels: [],
@@ -138,7 +154,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         children: []
     },
     {
-        id: '9',
+        id: 9,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 9',
         description: 'Simple structure',
         labels: [],
@@ -154,7 +171,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         ]
     },
     {
-        id: '10',
+        id: 10,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 10',
         description: 'Midpoint tree',
         labels: [],
@@ -162,7 +180,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         children: []
     },
     {
-        id: '11',
+        id: 11,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 11',
         description: 'Eleventh tree',
         labels: [],
@@ -170,7 +189,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         children: []
     },
     {
-        id: '12',
+        id: 12,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 12',
         description: 'Sample description',
         labels: [],
@@ -178,7 +198,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         children: []
     },
     {
-        id: '13',
+        id: 13,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 13',
         description: 'Tree with nested children',
         labels: [],
@@ -202,7 +223,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         ]
     },
     {
-        id: '14',
+        id: 14,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 14',
         description: 'Multi-node tree',
         labels: [],
@@ -225,7 +247,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         ]
     },
     {
-        id: '15',
+        id: 15,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 15',
         description: 'Fifteenth tree',
         labels: [],
@@ -233,7 +256,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         children: []
     },
     {
-        id: '16',
+        id: 16,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 16',
         description: 'Minimal tree',
         labels: [],
@@ -241,7 +265,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         children: []
     },
     {
-        id: '17',
+        id: 17,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 17',
         description: 'Tree with complex nesting',
         labels: [],
@@ -273,7 +298,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         ]
     },
     {
-        id: '18',
+        id: 18,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 18',
         description: 'Basic sample',
         labels: [],
@@ -281,7 +307,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         children: []
     },
     {
-        id: '19',
+        id: 19,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 19',
         description: 'Simple tree',
         labels: [],
@@ -289,7 +316,8 @@ export const DEFAULT_TREE: TreeInterface[] = [
         children: []
     },
     {
-        id: '20',
+        id: 20,
+        createdBy: 'Noskov Oleh',
         title: 'Tree 20',
         description: 'Final example tree',
         labels: [],

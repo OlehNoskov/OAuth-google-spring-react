@@ -8,7 +8,7 @@ public interface TreeService {
 
     TreeDto create(TreeDto treeNodeDto);
 
-    TreeDto getTreeNode(long treeId);
+    TreeDto getTreeNodeById(long treeId);
 
     TreeDto update(TreeDto treeNodeDto);
 

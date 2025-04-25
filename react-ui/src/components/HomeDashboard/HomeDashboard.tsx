@@ -1,11 +1,11 @@
 import React from 'react';
-import {DashboardStyled, SearchWrapper} from "./DashboardStyled.ts";
+import {HomeDashboardStyled, SearchWrapper} from "./HomeDashboardStyled.ts";
 import {Button, ButtonSize, InputSize, Search} from "react-magma-dom";
 import {DEFAULT_TREE} from "../../interfaces/TreeInterface.ts";
-import {TreeCard} from "../TreeCard/TreeCard.tsx";
-import {TreeCardsWrapper} from "../TreeCard/TreeCardStyled.ts";
+import {TreeCard} from "../Tree/TreeCard/TreeCard.tsx";
+import {TreeCardsWrapper} from "../Tree/TreeCard/TreeCardStyled.ts";
 
-export const Dashboard = () => {
+export const HomeDashboard = () => {
     const handleSearch = (search: string) => {
 
         console.log(search);
@@ -13,7 +13,7 @@ export const Dashboard = () => {
 
     return (
         <>
-            <DashboardStyled>
+            <HomeDashboardStyled>
                 <SearchWrapper>
                     <Search placeholder="Search tree by title"
                             onSearch={handleSearch}
@@ -25,7 +25,7 @@ export const Dashboard = () => {
                     style={{position: 'absolute', right: '0', marginRight: '260px'}}>
                     Create tree
                 </Button>
-            </DashboardStyled>
+            </HomeDashboardStyled>
             <TreeCardsWrapper>
                 {DEFAULT_TREE.map(tree => (
                     <TreeCard tree={tree}/>
