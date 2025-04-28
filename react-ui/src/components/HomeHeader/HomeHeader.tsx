@@ -22,7 +22,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = (props) => {
 
     return (
         <AppBar isInverse
-                style={{display: 'flex', justifyContent: 'end'}}>
+                style={{display: 'flex', justifyContent: 'end', height: '80px'}}>
             <PhotoStyled>
                 {props.user.picture ? (
                     <img className="image" src={props.user.picture} alt={noPhotoLabel}/>
