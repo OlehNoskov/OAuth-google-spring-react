@@ -27,9 +27,7 @@ export const HomeDashboard = () => {
                 </Button>
             </HomeDashboardStyled>
             <TreeCardsWrapper>
-                {DEFAULT_TREE.map(tree => (
-                    <TreeCard tree={tree}/>
-                ))}
+                <TreeCard tree={DEFAULT_TREE}/>
             </TreeCardsWrapper>
         </>
     );

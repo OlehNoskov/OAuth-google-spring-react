@@ -8,7 +8,7 @@ const TreeDashboard = () => {
     return (
         <>
             <HomeHeader user={getCurrentUser()}/>
-            <TreeViewComponent trees={DEFAULT_TREE}></TreeViewComponent>
+            <TreeViewComponent tree={DEFAULT_TREE}></TreeViewComponent>
         </>
     );
 };
