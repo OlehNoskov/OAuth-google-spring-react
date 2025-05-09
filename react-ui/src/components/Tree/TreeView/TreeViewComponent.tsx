@@ -1,16 +1,9 @@
 import React, {useState} from 'react';
 import {
-    ButtonColor,
-    Card,
-    CardBody,
     Flex,
-    FlexAlignItems,
     FlexBehavior,
-    FlexDirection,
     FlexJustify,
     FlexWrap,
-    Heading,
-    IconButton,
     Paragraph,
     TreeItem,
     TreeView,
@@ -22,14 +15,16 @@ import {
     LeftSideBar,
     TreeHeader,
     TreeNodeContent,
-    TreeNodeSettings,
     TreeTitle,
     TreeViewComponentStyled
 } from "./TreeViewComponentStyled.ts";
 import {NodeType} from "../../../interfaces/NodeType.ts";
-import {DeleteIcon, DnsIcon, FlagIcon, FolderIcon, LinkIcon} from "react-magma-icons";
-import {RenameButton} from "../../General/RenameButton.tsx";
+import {FlagIcon, FolderIcon, LinkIcon} from "react-magma-icons";
+import {RenameAndDeleteButton} from "../../General/RenameAndDeleteButton.tsx";
 import {TreeNodeInterface} from "../../../interfaces/TreeNodeInterface.ts";
+import {TreeNodeCard} from "../TreeNodeCard/TreeNodeCard.tsx";
+import {TreeNodeSettingsContent} from "../TreeNodeSettings/TreeNodeSettingsContent.tsx";
+import {TreeEditModal} from "../TreeEditModal/TreeEditModal.tsx";
 
 interface TreeViewComponentProps {
     tree: TreeInterface;
@@ -39,6 +34,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
 
     const [currentTree, setCurrentTree] = useState<TreeInterface | null>(props.tree);
     const [currentNode, setCurrentNode] = useState<TreeNodeInterface | null>(null);
+    const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(true);
 
     const getFolderIcon = (node: any) => {
         switch (node.type) {
@@ -65,34 +61,42 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                         noMargins
                         color={TypographyColor.subdued}
                     />
-                    <RenameButton/>
+                    <RenameAndDeleteButton/>
                 </Flex>
             </Flex>
         )
     };
 
-    const renderTree = (node: any) => (
-        <TreeItem
-            style={{
-                marginBottom: '10px',
-                backgroundColor: 'white',
-                borderRadius: '4px',
-                marginInlineStart: '0',
-                paddingLeft: `12px`,
-                height: '50px',
-                alignItems: 'center',
-            }}
-            onClick={() => setCurrentNode(node)}
-            key={node.id}
-            itemId={String(node.id)}
-            icon={getFolderIcon(node)}
-            label={treeItemLabel(node)}
-            isDisabled={node.disabled}
-        >
-            {node.children && node.children.length > 0 &&
-                node.children.map((child: any) => renderTree(child))}
-        </TreeItem>
-    );
+    const renderTree = (node: any) => {
+        return (
+
+            <TreeItem
+                style={{
+                    marginBottom: '10px',
+                    backgroundColor: 'white',
+                    borderRadius: '4px',
+                    marginInlineStart: '0',
+                    paddingLeft: `12px`,
+                    height: '50px',
+                    alignItems: 'center',
+                }}
+                onClick={(event: any) => {
+                    event.stopPropagation(); // Prevent parent nodes from being triggered
+                    setCurrentNode(node);
+
+                }}
+                key={node.id}
+                itemId={String(node.id)}
+                icon={getFolderIcon(node)}
+                label={treeItemLabel(node)}
+                isDisabled={node.disabled}
+            >
+                {node.children && node.children.length > 0 &&
+                    node.children.map((child: any) => renderTree(child))}
+            </TreeItem>
+
+        )
+    };
 
     const treeTitle = () => {
         return (
@@ -110,15 +114,18 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                         color={TypographyColor.subdued}
                     />
                 </Flex>
-                <RenameButton marginRight={'32px'} background={'#F5F5F5'}/>
+                <RenameAndDeleteButton marginRight={'32px'} background={'#F5F5F5'}/>
             </Flex>
         )
     }
 
     return (
         <>
+            {isOpenEditModal && (
+                <TreeEditModal isOpen={isOpenEditModal} handleOnCLose={() => setIsOpenEditModal(false)}
+                               save={() => (console.log('save'))}/>)
+            }
             <TreeHeader>
-
             </TreeHeader>
             <TreeViewComponentStyled>
                 <LeftSideBar>
@@ -130,57 +137,8 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                 <TreeNodeContent>
                     {currentNode && (
                         <>
-                            <Card hasDropShadow style={{maxWidth: '700px'}}>
-                                <CardBody>
-                                    <Paragraph visualStyle={TypographyVisualStyle.bodyLarge}>
-                                        Title: {currentNode.title}
-                                    </Paragraph>
-                                    <Paragraph visualStyle={TypographyVisualStyle.bodyMedium}>
-                                        Description: {currentNode.description}
-                                    </Paragraph>
-                                    <Paragraph visualStyle={TypographyVisualStyle.bodyMedium}>
-                                        Type: {currentNode.type}
-                                    </Paragraph>
-                                    <Paragraph visualStyle={TypographyVisualStyle.bodyMedium}>
-                                        Has children: {currentNode.children.length > 0 ? 'Yes' : 'No'}
-                                    </Paragraph>
-                                </CardBody>
-                            </Card>
-
-                            <TreeNodeSettings>
-                                <Flex direction={FlexDirection.row}
-                                      behavior={FlexBehavior.container}
-                                      style={{marginTop: '32px', marginBottom: '16px'}}>
-                                    <Flex behavior={FlexBehavior.container} alignItems={FlexAlignItems.center}
-                                          onClick={() => console.log('Edit Name and Description clicked!')}
-                                          style={{cursor: 'pointer'}}>
-                                        <IconButton
-                                            aria-label="Edit Name and Description"
-                                            color={ButtonColor.secondary}
-                                            icon={<DnsIcon/>}
-                                            style={{marginRight: '12px'}}
-                                        />
-                                        <Heading level={5} style={{margin: 0}} placeholder={undefined}
-                                                 onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                                            Edit Name and Description
-                                        </Heading>
-                                    </Flex>
-                                    <Flex behavior={FlexBehavior.container} alignItems={FlexAlignItems.center}
-                                          onClick={() => console.log('Delete clicked!')}
-                                          style={{cursor: 'pointer'}}>
-                                        <IconButton
-                                            aria-label="Delete"
-                                            color={ButtonColor.secondary}
-                                            icon={<DeleteIcon/>}
-                                            style={{marginRight: '12px'}}
-                                        />
-                                        <Heading level={5} placeholder={undefined}
-                                                 onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                                            Delete
-                                        </Heading>
-                                    </Flex>
-                                </Flex>
-                            </TreeNodeSettings>
+                            <TreeNodeCard treeNode={currentNode}/>
+                            <TreeNodeSettingsContent/>
                         </>
                     )}
                 </TreeNodeContent>

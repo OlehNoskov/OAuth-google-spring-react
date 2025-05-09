@@ -32,8 +32,3 @@ export const TreeTitle = styled.div`
     font-weight: 500;
     margin: 12px 0 12px 12px;
 `;
-
-export const TreeNodeSettings = styled.div`
-    margin-top: 16px;
-    width: 100%`
-;

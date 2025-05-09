@@ -8,14 +8,14 @@ import {
     DropdownContent,
     DropdownMenuItem,
 } from "react-magma-dom";
-import {EditIcon, MoreVertIcon} from "react-magma-icons";
+import {DeleteIcon, EditIcon, MoreVertIcon} from "react-magma-icons";
 
 interface RenameButtonProps {
     marginRight?: string;
     background?: string;
 }
 
-export const RenameButton: React.FC<RenameButtonProps> = (props: RenameButtonProps) => {
+export const RenameAndDeleteButton: React.FC<RenameButtonProps> = (props: RenameButtonProps) => {
 
     return (
         <Dropdown style={{marginRight: `${props.marginRight || '12px'}`}}>
@@ -34,7 +34,13 @@ export const RenameButton: React.FC<RenameButtonProps> = (props: RenameButtonPro
                     icon={<EditIcon aria-hidden/>}
                     onClick={() => console.log('Rename clicked!')}
                 >
-                    Rename
+                    Edit Name & Description
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    icon={<DeleteIcon aria-hidden/>}
+                    onClick={() => console.log('Delete clicked!')}
+                >
+                    Delete
                 </DropdownMenuItem>
             </DropdownContent>
         </Dropdown>
