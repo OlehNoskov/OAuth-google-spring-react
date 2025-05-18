@@ -24,8 +24,8 @@ import {RenameAndDeleteButton} from "../../General/RenameAndDeleteButton.tsx";
 import {TreeNodeInterface} from "../../../interfaces/TreeNodeInterface.ts";
 import {TreeNodeCard} from "../TreeNodeCard/TreeNodeCard.tsx";
 import {TreeNodeSettingsContent} from "../TreeNodeSettings/TreeNodeSettingsContent.tsx";
-import {TreeDeleteModal} from "../TreeDeleteModal/TreeDeleteModal.tsx";
-import {TreeEditModal} from "../TreeEditModal/TreeEditModal.tsx";
+import {DeleteModal} from "../DeleteModal/DeleteModal.tsx";
+import {EditModal} from "../EditModal/EditModal.tsx";
 import {TreeNodeEmptyCard} from "../TreeNodeEmptyCard/TreeNodeEmptyCard.tsx";
 
 interface TreeViewComponentProps {
@@ -37,13 +37,19 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
     const [currentTree, setCurrentTree] = useState<TreeInterface | undefined>(props.tree);
     const [currentNode, setCurrentNode] = useState<TreeNodeInterface | null>();
 
-    const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
-    const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
+    const [isOpenEditNodeModal, setIsOpenEditNodeModal] = useState<boolean>(false);
+    const [isOpenDeleteNodeModal, setIsOpenDeleteNodeModal] = useState<boolean>(false);
 
-    const [nameNode, setNameNode] = useState<string>('');
-    const [descriptionNode, setDescriptionNode] = useState<string>('');
+    const [isOpenEditTreeModal, setIsOpenEditTreeModal] = useState<boolean>(false);
+    const [isOpenDeleteTreeModal, setIsOpenDeleteTreeModal] = useState<boolean>(false);
 
-    const editNameAndDescriptionNode = () => {
+    const [nameCurrentNode, setNameCurrentNode] = useState<string>('');
+    const [descriptionCurrentNode, setDescriptionCurrentNode] = useState<string>('');
+
+    const [titleCurrentTree, setTitleCurrentTree] = useState<string>(props.tree?.title ? props.tree?.title : '');
+    const [descriptionCurrentTree, setDescriptionCurrentTree] = useState<string>(props.tree?.description ? props.tree?.description : '');
+
+    const editCurrentNode = () => {
         setCurrentTree((prevTree) => {
             if (!prevTree) {
                 return prevTree;
@@ -52,9 +58,22 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                 ...prevTree,
                 nodes: prevTree.nodes.map((node) =>
                     node.id === currentNode?.id
-                        ? {...node, title: nameNode, description: descriptionNode}
+                        ? {...node, title: nameCurrentNode, description: descriptionCurrentNode}
                         : node
                 ),
+            };
+        });
+    };
+
+    const editCurrentTree = () => {
+        setCurrentTree((prevTree) => {
+            if (!prevTree) {
+                return prevTree;
+            }
+            return {
+                ...prevTree,
+                title: titleCurrentTree,
+                description: descriptionCurrentNode
             };
         });
     };
@@ -84,8 +103,9 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                         noMargins
                         color={TypographyColor.subdued}
                     />
-                    <RenameAndDeleteButton onClickEdit={() => setIsOpenEditModal(true)}
-                                           onClickDelete={() => setIsOpenDeleteModal(true)}/>
+                    <RenameAndDeleteButton onClickEdit={() => setIsOpenEditNodeModal(true)}
+                                           onClickDelete={() => setIsOpenDeleteNodeModal(true)}
+                    />
                 </Flex>
             </Flex>
         )
@@ -106,8 +126,8 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                 onClick={(event: any) => {
                     event.stopPropagation(); // Prevent parent nodes from being triggered
                     setCurrentNode(node);
-                    setNameNode(node?.title)
-                    setDescriptionNode(node?.description)
+                    setNameCurrentNode(node?.title)
+                    setDescriptionCurrentNode(node?.description)
                 }}
                 key={node.id}
                 itemId={String(node.id)}
@@ -138,8 +158,8 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                         color={TypographyColor.subdued}
                     />
                 </Flex>
-                <RenameAndDeleteButton onClickEdit={() => setIsOpenEditModal(true)}
-                                       onClickDelete={() => setIsOpenDeleteModal(true)}
+                <RenameAndDeleteButton onClickEdit={() => setIsOpenEditTreeModal(true)}
+                                       onClickDelete={() => setIsOpenDeleteTreeModal(true)}
                                        marginRight={'32px'} background={'#F5F5F5'}/>
             </Flex>
         )
@@ -147,19 +167,38 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
 
     return (
         <>
-            {isOpenEditModal && (
-                <TreeEditModal isOpen={isOpenEditModal}
-                               handleOnCLose={() => setIsOpenEditModal(false)}
-                               onSave={editNameAndDescriptionNode}
-                               nameNode={nameNode}
-                               editNameNode={(value: string) => setNameNode(value)}
-                               descriptionNode={descriptionNode}
-                               editDescriptionNode={(value: string) => setDescriptionNode(value)}
+            {isOpenEditNodeModal && (
+                <EditModal isOpen={isOpenEditNodeModal}
+                           handleOnCLose={() => setIsOpenEditNodeModal(false)}
+                           onSave={editCurrentNode}
+                           nameNode={nameCurrentNode}
+                           editNameNode={(value: string) => setNameCurrentNode(value)}
+                           descriptionNode={descriptionCurrentNode}
+                           editDescriptionNode={(value: string) => setDescriptionCurrentNode(value)}
                 />)
             }
-            {isOpenDeleteModal && (
-                <TreeDeleteModal isOpen={isOpenDeleteModal} handleOnCLose={() => setIsOpenDeleteModal(false)}
-                                 onDelete={() => (console.log('delete'))}/>)
+            {isOpenEditTreeModal && (
+                <EditModal isOpen={isOpenEditTreeModal}
+                           handleOnCLose={() => setIsOpenEditTreeModal(false)}
+                           onSave={editCurrentTree}
+                           titleTree={titleCurrentTree}
+                           editTitleTree={(value: string) => setTitleCurrentTree(value)}
+                           descriptionTree={descriptionCurrentTree}
+                           editDescriptionTree={(value: string) => setDescriptionCurrentTree(value)}
+                />)
+            }
+
+            {isOpenDeleteNodeModal && (
+                <DeleteModal isOpen={isOpenDeleteNodeModal}
+                             handleOnCLose={() => setIsOpenDeleteNodeModal(false)}
+                             onDelete={() => (console.log('delete'))}/>)
+            }
+
+            {isOpenDeleteTreeModal && (
+                <DeleteModal isNodeDelete={false}
+                             isOpen={isOpenDeleteTreeModal}
+                             handleOnCLose={() => setIsOpenDeleteTreeModal(false)}
+                             onDelete={() => (console.log('delete'))}/>)
             }
             <TreeHeader></TreeHeader>
             <TreeViewComponentStyled>
@@ -174,8 +213,8 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                         ?
                         <>
                             <TreeNodeCard treeNode={currentNode}/>
-                            <TreeNodeSettingsContent onEditNameAndDescription={() => setIsOpenEditModal(true)}
-                                                     onDelete={() => setIsOpenDeleteModal(true)}/>
+                            <TreeNodeSettingsContent onEditNameAndDescription={() => setIsOpenEditNodeModal(true)}
+                                                     onDelete={() => setIsOpenDeleteNodeModal(true)}/>
                         </>
                         : <TreeNodeEmptyCard/>}
                 </TreeNodeContent>

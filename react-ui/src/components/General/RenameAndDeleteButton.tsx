@@ -11,10 +11,10 @@ import {
 import {DeleteIcon, EditIcon, MoreVertIcon} from "react-magma-icons";
 
 interface RenameButtonProps {
+    marginRight?: string;
+    background?: string;
     onClickEdit: () => void;
     onClickDelete: () => void;
-    background?: string;
-    marginRight?: string;
 }
 
 export const RenameAndDeleteButton: React.FC<RenameButtonProps> = (props: RenameButtonProps) => {
