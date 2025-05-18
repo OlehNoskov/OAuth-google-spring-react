@@ -23,7 +23,7 @@ public class TreeServiceImpl implements TreeService {
         Tree treeNode = treeMapper.toTreeEntity(treeDto);
         treeRepository.save(treeNode);
 
-        log.info("Tree was created: {}", treeNode.getTitle());
+        log.info("Tree with name: '{}' was created.", treeNode.getTitle());
 
         return treeMapper.toTreeDto(treeNode);
     }
@@ -32,7 +32,7 @@ public class TreeServiceImpl implements TreeService {
     public TreeDto getTreeNodeById(long treeId) {
         Tree tree = treeRepository.findById(treeId).orElseThrow(() -> new RuntimeException("Tree wasn't found by id " + treeId));
 
-        log.info("Get Tree by id: {}", treeId);
+        log.info("Get Tree by id: '{}'", treeId);
 
         return treeMapper.toTreeDto(tree);
     }
@@ -44,7 +44,7 @@ public class TreeServiceImpl implements TreeService {
 
         Tree updatedTree = treeRepository.save(tree);
 
-        log.info("Tree with id: {} was updated.", treeDto.getId());
+        log.info("Tree with id: '{}' was updated.", treeDto.getId());
 
         return treeMapper.toTreeDto(updatedTree);
     }
@@ -59,6 +59,6 @@ public class TreeServiceImpl implements TreeService {
     public void delete(long treeId) {
         treeRepository.deleteById(treeId);
 
-        log.info("Tree with id: {} was deleted.", treeId);
+        log.info("Tree with id: '{}' was deleted.", treeId);
     }
 }

@@ -4,14 +4,21 @@ import {ButtonColor, Flex, FlexAlignItems, FlexBehavior, FlexDirection, Heading,
 import {DeleteIcon, DnsIcon} from "react-magma-icons";
 import {TreeNodeSettings} from "./TreeNodeSettingsContentStyled.ts";
 
-export const TreeNodeSettingsContent = () => {
+interface TreeNodeSettingsContentProps {
+    onEditNameAndDescription: () => void;
+    onDelete: () => void;
+}
+
+export const TreeNodeSettingsContent = (props: TreeNodeSettingsContentProps) => {
+    const {onEditNameAndDescription, onDelete} = props;
+
     return (
         <TreeNodeSettings>
             <Flex direction={FlexDirection.row}
                   behavior={FlexBehavior.container}
                   style={{marginTop: '32px', marginBottom: '16px'}}>
                 <Flex behavior={FlexBehavior.container} alignItems={FlexAlignItems.center}
-                      onClick={() => console.log('Edit Name and Description clicked!')}
+                      onClick={onEditNameAndDescription}
                       style={{cursor: 'pointer'}}>
                     <IconButton
                         aria-label="Edit Name and Description"
@@ -25,7 +32,7 @@ export const TreeNodeSettingsContent = () => {
                     </Heading>
                 </Flex>
                 <Flex behavior={FlexBehavior.container} alignItems={FlexAlignItems.center}
-                      onClick={() => console.log('Delete clicked!')}
+                      onClick={onDelete}
                       style={{cursor: 'pointer'}}>
                     <IconButton
                         aria-label="Delete"

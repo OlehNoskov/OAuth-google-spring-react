@@ -11,11 +11,15 @@ import {
 import {DeleteIcon, EditIcon, MoreVertIcon} from "react-magma-icons";
 
 interface RenameButtonProps {
-    marginRight?: string;
+    onClickEdit: () => void;
+    onClickDelete: () => void;
     background?: string;
+    marginRight?: string;
 }
 
 export const RenameAndDeleteButton: React.FC<RenameButtonProps> = (props: RenameButtonProps) => {
+
+    const {onClickEdit, onClickDelete} = props;
 
     return (
         <Dropdown style={{marginRight: `${props.marginRight || '12px'}`}}>
@@ -32,14 +36,12 @@ export const RenameAndDeleteButton: React.FC<RenameButtonProps> = (props: Rename
             <DropdownContent>
                 <DropdownMenuItem
                     icon={<EditIcon aria-hidden/>}
-                    onClick={() => console.log('Rename clicked!')}
-                >
+                    onClick={onClickEdit}>
                     Edit Name & Description
                 </DropdownMenuItem>
                 <DropdownMenuItem
                     icon={<DeleteIcon aria-hidden/>}
-                    onClick={() => console.log('Delete clicked!')}
-                >
+                    onClick={onClickDelete}>
                     Delete
                 </DropdownMenuItem>
             </DropdownContent>

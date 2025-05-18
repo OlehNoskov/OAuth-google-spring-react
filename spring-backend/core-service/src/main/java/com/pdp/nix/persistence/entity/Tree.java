@@ -15,23 +15,40 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "tree")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tree extends BaseEntity {
+public class Tree {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @CreationTimestamp
+    @Column(name = "created_date")
+    private OffsetDateTime createdDate;
+
+    @Column(name = "last_updated_by")
+    private String lastUpdatedBy;
+
+    @UpdateTimestamp
+    @Column(name = "last_updated_date")
+    private OffsetDateTime lastUpdatedDate;
+
     private String title;
+
     @Column(length = 1000)
     private String description;
 

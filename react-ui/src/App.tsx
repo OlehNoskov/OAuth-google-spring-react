@@ -6,7 +6,7 @@ import {GlobalStyles} from "react-magma-dom";
 
 import "./App.css"
 import {NotFound} from "./pages/NotFound/NotFound.tsx";
-import TreeDashboard from "./pages/Tree/TreeDashboard.tsx";
+import {TreeDashboard} from "./pages/Tree/TreeDashboard.tsx";
 
 function App() {
     return (

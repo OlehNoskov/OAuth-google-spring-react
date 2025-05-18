@@ -1,15 +1,21 @@
 import React from 'react';
 import {HomeDashboardStyled, SearchWrapper} from "./HomeDashboardStyled.ts";
 import {Button, ButtonSize, InputSize, Search} from "react-magma-dom";
-import {DEFAULT_TREE} from "../../interfaces/TreeInterface.ts";
+import {DEFAULT_TREE, TreeInterface} from "../../interfaces/TreeInterface.ts";
 import {TreeCard} from "../Tree/TreeCard/TreeCard.tsx";
 import {TreeCardsWrapper} from "../Tree/TreeCard/TreeCardStyled.ts";
+import {EmptyDashboard} from "./EmptyDashboard/EmptyDashboard.tsx";
 
 export const HomeDashboard = () => {
-    const handleSearch = (search: string) => {
+    const [allTrees, setAllTrees] = React.useState<TreeInterface[]>([]);
 
+    const handleSearch = (search: string) => {
         console.log(search);
     };
+
+    React.useEffect(() => {
+        setAllTrees(DEFAULT_TREE);
+    }, []);
 
     return (
         <>
@@ -26,9 +32,16 @@ export const HomeDashboard = () => {
                     Create tree
                 </Button>
             </HomeDashboardStyled>
-            <TreeCardsWrapper>
-                <TreeCard tree={DEFAULT_TREE}/>
-            </TreeCardsWrapper>
+            {
+                allTrees.length === 0 ?
+                    <EmptyDashboard/>
+                    :
+                    <TreeCardsWrapper>
+                        {allTrees.map(tree => (
+                            <TreeCard tree={tree}/>
+                        ))}
+                    </TreeCardsWrapper>
+            }
         </>
     );
 };
