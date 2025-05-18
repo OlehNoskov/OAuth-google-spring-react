@@ -11,13 +11,7 @@ import {
     TypographyVisualStyle
 } from 'react-magma-dom';
 import {TreeInterface} from "../../../interfaces/TreeInterface.ts";
-import {
-    LeftSideBar,
-    TreeHeader,
-    TreeNodeContent,
-    TreeTitle,
-    TreeViewComponentStyled
-} from "./TreeViewComponentStyled.ts";
+import {LeftSideBar, TreeNodeContent, TreeTitle, TreeViewComponentStyled} from "./TreeViewComponentStyled.ts";
 import {NodeType} from "../../../interfaces/NodeType.ts";
 import {FlagIcon, FolderIcon, LinkIcon} from "react-magma-icons";
 import {RenameAndDeleteButton} from "../../General/RenameAndDeleteButton.tsx";
@@ -27,14 +21,17 @@ import {TreeNodeSettingsContent} from "../TreeNodeSettings/TreeNodeSettingsConte
 import {DeleteModal} from "../DeleteModal/DeleteModal.tsx";
 import {EditModal} from "../EditModal/EditModal.tsx";
 import {TreeNodeEmptyCard} from "../TreeNodeEmptyCard/TreeNodeEmptyCard.tsx";
+import {TreeHeader} from "../TreeHeader/TreeHeader.tsx";
+import {updateTree} from "../../../services/treeService.ts";
+import {ToastNotification} from "../../General/ToastNotification.tsx";
 
 interface TreeViewComponentProps {
-    tree: TreeInterface | undefined;
+    tree: TreeInterface;
 }
 
 export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeViewComponentProps) => {
 
-    const [currentTree, setCurrentTree] = useState<TreeInterface | undefined>(props.tree);
+    const [currentTree, setCurrentTree] = useState<TreeInterface>(props.tree);
     const [currentNode, setCurrentNode] = useState<TreeNodeInterface | null>();
 
     const [isOpenEditNodeModal, setIsOpenEditNodeModal] = useState<boolean>(false);
@@ -42,6 +39,8 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
 
     const [isOpenEditTreeModal, setIsOpenEditTreeModal] = useState<boolean>(false);
     const [isOpenDeleteTreeModal, setIsOpenDeleteTreeModal] = useState<boolean>(false);
+
+    const [isShowNotification, setIsShowNotification] = useState<boolean>(false);
 
     const [nameCurrentNode, setNameCurrentNode] = useState<string>('');
     const [descriptionCurrentNode, setDescriptionCurrentNode] = useState<string>('');
@@ -165,6 +164,14 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
         )
     }
 
+    const updateCurrentTree: () => void = () => {
+        updateTree(currentTree).then(response => {
+                setCurrentTree(response)
+                setIsShowNotification(true);
+            }
+        );
+    }
+
     return (
         <>
             {isOpenEditNodeModal && (
@@ -200,7 +207,9 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                              handleOnCLose={() => setIsOpenDeleteTreeModal(false)}
                              onDelete={() => (console.log('delete'))}/>)
             }
-            <TreeHeader></TreeHeader>
+            {isShowNotification && (<ToastNotification isSuccess text={'Tree was updated!'}
+                                                       onDismiss={() => setIsShowNotification(false)}/>)}
+            <TreeHeader onSave={() => updateCurrentTree()} isDisabledSaveButton={false}/>
             <TreeViewComponentStyled>
                 <LeftSideBar>
                     <TreeTitle id="tree-title">{treeTitle()}</TreeTitle>

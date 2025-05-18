@@ -19,13 +19,6 @@ export const TreeNodeContent = styled.div`
     padding: 16px;
 `;
 
-export const TreeHeader = styled.div`
-    width: 100%;
-    height: 80px;
-    background-color: #E8E9F8;
-    border-bottom: #D4D4D4 solid 1px;
-`;
-
 export const TreeTitle = styled.div`
     color: #000000;
     font-size: 24px;

@@ -8,4 +8,7 @@ export const BACKEND_API = {
     // TREE
     GET_ALL_TREE_BY_USER_NAME: `${BASE_API_URL}/tree/getAllTreeByUserName`,
     GET_ALL_TREE_BY_ID: `${BASE_API_URL}/tree/get`,
+    CREATE_TREE_BY_ID: `${BASE_API_URL}/tree/create`,
+    UPDATE_TREE: `${BASE_API_URL}/tree/update`,
+    DELETE_TREE_BY_ID: `${BASE_API_URL}/tree/delete`,
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, ButtonColor, ButtonGroup, ButtonGroupAlignment, Input, Modal, Spacer, Textarea} from "react-magma-dom";
 
 interface EditModalProps {
@@ -26,16 +26,28 @@ export const EditModal = (props: EditModalProps) => {
         titleTree, editTitleTree, descriptionTree, editDescriptionTree
     } = props;
 
-    const saveData = () => {
-        onSave();
-        handleOnCLose();
-    };
-
     const isNodeEdit =
-        typeof nameNode !== undefined &&
         typeof nameNode !== undefined &&
         typeof editNameNode === 'function' &&
         typeof editDescriptionNode === 'function';
+
+    const [isInputEmpty, setIsInputEmpty] = useState(false);
+
+    useEffect(() => {
+        if (isNodeEdit) {
+            setIsInputEmpty(!nameNode || !descriptionNode);
+        } else {
+            setIsInputEmpty(!titleTree || !descriptionTree);
+        }
+    }, [isNodeEdit, nameNode, descriptionNode, titleTree, descriptionTree]);
+
+    const saveData = () => {
+        if (isInputEmpty) {
+            return;
+        }
+        onSave();
+        handleOnCLose();
+    };
 
     return (
         <Modal header={isNodeEdit ? "Edit node" : "Edit tree"} isOpen={isOpen} onClose={handleOnCLose}>
@@ -61,7 +73,7 @@ export const EditModal = (props: EditModalProps) => {
             />
             <ButtonGroup alignment={ButtonGroupAlignment.right}>
                 <Button onClick={handleOnCLose} color={ButtonColor.secondary}>Cancel</Button>
-                <Button onClick={saveData} color={ButtonColor.primary}>Save</Button>
+                <Button onClick={saveData} color={ButtonColor.primary} disabled={isInputEmpty}>Save</Button>
             </ButtonGroup>
         </Modal>
     );

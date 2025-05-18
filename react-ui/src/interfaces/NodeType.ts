@@ -1,5 +1,5 @@
 export enum NodeType {
-    DEFAULT = 'default',
-    FLAG = 'flag',
-    LINK = 'link',
+    DEFAULT = 'DEFAULT',
+    FLAG = 'FLAG',
+    LINK = 'LINK',
 }

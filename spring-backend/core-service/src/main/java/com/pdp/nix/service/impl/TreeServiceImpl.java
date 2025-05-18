@@ -5,6 +5,7 @@ import com.pdp.nix.mapper.TreeMapper;
 import com.pdp.nix.persistence.entity.Tree;
 import com.pdp.nix.persistence.repository.TreeRepository;
 import com.pdp.nix.service.TreeService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,9 +39,15 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
+    @Transactional
     public TreeDto update(TreeDto treeDto) {
-        Tree tree = treeRepository.findById(treeDto.getId()).orElseThrow(
-                () -> new RuntimeException("Tree wasn't found by id " + treeDto.getId()));
+        Tree tree = treeRepository.findById(treeDto.getId())
+                .orElseThrow(() -> new RuntimeException("Tree wasn't found by id " + treeDto.getId()));
+
+        // Update fields from treeDto to tree
+        tree.setTitle(treeDto.getTitle());
+        tree.setDescription(treeDto.getDescription());
+        // Update other fields as needed
 
         Tree updatedTree = treeRepository.save(tree);
 
@@ -48,6 +55,19 @@ public class TreeServiceImpl implements TreeService {
 
         return treeMapper.toTreeDto(updatedTree);
     }
+
+    //@Override
+    //@Transactional
+    //public TreeDto update(TreeDto treeDto) {
+    //    Tree tree = treeRepository.findById(treeDto.getId()).orElseThrow(
+    //            () -> new RuntimeException("Tree wasn't found by id " + treeDto.getId()));
+    //
+    //    Tree updatedTree = treeRepository.save(treeMapper.toTreeEntity(treeDto));
+    //
+    //    log.info("Tree with id: '{}' was updated.", treeDto.getId());
+    //
+    //    return treeMapper.toTreeDto(updatedTree);
+    //}
 
     @Override
     public List<TreeDto> getAllTreeByUser(String username) {
