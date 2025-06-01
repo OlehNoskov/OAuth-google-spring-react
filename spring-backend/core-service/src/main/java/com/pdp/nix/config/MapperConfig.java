@@ -1,5 +1,6 @@
 package com.pdp.nix.config;
 
+import com.pdp.nix.mapper.LabelMapper;
 import com.pdp.nix.mapper.TreeMapper;
 import com.pdp.nix.mapper.TreeNodeMapper;
 import com.pdp.nix.security.mapper.UserMapper;
@@ -23,5 +24,10 @@ public class MapperConfig {
     @Bean
     public TreeNodeMapper treeNodeMapper() {
         return Mappers.getMapper(TreeNodeMapper.class);
+    }
+
+    @Bean
+    public LabelMapper labelMapper() {
+        return Mappers.getMapper(LabelMapper.class);
     }
 }

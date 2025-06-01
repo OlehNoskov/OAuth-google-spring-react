@@ -15,7 +15,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-#    show-sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+  #    show-sql: true
   datasource:
     url: jdbc:mysql://localhost:3306/google_oauth
     username: root

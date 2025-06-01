@@ -30,7 +30,6 @@ interface TreeViewComponentProps {
 }
 
 export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeViewComponentProps) => {
-
     const [currentTree, setCurrentTree] = useState<TreeInterface>(props.tree);
     const [currentNode, setCurrentNode] = useState<TreeNodeInterface | null>();
 
@@ -40,13 +39,13 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
     const [isOpenEditTreeModal, setIsOpenEditTreeModal] = useState<boolean>(false);
     const [isOpenDeleteTreeModal, setIsOpenDeleteTreeModal] = useState<boolean>(false);
 
-    const [isShowNotification, setIsShowNotification] = useState<boolean>(false);
-
     const [nameCurrentNode, setNameCurrentNode] = useState<string>('');
     const [descriptionCurrentNode, setDescriptionCurrentNode] = useState<string>('');
 
     const [titleCurrentTree, setTitleCurrentTree] = useState<string>(props.tree?.title ? props.tree?.title : '');
     const [descriptionCurrentTree, setDescriptionCurrentTree] = useState<string>(props.tree?.description ? props.tree?.description : '');
+
+    const [isShowNotification, setIsShowNotification] = useState<boolean>(false);
 
     const editCurrentNode = () => {
         setCurrentTree((prevTree) => {

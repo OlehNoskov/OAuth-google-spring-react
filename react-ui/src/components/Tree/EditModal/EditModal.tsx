@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Button, ButtonColor, ButtonGroup, ButtonGroupAlignment, Input, Modal, Spacer, Textarea} from "react-magma-dom";
+import {Input, Modal, Spacer, Textarea} from "react-magma-dom";
+import {ModalFooterButtons} from "../../General/ModalFooterButtons.tsx";
 
 interface EditModalProps {
     isOpen: boolean;
@@ -42,9 +43,6 @@ export const EditModal = (props: EditModalProps) => {
     }, [isNodeEdit, nameNode, descriptionNode, titleTree, descriptionTree]);
 
     const saveData = () => {
-        if (isInputEmpty) {
-            return;
-        }
         onSave();
         handleOnCLose();
     };
@@ -71,10 +69,11 @@ export const EditModal = (props: EditModalProps) => {
                 }
                 maxCount={1000}
             />
-            <ButtonGroup alignment={ButtonGroupAlignment.right}>
-                <Button onClick={handleOnCLose} color={ButtonColor.secondary}>Cancel</Button>
-                <Button onClick={saveData} color={ButtonColor.primary} disabled={isInputEmpty}>Save</Button>
-            </ButtonGroup>
+            <ModalFooterButtons
+                handleOnCLose={handleOnCLose}
+                saveButtonDisabled={isInputEmpty}
+                onSave={saveData}
+            />
         </Modal>
     );
 };

@@ -24,7 +24,7 @@ const LabelsWrapper = styled.div`
     margin-top: 12px;
 `;
 
-export const TreeCard = (props: TreeCardProps) => {
+export const TreeCardDashboard = (props: TreeCardProps) => {
     const labels = props.tree.labels;
 
     return (

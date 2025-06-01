@@ -4,8 +4,8 @@ import {useNavigate} from "react-router-dom";
 import {login} from "../../services/authService.ts";
 import {USER} from "../../constants/constants.ts";
 
-import {Card, CardBody, Heading} from "react-magma-dom";
-import {StyledLoginPage} from "./LoginStyled.ts";
+import {Card, CardBody, Paragraph, TypographyVisualStyle} from "react-magma-dom";
+import {StyledLoginFooter, StyledLoginPage} from "./LoginStyled.ts";
 import {UserInterface} from "../../interfaces/UserInterface.ts";
 
 export const Login = () => {
@@ -33,16 +33,32 @@ export const Login = () => {
     }, [isLoggedIn]);
 
     return (
-        <StyledLoginPage>
-            <Card style={{padding: '30px'}} width={600}>
-                <CardBody>
-                    <Heading style={{textAlign: 'center', marginBottom: '50px'}} level={5}
-                             placeholder={undefined}
-                             onPointerEnterCapture={undefined}
-                             onPointerLeaveCapture={undefined}>Course builder app</Heading>
-                    <GoogleLogin onSuccess={loginUser}/>
-                </CardBody>
-            </Card>
-        </StyledLoginPage>
+        <>
+            <StyledLoginPage>
+                <Card style={{padding: '30px'}} width={600}>
+                    <CardBody>
+                        <Paragraph
+                            visualStyle={TypographyVisualStyle.bodyLarge}
+                            style={{textAlign: 'center', marginBottom: '50px'}}
+                        >Course builder app</Paragraph>
+                        <GoogleLogin onSuccess={loginUser}/>
+                    </CardBody>
+                </Card>
+            </StyledLoginPage>
+            <StyledLoginFooter>
+                <Paragraph
+                    visualStyle={TypographyVisualStyle.bodySmall}
+                    style={{textAlign: 'center', marginTop: '25px', color: '#fff', fontWeight: '600'}}
+                >
+                    This app is built with React, TypeScript, and React Magma Library.
+                </Paragraph>
+                <Paragraph
+                    visualStyle={TypographyVisualStyle.bodySmall}
+                    style={{textAlign: 'right', marginTop: '20px', marginRight: '50px', color: '#fff',  fontWeight: '600'}}>
+                    Author: Noskov Oleh
+                </Paragraph>
+
+            </StyledLoginFooter>
+        </>
     );
 };
