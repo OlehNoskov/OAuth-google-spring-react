@@ -22,15 +22,18 @@ import {DeleteModal} from "../DeleteModal/DeleteModal.tsx";
 import {EditModal} from "../EditModal/EditModal.tsx";
 import {TreeNodeEmptyCard} from "../TreeNodeEmptyCard/TreeNodeEmptyCard.tsx";
 import {TreeHeader} from "../TreeHeader/TreeHeader.tsx";
-import {updateTree} from "../../../services/treeService.ts";
+import {deleteTreeById, updateTree} from "../../../services/treeService.ts";
 import {ToastNotification} from "../../General/ToastNotification.tsx";
+import {useNavigateHome} from "../../../hooks/useNavigateHook.ts";
 
 interface TreeViewComponentProps {
     tree: TreeInterface;
 }
 
 export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeViewComponentProps) => {
-    const [currentTree, setCurrentTree] = useState<TreeInterface>(props.tree);
+    const {tree} = props;
+
+    const [currentTree, setCurrentTree] = useState<TreeInterface>(tree);
     const [currentNode, setCurrentNode] = useState<TreeNodeInterface | null>();
 
     const [isOpenEditNodeModal, setIsOpenEditNodeModal] = useState<boolean>(false);
@@ -42,8 +45,8 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
     const [nameCurrentNode, setNameCurrentNode] = useState<string>('');
     const [descriptionCurrentNode, setDescriptionCurrentNode] = useState<string>('');
 
-    const [titleCurrentTree, setTitleCurrentTree] = useState<string>(props.tree?.title ? props.tree?.title : '');
-    const [descriptionCurrentTree, setDescriptionCurrentTree] = useState<string>(props.tree?.description ? props.tree?.description : '');
+    const [titleCurrentTree, setTitleCurrentTree] = useState<string>(tree?.title ? tree?.title : '');
+    const [descriptionCurrentTree, setDescriptionCurrentTree] = useState<string>(tree?.description ? tree?.description : '');
 
     const [isShowNotification, setIsShowNotification] = useState<boolean>(false);
 
@@ -171,6 +174,12 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
         );
     }
 
+    const deleteCurrentTree: () => void = () => {
+        deleteTreeById(currentTree?.id).then(() => {
+            useNavigateHome();
+        })
+    }
+
     return (
         <>
             {isOpenEditNodeModal && (
@@ -204,7 +213,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                 <DeleteModal isNodeDelete={false}
                              isOpen={isOpenDeleteTreeModal}
                              handleOnCLose={() => setIsOpenDeleteTreeModal(false)}
-                             onDelete={() => (console.log('delete'))}/>)
+                             onDelete={() => deleteCurrentTree()}/>)
             }
             {isShowNotification && (<ToastNotification isSuccess text={'Tree was updated!'}
                                                        onDismiss={() => setIsShowNotification(false)}/>)}

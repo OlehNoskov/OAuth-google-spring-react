@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class TreeController {
 
     private TreeService treeService;
 
-    @PutMapping
+    @PostMapping
     @RequestMapping("/create")
     public TreeDto create(@RequestBody TreeDto treeDto) {
         return treeService.create(treeDto);
@@ -32,6 +33,12 @@ public class TreeController {
         return treeService.getTreeNodeById(treeId);
     }
 
+    @GetMapping
+    @RequestMapping("/get/title/{title}")
+    public List<TreeDto> getTreeByTitle(@PathVariable("title") String title) {
+        return treeService.getTreeNodeByTitle(title);
+    }
+
     @PutMapping
     @RequestMapping("/update")
     public TreeDto update(@RequestBody TreeDto treeDto) {
@@ -40,12 +47,12 @@ public class TreeController {
 
     @DeleteMapping
     @RequestMapping("/delete/{treeId}")
-    public void delete(@PathVariable("treeId")  Long treeId) {
+    public void delete(@PathVariable("treeId") Long treeId) {
         treeService.delete(treeId);
     }
 
     @GetMapping
-    @RequestMapping("/getAllByUser/{username}")
+    @RequestMapping("/getAll/{username}")
     private List<TreeDto> getAllByUser(@PathVariable("username") String username) {
         return treeService.getAllTreeByUser(username);
     }

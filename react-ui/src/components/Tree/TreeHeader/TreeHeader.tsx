@@ -2,7 +2,7 @@ import React from 'react';
 import {TreeHeaderWrapper} from "./TreeHeaderStyled.tsx";
 import {IconButton} from 'react-magma-dom';
 import {KeyboardBackspaceIcon, SaveIcon} from "react-magma-icons";
-import {useNavigate} from "react-router-dom";
+import {useNavigateHome} from "../../../hooks/useNavigateHook.ts";
 
 interface TreeHeaderProps {
     onSave: () => void;
@@ -10,14 +10,13 @@ interface TreeHeaderProps {
 }
 
 export const TreeHeader = (props: TreeHeaderProps) => {
-    const navigate = useNavigate();
     const {isDisabledSaveButton, onSave} = props;
 
     return (
         <TreeHeaderWrapper>
             <IconButton style={{margin: '20px 0 0 25px'}}
                         icon={<KeyboardBackspaceIcon/>} aria-label="Back"
-                        onClick={() => navigate('/home')}
+                        onClick={() => useNavigateHome()}
             >
                 Go Home
             </IconButton>

@@ -10,6 +10,8 @@ public interface TreeService {
 
     TreeDto getTreeNodeById(long treeId);
 
+    List<TreeDto> getTreeNodeByTitle(String title);
+
     TreeDto update(TreeDto treeNodeDto);
 
     List<TreeDto> getAllTreeByUser(String username);

@@ -13,4 +13,7 @@ public interface TreeRepository extends JpaRepository<Tree, Long> {
     List<Tree> findByLabelKeys(@Param("labelKeys") List<String> labelKeys);
 
     List<Tree> findByCreatedBy(String username);
+
+    @Query("SELECT t FROM Tree t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :titlePart, '%'))")
+    List<Tree> findByTitleLike(@Param("titlePart") String titlePart);
 }

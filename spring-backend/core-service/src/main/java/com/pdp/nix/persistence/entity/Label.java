@@ -23,7 +23,7 @@ public class Label {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(length = 15, unique = true)
+    @Column(length = 15)
     private String labelKey;
 
     @Column(length = 15)

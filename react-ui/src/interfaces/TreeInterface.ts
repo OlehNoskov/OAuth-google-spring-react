@@ -3,7 +3,7 @@ import {TreeNodeInterface} from "./TreeNodeInterface.ts";
 import {UserInterface} from "./UserInterface.ts";
 
 export interface TreeInterface {
-    id: number;
+    id?: number;
     createdBy: string;
     title: string;
     description: string;

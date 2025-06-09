@@ -1,17 +1,16 @@
 import {CredentialResponse, GoogleLogin} from "@react-oauth/google";
 import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {login} from "../../services/authService.ts";
 import {USER} from "../../constants/constants.ts";
 
 import {Card, CardBody, Paragraph, TypographyVisualStyle} from "react-magma-dom";
 import {StyledLoginFooter, StyledLoginPage} from "./LoginStyled.ts";
 import {UserInterface} from "../../interfaces/UserInterface.ts";
+import {useNavigateHome} from "../../hooks/useNavigateHook.ts";
 
 export const Login = () => {
 
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-    const navigate = useNavigate();
 
     let currentUser = window.localStorage.getItem(USER);
     const user: UserInterface = JSON.parse(currentUser ?? "{}");
@@ -29,7 +28,7 @@ export const Login = () => {
 
     useEffect(() => {
         if (!user.isLoggedIn) return;
-        navigate('/home');
+        useNavigateHome();
     }, [isLoggedIn]);
 
     return (

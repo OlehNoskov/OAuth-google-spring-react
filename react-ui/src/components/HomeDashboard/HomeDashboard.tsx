@@ -1,24 +1,39 @@
 import React, {useState} from 'react';
 import {HomeDashboardStyled, SearchWrapper} from "./HomeDashboardStyled.ts";
 import {Button, ButtonSize, InputSize, Search} from "react-magma-dom";
-import {DEFAULT_TREE, TreeInterface} from "../../interfaces/TreeInterface.ts";
+import {TreeInterface} from "../../interfaces/TreeInterface.ts";
 import {TreeCardDashboard} from "../Tree/TreeCardDashboard/TreeCardDashboard.tsx";
 import {TreeCardsWrapper} from "../Tree/TreeCardDashboard/TreeCardDashboardStyled.ts";
 import {EmptyDashboard} from "./EmptyDashboard/EmptyDashboard.tsx";
 import {CreateTreeModal} from "../Tree/CreateTreeModal/CreateTreeModal.tsx";
+import {getAllTreeByUsername, getTreeByTitle} from "../../services/treeService.ts";
+import {getCurrentUser} from "../../services/userStorage.ts";
 
 export const HomeDashboard = () => {
     const [allTrees, setAllTrees] = React.useState<TreeInterface[]>([]);
     const [isOpenCreateTreeModal, setIsOpenCreateTreeModal] = useState<boolean>(false);
+    const [searchTitle, setSearchTitle] = useState<string>('');
+    const currentUserName = getCurrentUser()?.email;
 
-
-    const handleSearch = (search: string) => {
-        console.log(search);
+    const getAllTrees = () => {
+        getAllTreeByUsername(currentUserName).then(response => {
+            setAllTrees(response);
+        });
     };
 
     React.useEffect(() => {
-        setAllTrees(DEFAULT_TREE);
+        getAllTrees();
     }, []);
+
+    function handleChange(event: { target: { value: React.SetStateAction<string>; }; }) {
+        setSearchTitle(event.target.value);
+    }
+
+    const handleSearch = (title: string) => {
+        getTreeByTitle(title).then(response => {
+            setAllTrees(response);
+        })
+    };
 
     return (
         <>
@@ -31,9 +46,13 @@ export const HomeDashboard = () => {
             <HomeDashboardStyled>
                 <SearchWrapper>
                     <Search placeholder="Search tree by title"
-                            onSearch={handleSearch}
                             isClearable
-                            inputSize={InputSize.large}/>
+                            inputSize={InputSize.large}
+                            value={searchTitle}
+                            onChange={handleChange}
+                            onSearch={handleSearch}
+                            onClick={getAllTrees}
+                    />
                 </SearchWrapper>
                 <Button
                     size={ButtonSize.large}

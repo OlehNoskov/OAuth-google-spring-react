@@ -31,8 +31,12 @@ export const TreeCardDashboard = (props: TreeCardProps) => {
         <Card align={CardAlignment.left} hasDropShadow style={{minHeight: '180px'}} width={250}>
             <CardBody style={{display: 'flex', flexDirection: 'column'}}>
                 <Hyperlink style={{color: 'black', fontWeight: '600', textDecoration: 'none'}}
-                           to={`/tree/${props.tree.id}`}>{props.tree.title}</Hyperlink>
-                <Paragraph noBottomMargin noTopMargin color={TypographyColor.subdued}>{props.tree.createdBy}</Paragraph>
+                           to={`/tree/${props.tree.id}`}>
+                    {props.tree.title}
+                </Hyperlink>
+                <Paragraph noBottomMargin noTopMargin color={TypographyColor.subdued}>
+                    {props.tree.createdBy}
+                </Paragraph>
                 <LabelsWrapper>
                     {
                         labels.map(label => (
