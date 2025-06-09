@@ -1,19 +1,7 @@
 import axios from "axios";
 import {BACKEND_API} from "../constants/backend-api.ts";
 import {TreeInterface} from "../interfaces/TreeInterface.ts";
-
-export const getAllTreeByUsername = async (userName: string): Promise<TreeInterface[]> => {
-    try {
-        const response = await axios.get(`${BACKEND_API.GET_ALL_TREE_BY_USER_NAME}/${userName}`, {
-            withCredentials: true, // Send cookies for backend
-        });
-
-        return response.data;
-    } catch (error) {
-        console.error(`Error within getting user by name: ${userName}`, error);
-        throw error;
-    }
-};
+import { PageableResponse } from "../interfaces/PageableResponse";
 
 export const getTreeById = async (id: string): Promise<TreeInterface> => {
     try {
@@ -24,19 +12,6 @@ export const getTreeById = async (id: string): Promise<TreeInterface> => {
         return response.data;
     } catch (error) {
         console.error(`Error within getting tree by id: ${id}`, error);
-        throw error;
-    }
-};
-
-export const getTreeByTitle = async (title: string): Promise<TreeInterface[]> => {
-    try {
-        const response = await axios.get(`${BACKEND_API.GET_TREE_BY_TITLE}/${title}`, {
-            withCredentials: true,
-        });
-
-        return response.data;
-    } catch (error) {
-        console.error(`Error within getting tree by title: ${title}`, error);
         throw error;
     }
 };
@@ -84,3 +59,30 @@ export const deleteTreeById = async (id: number): Promise<void> => {
         throw error;
     }
 };
+
+export const getAllTreeByUsername = async (userName: string, page: number, size: number): Promise<PageableResponse<TreeInterface>> => {
+    try {
+        const response = await axios.get(`${BACKEND_API.GET_ALL_TREE_BY_USER_NAME}/${userName}`, {
+            params: { page, size },
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error within getting paged trees for user: ${userName}`, error);
+        throw error;
+    }
+};
+
+export const getTreeByTitle = async (title: string, page: number, size: number): Promise<PageableResponse<TreeInterface>> => {
+    try {
+        const response = await axios.get(`${BACKEND_API.GET_TREE_BY_TITLE}/${title}`, {
+            params: { page, size },
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error within getting paged trees by title: ${title}`, error);
+        throw error;
+    }
+};
+

@@ -7,8 +7,8 @@ import {getTreeById} from "../../services/treeService.ts";
 import {TreeInterface} from "../../interfaces/TreeInterface.ts";
 
 export const TreeDashboard = () => {
-    const {id} = useParams<{ id: string }>();
-    const [currentTree, setCurrentTree] = useState<TreeInterface>()// Retrieve the id of tree from the URL
+    const {id} = useParams<{ id: string }>(); // Retrieve the id of tree from the URL
+    const [currentTree, setCurrentTree] = useState<TreeInterface>()
 
     React.useEffect(() => {
         getTreeById(id).then(response => {

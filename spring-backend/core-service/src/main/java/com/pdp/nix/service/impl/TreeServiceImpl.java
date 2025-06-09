@@ -1,6 +1,7 @@
 package com.pdp.nix.service.impl;
 
 import com.pdp.nix.dto.LabelDto;
+import com.pdp.nix.dto.PageableResponse;
 import com.pdp.nix.dto.TreeDto;
 import com.pdp.nix.mapper.TreeMapper;
 import com.pdp.nix.persistence.entity.Label;
@@ -11,6 +12,8 @@ import com.pdp.nix.service.TreeService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,13 +48,6 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public List<TreeDto> getTreeNodeByTitle(String title) {
-        List<Tree> trees = treeRepository.findByTitleLike(title);
-
-        return treeMapper.toTreeDtoList(trees);
-    }
-
-    @Override
     @Transactional
     public TreeDto update(TreeDto treeDto) {
         Tree tree = treeRepository.findById(treeDto.getId())
@@ -70,12 +66,6 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public List<TreeDto> getAllTreeByUser(String username) {
-        List<Tree> trees = treeRepository.findByCreatedBy(username);
-        return treeMapper.toTreeDtoList(trees);
-    }
-
-    @Override
     public void delete(long treeId) {
         treeRepository.deleteById(treeId);
 
@@ -90,5 +80,31 @@ public class TreeServiceImpl implements TreeService {
                                 .value(dto.getValue())
                                 .build()))
                 .toList();
+    }
+
+    @Override
+    public PageableResponse<TreeDto> getAllTreeByUser(String username, Pageable pageable) {
+        Page<Tree> trees = treeRepository.findByCreatedBy(username, pageable);
+
+        return PageableResponse.<TreeDto>builder()
+                .elements(trees.map(treeMapper::toTreeDto).getContent())
+                .page(trees.getNumber())
+                .size(trees.getSize())
+                .totalElements(trees.getTotalElements())
+                .totalPages(trees.getTotalPages())
+                .build();
+    }
+
+    @Override
+    public PageableResponse<TreeDto> getTreeNodeByTitle(String title, Pageable pageable) {
+        Page<Tree> trees = treeRepository.findByTitleLike(title, pageable);
+
+        return PageableResponse.<TreeDto>builder()
+                .elements(trees.map(treeMapper::toTreeDto).getContent())
+                .page(trees.getNumber())
+                .size(trees.getSize())
+                .totalElements(trees.getTotalElements())
+                .totalPages(trees.getTotalPages())
+                .build();
     }
 }

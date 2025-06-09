@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.PageRequest;
+import com.pdp.nix.dto.PageableResponse;
 
 @RestController
 @RequestMapping("/tree")
@@ -33,12 +34,6 @@ public class TreeController {
         return treeService.getTreeNodeById(treeId);
     }
 
-    @GetMapping
-    @RequestMapping("/get/title/{title}")
-    public List<TreeDto> getTreeByTitle(@PathVariable("title") String title) {
-        return treeService.getTreeNodeByTitle(title);
-    }
-
     @PutMapping
     @RequestMapping("/update")
     public TreeDto update(@RequestBody TreeDto treeDto) {
@@ -53,7 +48,17 @@ public class TreeController {
 
     @GetMapping
     @RequestMapping("/getAll/{username}")
-    private List<TreeDto> getAllByUser(@PathVariable("username") String username) {
-        return treeService.getAllTreeByUser(username);
+    public PageableResponse<TreeDto> getAllByUser(@PathVariable("username") String username,
+                                           @RequestParam(name = "page", defaultValue = "0") int page,
+                                           @RequestParam(name = "size", defaultValue = "10") int size) {
+        return treeService.getAllTreeByUser(username, PageRequest.of(page, size));
+    }
+
+    @GetMapping
+    @RequestMapping("/get/title/{title}")
+    public PageableResponse<TreeDto> getTreeByTitle(@PathVariable("title") String title,
+                                             @RequestParam(name = "page", defaultValue = "0") int page,
+                                             @RequestParam(name = "size", defaultValue = "10") int size) {
+        return treeService.getTreeNodeByTitle(title, PageRequest.of(page, size));
     }
 }

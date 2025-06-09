@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {HomeDashboardStyled, SearchWrapper} from "./HomeDashboardStyled.ts";
-import {Button, ButtonSize, InputSize, Search} from "react-magma-dom";
+import {Button, ButtonSize, InputSize, Pagination, Search} from "react-magma-dom";
 import {TreeInterface} from "../../interfaces/TreeInterface.ts";
 import {TreeCardDashboard} from "../Tree/TreeCardDashboard/TreeCardDashboard.tsx";
 import {TreeCardsWrapper} from "../Tree/TreeCardDashboard/TreeCardDashboardStyled.ts";
@@ -13,27 +13,37 @@ export const HomeDashboard = () => {
     const [allTrees, setAllTrees] = React.useState<TreeInterface[]>([]);
     const [isOpenCreateTreeModal, setIsOpenCreateTreeModal] = useState<boolean>(false);
     const [searchTitle, setSearchTitle] = useState<string>('');
+    const [page, setPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const pageSize = 10;
     const currentUserName = getCurrentUser()?.email;
 
-    const getAllTrees = () => {
-        getAllTreeByUsername(currentUserName).then(response => {
-            setAllTrees(response);
+    const getAllTrees = (pageNum = 1) => {
+        getAllTreeByUsername(currentUserName, pageNum - 1, pageSize).then(response => {
+            setAllTrees(response.elements);
+            setTotalPages(response.totalPages);
         });
     };
 
     React.useEffect(() => {
-        getAllTrees();
-    }, []);
+        getAllTrees(page);
+    }, [page]);
 
     function handleChange(event: { target: { value: React.SetStateAction<string>; }; }) {
         setSearchTitle(event.target.value);
     }
 
     const handleSearch = (title: string) => {
-        getTreeByTitle(title).then(response => {
-            setAllTrees(response);
+        getTreeByTitle(title, 0, pageSize).then(response => {
+            setAllTrees(response.elements);
+            setTotalPages(response.totalPages);
+            setPage(1);
         })
     };
+
+    function handlePageChange(event, pageNumber: number) {
+        setPage(pageNumber);
+    }
 
     return (
         <>
@@ -56,7 +66,7 @@ export const HomeDashboard = () => {
                 </SearchWrapper>
                 <Button
                     size={ButtonSize.large}
-                    style={{position: 'absolute', right: '0', marginRight: '260px'}}
+                    style={{position: 'absolute', right: '0', marginRight: '195px'}}
                     onClick={() => setIsOpenCreateTreeModal(true)}>
                     Create tree
                 </Button>
@@ -65,11 +75,15 @@ export const HomeDashboard = () => {
                 allTrees.length === 0 ?
                     <EmptyDashboard/>
                     :
-                    <TreeCardsWrapper>
-                        {allTrees.map(tree => (
-                            <TreeCardDashboard tree={tree}/>
-                        ))}
-                    </TreeCardsWrapper>
+                    <>
+                        <TreeCardsWrapper>
+                            {allTrees.map(tree => (
+                                <TreeCardDashboard tree={tree}/>
+                            ))}
+                        </TreeCardsWrapper>
+                        <Pagination style={{margin: '25px', display: 'flex', justifyContent: 'center'}} page={page}
+                                    onPageChange={handlePageChange} count={totalPages}/>
+                    </>
             }
         </>
     );

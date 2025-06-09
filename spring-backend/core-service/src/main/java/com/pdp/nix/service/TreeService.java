@@ -1,8 +1,8 @@
 package com.pdp.nix.service;
 
+import com.pdp.nix.dto.PageableResponse;
 import com.pdp.nix.dto.TreeDto;
-
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface TreeService {
 
@@ -10,11 +10,11 @@ public interface TreeService {
 
     TreeDto getTreeNodeById(long treeId);
 
-    List<TreeDto> getTreeNodeByTitle(String title);
-
     TreeDto update(TreeDto treeNodeDto);
 
-    List<TreeDto> getAllTreeByUser(String username);
-
     void delete(long treeId);
+
+    PageableResponse<TreeDto> getAllTreeByUser(String username, Pageable pageable);
+
+    PageableResponse<TreeDto> getTreeNodeByTitle(String title, Pageable pageable);
 }
