@@ -24,7 +24,7 @@ import {TreeNodeEmptyCard} from "../TreeNodeEmptyCard/TreeNodeEmptyCard.tsx";
 import {TreeHeader} from "../TreeHeader/TreeHeader.tsx";
 import {deleteTreeById, updateTree} from "../../../services/treeService.ts";
 import {ToastNotification} from "../../General/ToastNotification.tsx";
-import {useNavigateHome} from "../../../hooks/useNavigateHook.ts";
+import {useNavigate} from "react-router-dom";
 
 interface TreeViewComponentProps {
     tree: TreeInterface;
@@ -32,6 +32,7 @@ interface TreeViewComponentProps {
 
 export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeViewComponentProps) => {
     const {tree} = props;
+    const navigate = useNavigate();
 
     const [currentTree, setCurrentTree] = useState<TreeInterface>(tree);
     const [currentNode, setCurrentNode] = useState<TreeNodeInterface | null>();
@@ -176,7 +177,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
 
     const deleteCurrentTree: () => void = () => {
         deleteTreeById(currentTree?.id).then(() => {
-            useNavigateHome();
+            navigate('/home');
         })
     }
 

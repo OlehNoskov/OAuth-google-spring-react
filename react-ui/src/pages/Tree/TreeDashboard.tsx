@@ -16,7 +16,6 @@ export const TreeDashboard = () => {
         });
     }, []);
 
-
     return (
         <>
             <HomeHeader user={getCurrentUser()}/>

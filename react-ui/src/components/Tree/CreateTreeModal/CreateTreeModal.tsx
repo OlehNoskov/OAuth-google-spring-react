@@ -49,13 +49,14 @@ export const CreateTreeModal = (props: CreateTreeModalProps) => {
     const saveData = () => {
         const currentUser = getCurrentUser();
         const currentUserData = currentUser && currentUser.email;
+        const owners = selectedUsers.concat(allUsers.filter(user => user.email === currentUserData)[0]);
 
         const newTree: TreeInterface = {
             createdBy: currentUserData,
             title: titleTree,
             description: descriptionTree,
             labels: selectedLabels,
-            owners: selectedUsers,
+            owners: owners,
             nodes: []
         };
 
