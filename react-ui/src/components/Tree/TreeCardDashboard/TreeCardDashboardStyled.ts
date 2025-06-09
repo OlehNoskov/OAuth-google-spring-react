@@ -1,6 +1,9 @@
 import styled from "@emotion/styled";
 
-export  const TreeCardStyled = styled.div`
+export  const SearchEmptyMessageStyled = styled.div`
+    text-align: center;
+    margin-top: 50px;
+    font-size: 24px;
 `;
 
 export const TreeCardsWrapper = styled.div`

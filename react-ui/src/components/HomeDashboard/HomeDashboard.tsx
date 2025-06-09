@@ -3,7 +3,7 @@ import {HomeDashboardStyled, SearchWrapper} from "./HomeDashboardStyled.ts";
 import {Button, ButtonSize, InputSize, Pagination, Search} from "react-magma-dom";
 import {TreeInterface} from "../../interfaces/TreeInterface.ts";
 import {TreeCardDashboard} from "../Tree/TreeCardDashboard/TreeCardDashboard.tsx";
-import {TreeCardsWrapper} from "../Tree/TreeCardDashboard/TreeCardDashboardStyled.ts";
+import {SearchEmptyMessageStyled, TreeCardsWrapper} from "../Tree/TreeCardDashboard/TreeCardDashboardStyled.ts";
 import {EmptyDashboard} from "./EmptyDashboard/EmptyDashboard.tsx";
 import {CreateTreeModal} from "../Tree/CreateTreeModal/CreateTreeModal.tsx";
 import {getAllTreeByUsername, getTreeByTitle} from "../../services/treeService.ts";
@@ -15,6 +15,7 @@ export const HomeDashboard = () => {
     const [searchTitle, setSearchTitle] = useState<string>('');
     const [page, setPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
+    const [searchMode, setSearchMode] = useState<boolean>(false);
     const pageSize = 10;
     const currentUserName = getCurrentUser()?.email;
 
@@ -22,6 +23,7 @@ export const HomeDashboard = () => {
         getAllTreeByUsername(currentUserName, pageNum - 1, pageSize).then(response => {
             setAllTrees(response.elements);
             setTotalPages(response.totalPages);
+            setSearchMode(false);
         });
     };
 
@@ -38,6 +40,7 @@ export const HomeDashboard = () => {
             setAllTrees(response.elements);
             setTotalPages(response.totalPages);
             setPage(1);
+            setSearchMode(true);
         })
     };
 
@@ -61,19 +64,24 @@ export const HomeDashboard = () => {
                             value={searchTitle}
                             onChange={handleChange}
                             onSearch={handleSearch}
-                            onClick={getAllTrees}
+                            onClear={getAllTrees}
                     />
                 </SearchWrapper>
                 <Button
                     size={ButtonSize.large}
-                    style={{position: 'absolute', right: '0', marginRight: '195px'}}
+                    style={{marginRight: '195px'}}
                     onClick={() => setIsOpenCreateTreeModal(true)}>
                     Create tree
                 </Button>
             </HomeDashboardStyled>
             {
                 allTrees.length === 0 ?
-                    <EmptyDashboard/>
+                    searchMode ?
+                        <SearchEmptyMessageStyled>
+                            Tree with title '{searchTitle}' wasn't found!
+                        </SearchEmptyMessageStyled>
+                        :
+                        <EmptyDashboard/>
                     :
                     <>
                         <TreeCardsWrapper>

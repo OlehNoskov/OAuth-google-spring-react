@@ -19,9 +19,8 @@ export const TreeDashboard = () => {
     return (
         <>
             <HomeHeader user={getCurrentUser()}/>
-            {currentTree
-                && <TreeViewComponent
-                    tree={currentTree}/>
+            {currentTree &&
+                <TreeViewComponent tree={currentTree}/>
             }
         </>
     );
