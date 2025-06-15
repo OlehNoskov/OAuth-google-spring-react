@@ -8,18 +8,19 @@ import {
     DropdownContent,
     DropdownMenuItem,
 } from "react-magma-dom";
-import {DeleteIcon, EditIcon, MoreVertIcon} from "react-magma-icons";
+import {AddIcon, DeleteIcon, EditIcon, MoreVertIcon} from "react-magma-icons";
 
 interface RenameButtonProps {
     marginRight?: string;
     background?: string;
+    onClickAdd: () => void;
     onClickEdit: () => void;
     onClickDelete: () => void;
 }
 
-export const RenameAndDeleteButton: React.FC<RenameButtonProps> = (props: RenameButtonProps) => {
+export const EditButton: React.FC<RenameButtonProps> = (props: RenameButtonProps) => {
 
-    const {onClickEdit, onClickDelete} = props;
+    const {onClickAdd, onClickEdit, onClickDelete} = props;
 
     return (
         <Dropdown style={{marginRight: `${props.marginRight || '12px'}`}}>
@@ -34,6 +35,11 @@ export const RenameAndDeleteButton: React.FC<RenameButtonProps> = (props: Rename
                 onMouseLeave={(e) => (e.currentTarget.style.background = `${props.background || '#FFFFFF'}`)}
             />
             <DropdownContent>
+                <DropdownMenuItem
+                    icon={<AddIcon aria-hidden/>}
+                    onClick={onClickAdd}>
+                    Add Tree Node
+                </DropdownMenuItem>
                 <DropdownMenuItem
                     icon={<EditIcon aria-hidden/>}
                     onClick={onClickEdit}>

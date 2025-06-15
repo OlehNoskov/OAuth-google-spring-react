@@ -16,4 +16,7 @@ export const BACKEND_API = {
 
     // LABEL
     GET_ALL_LABELS: `${BASE_API_URL}/label/all`,
+
+    //TREE NODE
+    GET_ALL_NODE_TYPES: `${BASE_API_URL}/tree-node/types/all`,
 }

@@ -4,6 +4,7 @@ import {
     FlexBehavior,
     FlexJustify,
     FlexWrap,
+    IconButton,
     Paragraph,
     TreeItem,
     TreeView,
@@ -11,10 +12,16 @@ import {
     TypographyVisualStyle
 } from 'react-magma-dom';
 import {TreeInterface} from "../../../interfaces/TreeInterface.ts";
-import {LeftSideBar, TreeNodeContent, TreeTitle, TreeViewComponentStyled} from "./TreeViewComponentStyled.ts";
+import {
+    AddTreeNodeButtonWrapper,
+    LeftSideBar,
+    TreeNodeContent,
+    TreeTitle,
+    TreeViewComponentStyled
+} from "./TreeViewComponentStyled.ts";
 import {NodeType} from "../../../interfaces/NodeType.ts";
-import {FlagIcon, FolderIcon, LinkIcon} from "react-magma-icons";
-import {RenameAndDeleteButton} from "../../General/RenameAndDeleteButton.tsx";
+import {AddIcon, FlagIcon, FolderIcon, LinkIcon} from "react-magma-icons";
+import {EditButton} from "../../General/EditButton.tsx";
 import {TreeNodeInterface} from "../../../interfaces/TreeNodeInterface.ts";
 import {TreeNodeCard} from "../TreeNodeCard/TreeNodeCard.tsx";
 import {TreeNodeSettingsContent} from "../TreeNodeSettings/TreeNodeSettingsContent.tsx";
@@ -25,6 +32,7 @@ import {TreeHeader} from "../TreeHeader/TreeHeader.tsx";
 import {deleteTreeById, updateTree} from "../../../services/treeService.ts";
 import {ToastNotification} from "../../General/ToastNotification.tsx";
 import {useNavigate} from "react-router-dom";
+import {CreateTreeNodeModal} from "../CreateTreeNodeModal/CreateTreeNodeModal.tsx";
 
 interface TreeViewComponentProps {
     tree: TreeInterface;
@@ -40,6 +48,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
     const [isOpenEditNodeModal, setIsOpenEditNodeModal] = useState<boolean>(false);
     const [isOpenDeleteNodeModal, setIsOpenDeleteNodeModal] = useState<boolean>(false);
 
+    const [isOpenCreateTreeNodeModal, setIsOpenCreateTreeNodeModal] = useState<boolean>(false);
     const [isOpenEditTreeModal, setIsOpenEditTreeModal] = useState<boolean>(false);
     const [isOpenDeleteTreeModal, setIsOpenDeleteTreeModal] = useState<boolean>(false);
 
@@ -75,9 +84,50 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
             return {
                 ...prevTree,
                 title: titleCurrentTree,
-                description: descriptionCurrentNode
+                description: descriptionCurrentTree,
             };
         });
+    };
+
+    // Helper to add a node at the same level as a target node (by id), or at root if no target
+    const handleCreateNode = (treeNodeData: TreeNodeInterface) => {
+        setCurrentTree(prevTree => {
+            if (!prevTree) return prevTree;
+            const newNode = {
+                title: treeNodeData.title,
+                description: treeNodeData.description,
+                type: treeNodeData.type,
+                depth: treeNodeData.depth,
+                children: treeNodeData.children,
+            };
+            return {
+                ...prevTree,
+                nodes: [...prevTree.nodes, newNode],
+            };
+        });
+    };
+
+    // Helper to recursively remove a node by id
+    const removeNodeById = (nodes: any[], nodeId: number): any[] => {
+        return nodes
+            .filter(node => node.id !== nodeId)
+            .map(node => ({
+                ...node,
+                children: node.children ? removeNodeById(node.children, nodeId) : []
+            }));
+    };
+
+    const handleDeleteNode = () => {
+        if (!currentNode) return;
+        setCurrentTree(prevTree => {
+            if (!prevTree) return prevTree;
+            return {
+                ...prevTree,
+                nodes: removeNodeById(prevTree.nodes, currentNode?.id)
+            };
+        });
+        setCurrentNode(null);
+        setIsOpenDeleteNodeModal(false);
     };
 
     const getFolderIcon = (node: any) => {
@@ -105,8 +155,10 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                         noMargins
                         color={TypographyColor.subdued}
                     />
-                    <RenameAndDeleteButton onClickEdit={() => setIsOpenEditNodeModal(true)}
-                                           onClickDelete={() => setIsOpenDeleteNodeModal(true)}
+                    <EditButton
+                        onClickAdd={() => setIsOpenCreateTreeNodeModal(true)}
+                        onClickEdit={() => setIsOpenEditNodeModal(true)}
+                        onClickDelete={() => setIsOpenDeleteNodeModal(true)}
                     />
                 </Flex>
             </Flex>
@@ -140,7 +192,6 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                 {node.children && node.children.length > 0 &&
                     node.children.map((child: any) => renderTree(child))}
             </TreeItem>
-
         )
     };
 
@@ -160,11 +211,33 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                         color={TypographyColor.subdued}
                     />
                 </Flex>
-                <RenameAndDeleteButton onClickEdit={() => setIsOpenEditTreeModal(true)}
-                                       onClickDelete={() => setIsOpenDeleteTreeModal(true)}
-                                       marginRight={'32px'} background={'#F5F5F5'}/>
+                <EditButton
+                    onClickAdd={() => setIsOpenCreateTreeNodeModal(true)}
+                    onClickEdit={() => setIsOpenEditTreeModal(true)}
+                    onClickDelete={() => setIsOpenDeleteTreeModal(true)}
+                    marginRight={'32px'} background={'#F5F5F5'}/>
             </Flex>
         )
+    }
+
+    const getLeftSideBar = () => {
+        return <LeftSideBar>
+            <TreeTitle id="tree-title">{treeTitle()}</TreeTitle>
+            {currentTree?.nodes.length !== 0 ?
+                <TreeView ariaLabelledBy="tree-title">
+                    {currentTree?.nodes.map(child => renderTree(child))}
+                </TreeView>
+                :
+                <AddTreeNodeButtonWrapper>
+                    <IconButton
+                        className={'add-tree-node-button'}
+                        icon={<AddIcon/>}
+                        onClick={() => setIsOpenCreateTreeNodeModal(true)}>
+                        Add Tree Node
+                    </IconButton>
+                </AddTreeNodeButtonWrapper>
+            }
+        </LeftSideBar>
     }
 
     const updateCurrentTree: () => void = () => {
@@ -183,6 +256,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
 
     return (
         <>
+            {/* isOpenEditModal */}
             {isOpenEditNodeModal && (
                 <EditModal isOpen={isOpenEditNodeModal}
                            handleOnCLose={() => setIsOpenEditNodeModal(false)}
@@ -203,36 +277,42 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                            editDescriptionTree={(value: string) => setDescriptionCurrentTree(value)}
                 />)
             }
-
             {isOpenDeleteNodeModal && (
                 <DeleteModal isOpen={isOpenDeleteNodeModal}
                              handleOnCLose={() => setIsOpenDeleteNodeModal(false)}
-                             onDelete={() => (console.log('delete'))}/>)
+                             onDelete={handleDeleteNode}/>)
             }
 
+            {/* isOpenDeleteModal */}
             {isOpenDeleteTreeModal && (
                 <DeleteModal isNodeDelete={false}
                              isOpen={isOpenDeleteTreeModal}
                              handleOnCLose={() => setIsOpenDeleteTreeModal(false)}
                              onDelete={() => deleteCurrentTree()}/>)
             }
+
+            {/* isOpenCreateModal */}
+            {isOpenCreateTreeNodeModal && (
+                <CreateTreeNodeModal
+                    isOpen={isOpenCreateTreeNodeModal}
+                    handleOnCLose={() => setIsOpenCreateTreeNodeModal(false)}
+                    onCreateNode={handleCreateNode}
+                />)
+            }
             {isShowNotification && (<ToastNotification isSuccess text={'Tree was updated!'}
                                                        onDismiss={() => setIsShowNotification(false)}/>)}
             <TreeHeader onSave={() => updateCurrentTree()} isDisabledSaveButton={false}/>
             <TreeViewComponentStyled>
-                <LeftSideBar>
-                    <TreeTitle id="tree-title">{treeTitle()}</TreeTitle>
-                    <TreeView ariaLabelledBy="tree-title">
-                        {currentTree?.nodes.map(child => renderTree(child))}
-                    </TreeView>
-                </LeftSideBar>
+                {getLeftSideBar()}
                 <TreeNodeContent>
                     {!!currentNode
                         ?
                         <>
                             <TreeNodeCard treeNode={currentNode}/>
-                            <TreeNodeSettingsContent onEditNameAndDescription={() => setIsOpenEditNodeModal(true)}
-                                                     onDelete={() => setIsOpenDeleteNodeModal(true)}/>
+                            <TreeNodeSettingsContent
+                                onCreateNewTreeNode={() => setIsOpenCreateTreeNodeModal(true)}
+                                onEditNameAndDescription={() => setIsOpenEditNodeModal(true)}
+                                onDelete={() => setIsOpenDeleteNodeModal(true)}/>
                         </>
                         : <TreeNodeEmptyCard/>}
                 </TreeNodeContent>

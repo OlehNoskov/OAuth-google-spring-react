@@ -4,6 +4,7 @@ import com.pdp.nix.dto.LabelDto;
 import com.pdp.nix.dto.PageableResponse;
 import com.pdp.nix.dto.TreeDto;
 import com.pdp.nix.mapper.TreeMapper;
+import com.pdp.nix.mapper.TreeNodeMapper;
 import com.pdp.nix.persistence.entity.Label;
 import com.pdp.nix.persistence.entity.Tree;
 import com.pdp.nix.persistence.repository.LabelRepository;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -23,6 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TreeServiceImpl implements TreeService {
     private TreeMapper treeMapper;
+    private TreeNodeMapper treeNodeMapper;
     private TreeRepository treeRepository;
     private LabelRepository labelRepository;
 
@@ -53,10 +56,10 @@ public class TreeServiceImpl implements TreeService {
         Tree tree = treeRepository.findById(treeDto.getId())
                 .orElseThrow(() -> new RuntimeException("Tree wasn't found by id " + treeDto.getId()));
 
-        // Update fields from treeDto to tree
         tree.setTitle(treeDto.getTitle());
         tree.setDescription(treeDto.getDescription());
-        // Update other fields as needed
+        tree.setLabels(new ArrayList<>(resolveLabels(treeDto.getLabels())));
+        tree.setNodes(new ArrayList<>(treeNodeMapper.toTreeNodeEntities(treeDto.getNodes())));
 
         Tree updatedTree = treeRepository.save(tree);
 

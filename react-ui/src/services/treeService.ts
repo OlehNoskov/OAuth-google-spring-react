@@ -46,7 +46,7 @@ export const createTree = async (tree: TreeInterface): Promise<TreeInterface> =>
     }
 };
 
-export const deleteTreeById = async (id: number): Promise<void> => {
+export const deleteTreeById = async (id: number | undefined): Promise<void> => {
     try {
         const response = await axios.delete(
             `${BACKEND_API.DELETE_TREE_BY_ID}/${id}`,
