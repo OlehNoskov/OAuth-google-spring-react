@@ -20,6 +20,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -55,13 +56,13 @@ public class Tree {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Label> labels;
+    private Set<Label> labels;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @Column(nullable = false)
-    private List<User> owners;
+    private Set<User> owners;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude

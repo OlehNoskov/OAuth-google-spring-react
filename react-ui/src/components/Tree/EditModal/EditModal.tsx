@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Input, Modal, Spacer, Textarea} from "react-magma-dom";
+import {Input, Spacer, Textarea} from "react-magma-dom";
 import {ModalFooterButtons} from "../../General/ModalFooterButtons.tsx";
+import {BaseModal, BaseModalProps} from '../../General/BaseModal';
 
-interface EditModalProps {
-    isOpen: boolean;
-    handleOnCLose: () => void;
+interface EditModalProps extends BaseModalProps{
     onSave: () => void;
 
     // Node editing
@@ -22,7 +21,7 @@ interface EditModalProps {
 
 export const EditModal = (props: EditModalProps) => {
     const {
-        isOpen, handleOnCLose, onSave,
+        isOpen, onClose, onSave, header,
         nameNode, editNameNode, descriptionNode, editDescriptionNode,
         titleTree, editTitleTree, descriptionTree, editDescriptionTree
     } = props;
@@ -44,11 +43,11 @@ export const EditModal = (props: EditModalProps) => {
 
     const saveData = () => {
         onSave();
-        handleOnCLose();
+        onClose();
     };
 
     return (
-        <Modal header={isNodeEdit ? "Edit node" : "Edit tree"} isOpen={isOpen} onClose={handleOnCLose}>
+        <BaseModal header={header} isOpen={isOpen} onClose={onClose}>
             <Input
                 labelText={isNodeEdit ? "Name" : "Title"}
                 required
@@ -70,10 +69,10 @@ export const EditModal = (props: EditModalProps) => {
                 maxCount={1000}
             />
             <ModalFooterButtons
-                handleOnCLose={handleOnCLose}
+                handleOnCLose={onClose}
                 saveButtonDisabled={isInputEmpty}
                 onSave={saveData}
             />
-        </Modal>
+        </BaseModal>
     );
 };

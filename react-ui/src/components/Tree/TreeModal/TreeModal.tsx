@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
-import {Input, Modal, Select, Spacer} from "react-magma-dom";
+import {Input, Select, Spacer} from "react-magma-dom";
 import {ModalFooterButtons} from "../../General/ModalFooterButtons.tsx";
-import {SelectWrapper} from "./CreateTreeModalStyled.ts";
+import {SelectWrapper} from "./TreeModalStyled.ts";
 import {getAllLabels} from "../../../services/labelService.ts";
 import {getAllUsers} from "../../../services/userService.ts";
 import {LabelInterface, TreeInterface} from '../../../interfaces/TreeInterface.ts';
@@ -9,29 +9,37 @@ import {UserInterface} from "../../../interfaces/UserInterface.ts";
 import {getCurrentUser} from "../../../services/userStorage.ts";
 import {createTree} from "../../../services/treeService.ts";
 import {useNavigate} from "react-router-dom";
+import {BaseModal, BaseModalProps} from '../../General/BaseModal';
+import {getAllLabelsOptions, getAllUsersOptions} from "../../../services/treehooks.ts";
 
-interface CreateTreeModalProps {
-    isOpen: boolean;
-    handleOnCLose: () => void;
+interface CreateTreeModalProps extends BaseModalProps {
+    currentTree?: TreeInterface;
+    onSave?: (currentTree: TreeInterface) => void;
 }
 
-export const CreateTreeModal = (props: CreateTreeModalProps) => {
+export const TreeModal = (props: CreateTreeModalProps) => {
     const navigate = useNavigate();
-    const {isOpen, handleOnCLose} = props;
+    const {isOpen, onClose, header, currentTree, onSave} = props;
 
-    const [titleTree, setTitleTree] = React.useState('');
-    const [descriptionTree, setDescriptionTree] = React.useState('');
-    const isDisabledSaveButton = !titleTree.length || !descriptionTree;
+    const preSelectedLabels = getAllLabelsOptions(currentTree?.labels);
+    const preSelectedUsers = getAllUsersOptions(currentTree?.owners);
+
     const [allLabels, setAllAllLabels] = React.useState<LabelInterface[]>([]);
     const [allUsers, setAllAllUsers] = React.useState<UserInterface[]>([]);
 
-    const [selectedLabelOptions, setSelectedLabelOptions] = React.useState<string[]>([]);
-    const [selectedUserOptions, setSelectedUserOptions] = React.useState<string[]>([]);
+    const [titleTree, setTitleTree] = React.useState(currentTree?.title ?? '');
+    const [descriptionTree, setDescriptionTree] = React.useState(currentTree?.description ?? '');
+    const [selectedLabelOptions, setSelectedLabelOptions] = React.useState<string[]>(preSelectedLabels);
+    const [selectedUserOptions, setSelectedUserOptions] = React.useState<string[]>(preSelectedUsers);
 
-    // Filter selected labels and users based on selected options
+    const isDisabledSaveButton = !titleTree.length || !descriptionTree || selectedLabelOptions.length === 0;
+
+    // Filter selected labels based on selected options
     const selectedLabels = allLabels.filter(label =>
         selectedLabelOptions.includes(`${label.value}`)
     );
+
+    // Filter selected users based on selected options
     const selectedUsers = allUsers.filter(user =>
         selectedUserOptions.includes(`${user.firstName} ${user.lastName}`)
     );
@@ -46,7 +54,7 @@ export const CreateTreeModal = (props: CreateTreeModalProps) => {
         });
     }, []);
 
-    const saveData = () => {
+    const saveNewTree = () => {
         const currentUser = getCurrentUser();
         const currentUserData = currentUser && currentUser.email;
         const owners = selectedUsers.concat(allUsers.filter(user => user.email === currentUserData)[0]);
@@ -66,16 +74,25 @@ export const CreateTreeModal = (props: CreateTreeModalProps) => {
         })
     };
 
-    const getAllLabelsOptions = () => {
-        return allLabels.map(label => `${label.value}`);
-    }
+    const updateCurrentTree = () => {
+        if (!currentTree || !onSave) return;
 
-    const getAllUsersOptions = () => {
-        return allUsers.map(user => `${user.firstName} ${user.lastName}`);
-    }
+        if (onSave && currentTree) {
+            const updatedTree = {
+                ...currentTree,
+                title: titleTree,
+                description: descriptionTree,
+                labels: selectedLabels,
+                owners: selectedUsers,
+            };
+
+            onSave(updatedTree);
+            onClose();
+        }
+    };
 
     return (
-        <Modal header={'Create tree'} isOpen={isOpen} onClose={handleOnCLose}>
+        <BaseModal header={header} isOpen={isOpen} onClose={onClose}>
             <Input
                 labelText={'Title*'}
                 required
@@ -95,7 +112,7 @@ export const CreateTreeModal = (props: CreateTreeModalProps) => {
                 <Select
                     labelText={'Labels*'}
                     isMulti
-                    items={getAllLabelsOptions()}
+                    items={getAllLabelsOptions(allLabels)}
                     selectedItems={selectedLabelOptions}
                     onSelectedItemsChange={change => setSelectedLabelOptions(change?.selectedItems ?? [])}
                     onRemoveSelectedItem={removedLabel => setSelectedLabelOptions(selectedLabelOptions.filter(label => label !== removedLabel))}
@@ -106,17 +123,17 @@ export const CreateTreeModal = (props: CreateTreeModalProps) => {
                 <Select
                     labelText={'Owners'}
                     isMulti
-                    items={getAllUsersOptions()}
+                    items={getAllUsersOptions(allUsers)}
                     selectedItems={selectedUserOptions}
                     onSelectedItemsChange={change => setSelectedUserOptions(change?.selectedItems ?? [])}
                     onRemoveSelectedItem={removedUser => setSelectedUserOptions(selectedUserOptions.filter(user => user !== removedUser))}
                 />
             </SelectWrapper>
             <ModalFooterButtons
-                handleOnCLose={handleOnCLose}
+                handleOnCLose={onClose}
                 saveButtonDisabled={isDisabledSaveButton}
-                onSave={saveData}
+                onSave={onSave ? updateCurrentTree : saveNewTree}  // Use provided onSave or default saveData
             />
-        </Modal>
+        </BaseModal>
     );
 };

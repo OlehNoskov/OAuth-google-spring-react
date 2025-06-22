@@ -5,7 +5,7 @@ import {TreeInterface} from "../../interfaces/TreeInterface.ts";
 import {TreeCardDashboard} from "../Tree/TreeCardDashboard/TreeCardDashboard.tsx";
 import {SearchEmptyMessageStyled, TreeCardsWrapper} from "../Tree/TreeCardDashboard/TreeCardDashboardStyled.ts";
 import {EmptyDashboard} from "./EmptyDashboard/EmptyDashboard.tsx";
-import {CreateTreeModal} from "../Tree/CreateTreeModal/CreateTreeModal.tsx";
+import {TreeModal} from "../Tree/TreeModal/TreeModal.tsx";
 import {getAllTreeByUsername, getTreeByTitle} from "../../services/treeService.ts";
 import {getCurrentUser} from "../../services/userStorage.ts";
 
@@ -51,9 +51,10 @@ export const HomeDashboard = () => {
     return (
         <>
             {isOpenCreateTreeModal && (
-                <CreateTreeModal
+                <TreeModal
+                    header={'Create tree'}
                     isOpen={isOpenCreateTreeModal}
-                    handleOnCLose={() => setIsOpenCreateTreeModal(false)}
+                    onClose={() => setIsOpenCreateTreeModal(false)}
                 />
             )}
             <HomeDashboardStyled>

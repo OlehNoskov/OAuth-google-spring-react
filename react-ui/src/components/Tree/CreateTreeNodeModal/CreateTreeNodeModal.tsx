@@ -3,17 +3,16 @@ import {Input, Modal, Select, Spacer} from "react-magma-dom";
 import {NodeType} from "../../../interfaces/NodeType.ts";
 import {getAllNodeTypes} from "../../../services/treeNodeService.ts";
 import {ModalFooterButtons} from "../../General/ModalFooterButtons.tsx";
-import {SelectWrapper} from "../CreateTreeModal/CreateTreeModalStyled.ts";
+import {SelectWrapper} from "../TreeModal/TreeModalStyled.ts";
 import {TreeNodeInterface} from "../../../interfaces/TreeNodeInterface.ts";
+import {BaseModalProps} from "../../General/BaseModal.tsx";
 
-interface CreateTreeNodeModalProps {
-    isOpen: boolean;
-    handleOnCLose: () => void;
+interface CreateTreeNodeModalProps extends BaseModalProps{
     onCreateNode: (treeNode: TreeNodeInterface) => void;
 }
 
 export const CreateTreeNodeModal = (props: CreateTreeNodeModalProps) => {
-    const {isOpen, handleOnCLose, onCreateNode} = props;
+    const {isOpen, header, onClose, onCreateNode} = props;
 
     const [titleTreeNode, setTitleTreeNode] = React.useState('');
     const [descriptionTreeNode, setDescriptionTreeNode] = React.useState('');
@@ -39,12 +38,12 @@ export const CreateTreeNodeModal = (props: CreateTreeNodeModalProps) => {
             setTitleTreeNode('');
             setDescriptionTreeNode('');
             setSelectedNodeType(null);
-            handleOnCLose();
+            onClose();
         }
     };
 
     return (
-        <Modal header={'Create new Tree node'} isOpen={isOpen} onClose={handleOnCLose}>
+        <Modal header={header} isOpen={isOpen} onClose={onClose}>
             <Input
                 labelText={'Title*'}
                 required
@@ -68,7 +67,7 @@ export const CreateTreeNodeModal = (props: CreateTreeNodeModalProps) => {
                 />
             </SelectWrapper>
             <ModalFooterButtons
-                handleOnCLose={handleOnCLose}
+                handleOnCLose={onClose}
                 saveButtonDisabled={isDisabledSaveButton}
                 onSave={handleSave}
             />

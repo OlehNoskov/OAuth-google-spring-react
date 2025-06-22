@@ -33,6 +33,7 @@ import {deleteTreeById, updateTree} from "../../../services/treeService.ts";
 import {ToastNotification} from "../../General/ToastNotification.tsx";
 import {useNavigate} from "react-router-dom";
 import {CreateTreeNodeModal} from "../CreateTreeNodeModal/CreateTreeNodeModal.tsx";
+import {TreeModal} from "../TreeModal/TreeModal.tsx";
 
 interface TreeViewComponentProps {
     tree: TreeInterface;
@@ -55,9 +56,6 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
     const [nameCurrentNode, setNameCurrentNode] = useState<string>('');
     const [descriptionCurrentNode, setDescriptionCurrentNode] = useState<string>('');
 
-    const [titleCurrentTree, setTitleCurrentTree] = useState<string>(tree?.title ? tree?.title : '');
-    const [descriptionCurrentTree, setDescriptionCurrentTree] = useState<string>(tree?.description ? tree?.description : '');
-
     const [isShowNotification, setIsShowNotification] = useState<boolean>(false);
 
     const editCurrentNode = () => {
@@ -72,19 +70,6 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                         ? {...node, title: nameCurrentNode, description: descriptionCurrentNode}
                         : node
                 ),
-            };
-        });
-    };
-
-    const editCurrentTree = () => {
-        setCurrentTree((prevTree) => {
-            if (!prevTree) {
-                return prevTree;
-            }
-            return {
-                ...prevTree,
-                title: titleCurrentTree,
-                description: descriptionCurrentTree,
             };
         });
     };
@@ -258,49 +243,54 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
         <>
             {/* isOpenEditModal */}
             {isOpenEditNodeModal && (
-                <EditModal isOpen={isOpenEditNodeModal}
-                           handleOnCLose={() => setIsOpenEditNodeModal(false)}
-                           onSave={editCurrentNode}
-                           nameNode={nameCurrentNode}
-                           editNameNode={(value: string) => setNameCurrentNode(value)}
-                           descriptionNode={descriptionCurrentNode}
-                           editDescriptionNode={(value: string) => setDescriptionCurrentNode(value)}
+                <EditModal
+                    header={"Edit node"}
+                    isOpen={isOpenEditNodeModal}
+                    onClose={() => setIsOpenEditNodeModal(false)}
+                    onSave={editCurrentNode}
+                    nameNode={nameCurrentNode}
+                    editNameNode={(value: string) => setNameCurrentNode(value)}
+                    descriptionNode={descriptionCurrentNode}
+                    editDescriptionNode={(value: string) => setDescriptionCurrentNode(value)}
                 />)
             }
             {isOpenEditTreeModal && (
-                <EditModal isOpen={isOpenEditTreeModal}
-                           handleOnCLose={() => setIsOpenEditTreeModal(false)}
-                           onSave={editCurrentTree}
-                           titleTree={titleCurrentTree}
-                           editTitleTree={(value: string) => setTitleCurrentTree(value)}
-                           descriptionTree={descriptionCurrentTree}
-                           editDescriptionTree={(value: string) => setDescriptionCurrentTree(value)}
+                <TreeModal
+                    header={'Edit tree'}
+                    isOpen={isOpenEditTreeModal}
+                    onClose={() => setIsOpenEditTreeModal(false)}
+                    currentTree={currentTree}
+                    onSave={(value: TreeInterface) => setCurrentTree(value)}
                 />)
             }
-            {isOpenDeleteNodeModal && (
-                <DeleteModal isOpen={isOpenDeleteNodeModal}
-                             handleOnCLose={() => setIsOpenDeleteNodeModal(false)}
-                             onDelete={handleDeleteNode}/>)
-            }
-
             {/* isOpenDeleteModal */}
+            {isOpenDeleteNodeModal && (
+                <DeleteModal
+                    header={"Are you sure that you want to delete this node?"}
+                    isOpen={isOpenDeleteNodeModal}
+                    onClose={() => setIsOpenDeleteNodeModal(false)}
+                    onDelete={handleDeleteNode}/>)
+            }
             {isOpenDeleteTreeModal && (
-                <DeleteModal isNodeDelete={false}
-                             isOpen={isOpenDeleteTreeModal}
-                             handleOnCLose={() => setIsOpenDeleteTreeModal(false)}
-                             onDelete={() => deleteCurrentTree()}/>)
+                <DeleteModal
+                    header={"Are you sure that you want to delete this tree?"}
+                    isOpen={isOpenDeleteTreeModal}
+                    onClose={() => setIsOpenDeleteTreeModal(false)}
+                    onDelete={() => deleteCurrentTree()}/>)
             }
 
             {/* isOpenCreateModal */}
             {isOpenCreateTreeNodeModal && (
                 <CreateTreeNodeModal
+                    header={'Create new Tree node'}
                     isOpen={isOpenCreateTreeNodeModal}
-                    handleOnCLose={() => setIsOpenCreateTreeNodeModal(false)}
+                    onClose={() => setIsOpenCreateTreeNodeModal(false)}
                     onCreateNode={handleCreateNode}
                 />)
             }
             {isShowNotification && (<ToastNotification isSuccess text={'Tree was updated!'}
                                                        onDismiss={() => setIsShowNotification(false)}/>)}
+
             <TreeHeader onSave={() => updateCurrentTree()} isDisabledSaveButton={false}/>
             <TreeViewComponentStyled>
                 {getLeftSideBar()}

@@ -10,6 +10,9 @@ import com.pdp.nix.persistence.entity.Tree;
 import com.pdp.nix.persistence.repository.LabelRepository;
 import com.pdp.nix.persistence.repository.TreeRepository;
 import com.pdp.nix.service.TreeService;
+import com.pdp.nix.security.dto.UserDto;
+import com.pdp.nix.security.persistence.entity.User;
+import com.pdp.nix.security.persistence.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,12 +32,15 @@ public class TreeServiceImpl implements TreeService {
     private TreeNodeMapper treeNodeMapper;
     private TreeRepository treeRepository;
     private LabelRepository labelRepository;
+    private UserRepository userRepository;
 
     @Override
     public TreeDto create(TreeDto treeDto) {
-        List<Label> labels = resolveLabels(treeDto.getLabels());
+        Set<Label> labels = resolveLabels(treeDto.getLabels());
+        Set<User> owners = resolveUsers(treeDto.getOwners());
         Tree treeNode = treeMapper.toTreeEntity(treeDto);
         treeNode.setLabels(labels);
+        treeNode.setOwners(owners);
         treeRepository.save(treeNode);
 
         log.info("Tree with name: '{}' was created.", treeNode.getTitle());
@@ -58,7 +65,8 @@ public class TreeServiceImpl implements TreeService {
 
         tree.setTitle(treeDto.getTitle());
         tree.setDescription(treeDto.getDescription());
-        tree.setLabels(new ArrayList<>(resolveLabels(treeDto.getLabels())));
+        tree.setLabels(resolveLabels(treeDto.getLabels()));
+        tree.setOwners(resolveUsers(treeDto.getOwners()));
         tree.setNodes(new ArrayList<>(treeNodeMapper.toTreeNodeEntities(treeDto.getNodes())));
 
         Tree updatedTree = treeRepository.save(tree);
@@ -73,16 +81,6 @@ public class TreeServiceImpl implements TreeService {
         treeRepository.deleteById(treeId);
 
         log.info("Tree with id: '{}' was deleted.", treeId);
-    }
-
-    private List<Label> resolveLabels(List<LabelDto> labelDtos) {
-        return labelDtos.stream()
-                .map(dto -> labelRepository.findLabelByLabelKey(dto.getLabelKey())
-                        .orElseGet(() -> Label.builder()
-                                .labelKey(dto.getLabelKey())
-                                .value(dto.getValue())
-                                .build()))
-                .toList();
     }
 
     @Override
@@ -109,5 +107,27 @@ public class TreeServiceImpl implements TreeService {
                 .totalElements(trees.getTotalElements())
                 .totalPages(trees.getTotalPages())
                 .build();
+    }
+
+    private Set<Label> resolveLabels(Set<LabelDto> labelDtos) {
+        return labelDtos.stream()
+                .map(dto -> labelRepository.findLabelByLabelKey(dto.getLabelKey())
+                        .orElseGet(() -> Label.builder()
+                                .labelKey(dto.getLabelKey())
+                                .value(dto.getValue())
+                                .build()))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<User> resolveUsers(Set<UserDto> userDtos) {
+        return userDtos.stream()
+                .map(dto -> userRepository.findByEmail(dto.getEmail())
+                        .orElseGet(() -> userRepository.save(User.builder()
+                                .firstName(dto.getFirstName())
+                                .lastName(dto.getLastName())
+                                .email(dto.getEmail())
+                                .picture(dto.getPicture())
+                                .build())))
+                .collect(Collectors.toSet());
     }
 }

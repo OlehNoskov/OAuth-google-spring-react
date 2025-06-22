@@ -1,30 +1,24 @@
 import React from 'react';
-import {Button, ButtonColor, ButtonGroup, ButtonGroupAlignment, Modal} from "react-magma-dom";
+import {Button, ButtonColor, ButtonGroup, ButtonGroupAlignment} from "react-magma-dom";
+import {BaseModal, BaseModalProps} from '../../General/BaseModal';
 
-interface DeleteModalProps {
-    isOpen: boolean;
-    handleOnCLose: () => void;
+interface DeleteModalProps extends BaseModalProps {
     onDelete: () => void;
-    isNodeDelete?: boolean;
 }
 
 export const DeleteModal = (props: DeleteModalProps) => {
-    const {isOpen, handleOnCLose, onDelete, isNodeDelete = true} = props;
+    const {isOpen, onClose, onDelete, header} = props;
 
     return (
-        <Modal
-            header={
-                isNodeDelete
-                    ? "Are you sure that you want to delete this node?"
-                    : "Are you sure that you want to delete this tree?"
-            }
+        <BaseModal
+            header={header}
             isOpen={isOpen}
-            onClose={handleOnCLose}
+            onClose={onClose}
         >
             <ButtonGroup alignment={ButtonGroupAlignment.right}>
-                <Button onClick={handleOnCLose} color={ButtonColor.secondary}>Cancel</Button>
+                <Button onClick={onClose} color={ButtonColor.secondary}>Cancel</Button>
                 <Button onClick={onDelete} color={ButtonColor.primary}>Delete</Button>
             </ButtonGroup>
-        </Modal>
+        </BaseModal>
     );
 };

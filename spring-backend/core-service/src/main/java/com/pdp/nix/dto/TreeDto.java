@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -28,10 +29,10 @@ public class TreeDto {
     private String description;
 
     @Max(5)
-    private List<LabelDto> labels;
+    private Set<LabelDto> labels;
 
     @Min(1)
-    private List<UserDto> owners;
+    private Set<UserDto> owners;
 
     private List<TreeNodeDto> nodes;
 }
