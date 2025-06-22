@@ -30,10 +30,10 @@ export const CreateTreeModal = (props: CreateTreeModalProps) => {
 
     // Filter selected labels and users based on selected options
     const selectedLabels = allLabels.filter(label =>
-        selectedLabelOptions.includes(`${label.labelKey}: ${label.value}`)
+        selectedLabelOptions.includes(`${label.value}`)
     );
     const selectedUsers = allUsers.filter(user =>
-        selectedUserOptions.includes(`${user.firstName}: ${user.lastName}`)
+        selectedUserOptions.includes(`${user.firstName} ${user.lastName}`)
     );
 
     useEffect(() => {
@@ -67,11 +67,11 @@ export const CreateTreeModal = (props: CreateTreeModalProps) => {
     };
 
     const getAllLabelsOptions = () => {
-        return allLabels.map(label => `${label.labelKey}: ${label.value}`);
+        return allLabels.map(label => `${label.value}`);
     }
 
     const getAllUsersOptions = () => {
-        return allUsers.map(user => `${user.firstName}: ${user.lastName}`);
+        return allUsers.map(user => `${user.firstName} ${user.lastName}`);
     }
 
     return (
