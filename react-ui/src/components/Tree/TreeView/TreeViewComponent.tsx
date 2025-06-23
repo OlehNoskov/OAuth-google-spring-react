@@ -26,13 +26,12 @@ import {TreeNodeInterface} from "../../../interfaces/TreeNodeInterface.ts";
 import {TreeNodeCard} from "../TreeNodeCard/TreeNodeCard.tsx";
 import {TreeNodeSettingsContent} from "../TreeNodeSettings/TreeNodeSettingsContent.tsx";
 import {DeleteModal} from "../DeleteModal/DeleteModal.tsx";
-import {EditModal} from "../EditModal/EditModal.tsx";
 import {TreeNodeEmptyCard} from "../TreeNodeEmptyCard/TreeNodeEmptyCard.tsx";
 import {TreeHeader} from "../TreeHeader/TreeHeader.tsx";
 import {deleteTreeById, updateTree} from "../../../services/treeService.ts";
 import {ToastNotification} from "../../General/ToastNotification.tsx";
 import {useNavigate} from "react-router-dom";
-import {CreateTreeNodeModal} from "../CreateTreeNodeModal/CreateTreeNodeModal.tsx";
+import {TreeNodeModal} from "../TreeNodeModal/TreeNodeModal.tsx";
 import {TreeModal} from "../TreeModal/TreeModal.tsx";
 
 interface TreeViewComponentProps {
@@ -44,7 +43,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
     const navigate = useNavigate();
 
     const [currentTree, setCurrentTree] = useState<TreeInterface>(tree);
-    const [currentNode, setCurrentNode] = useState<TreeNodeInterface | null>();
+    const [currentNode, setCurrentNode] = useState<TreeNodeInterface | null>(null);
 
     const [isOpenEditNodeModal, setIsOpenEditNodeModal] = useState<boolean>(false);
     const [isOpenDeleteNodeModal, setIsOpenDeleteNodeModal] = useState<boolean>(false);
@@ -53,26 +52,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
     const [isOpenEditTreeModal, setIsOpenEditTreeModal] = useState<boolean>(false);
     const [isOpenDeleteTreeModal, setIsOpenDeleteTreeModal] = useState<boolean>(false);
 
-    const [nameCurrentNode, setNameCurrentNode] = useState<string>('');
-    const [descriptionCurrentNode, setDescriptionCurrentNode] = useState<string>('');
-
-    const [isShowNotification, setIsShowNotification] = useState<boolean>(false);
-
-    const editCurrentNode = () => {
-        setCurrentTree((prevTree) => {
-            if (!prevTree) {
-                return prevTree;
-            }
-            return {
-                ...prevTree,
-                nodes: prevTree.nodes.map((node) =>
-                    node.id === currentNode?.id
-                        ? {...node, title: nameCurrentNode, description: descriptionCurrentNode}
-                        : node
-                ),
-            };
-        });
-    };
+    const [isShowTreeNotification, setIsShowTreeNotification] = useState<boolean>(false);
 
     // Helper to add a node at the same level as a target node (by id), or at root if no target
     const handleCreateNode = (treeNodeData: TreeNodeInterface) => {
@@ -108,14 +88,27 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
             if (!prevTree) return prevTree;
             return {
                 ...prevTree,
-                nodes: removeNodeById(prevTree.nodes, currentNode?.id)
+                nodes: removeNodeById(prevTree.nodes, currentNode.id)
             };
         });
         setCurrentNode(null);
         setIsOpenDeleteNodeModal(false);
     };
 
-    const getFolderIcon = (node: any) => {
+    // Helper to recursively update a node by id
+    const updateNodeById = (nodes: TreeNodeInterface[], updatedNode: TreeNodeInterface): TreeNodeInterface[] => {
+        return nodes.map(node => {
+            if (node.id === updatedNode.id) {
+                return {...node, ...updatedNode};
+            }
+            return {
+                ...node,
+                children: node.children ? updateNodeById(node.children, updatedNode) : []
+            };
+        });
+    };
+
+    const getFolderIcon = (node: TreeNodeInterface) => {
         switch (node.type) {
             case NodeType.FLAG:
                 return <FlagIcon aria-hidden/>;
@@ -165,8 +158,6 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                 onClick={(event: any) => {
                     event.stopPropagation(); // Prevent parent nodes from being triggered
                     setCurrentNode(node);
-                    setNameCurrentNode(node?.title)
-                    setDescriptionCurrentNode(node?.description)
                 }}
                 key={node.id}
                 itemId={String(node.id)}
@@ -228,7 +219,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
     const updateCurrentTree: () => void = () => {
         updateTree(currentTree).then(response => {
                 setCurrentTree(response)
-                setIsShowNotification(true);
+                setIsShowTreeNotification(true);
             }
         );
     }
@@ -241,17 +232,33 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
 
     return (
         <>
+            {isOpenCreateTreeNodeModal && (
+                <TreeNodeModal
+                    header={'Add Tree node'}
+                    isOpen={isOpenCreateTreeNodeModal}
+                    onClose={() => setIsOpenCreateTreeNodeModal(false)}
+                    onCreateNode={handleCreateNode}
+                />)
+            }
+
             {/* isOpenEditModal */}
             {isOpenEditNodeModal && (
-                <EditModal
-                    header={"Edit node"}
+                <TreeNodeModal
+                    header={'Edit Tree node'}
+                    currentTreeNode={currentNode}
                     isOpen={isOpenEditNodeModal}
                     onClose={() => setIsOpenEditNodeModal(false)}
-                    onSave={editCurrentNode}
-                    nameNode={nameCurrentNode}
-                    editNameNode={(value: string) => setNameCurrentNode(value)}
-                    descriptionNode={descriptionCurrentNode}
-                    editDescriptionNode={(value: string) => setDescriptionCurrentNode(value)}
+                    onUpdateNode={(value: TreeNodeInterface) => {
+                        setCurrentTree(prevTree => {
+                            if (!prevTree) return prevTree;
+                            return {
+                                ...prevTree,
+                                nodes: updateNodeById(prevTree.nodes, value)
+                            };
+                        });
+                        setCurrentNode(value);
+                        setIsOpenEditNodeModal(false);
+                    }}
                 />)
             }
             {isOpenEditTreeModal && (
@@ -278,18 +285,11 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                     onClose={() => setIsOpenDeleteTreeModal(false)}
                     onDelete={() => deleteCurrentTree()}/>)
             }
+            {isShowTreeNotification && (<ToastNotification isSuccess text={`Tree was updated!`}
+                                                       onDismiss={() => setIsShowTreeNotification(false)}/>)}
 
-            {/* isOpenCreateModal */}
-            {isOpenCreateTreeNodeModal && (
-                <CreateTreeNodeModal
-                    header={'Create new Tree node'}
-                    isOpen={isOpenCreateTreeNodeModal}
-                    onClose={() => setIsOpenCreateTreeNodeModal(false)}
-                    onCreateNode={handleCreateNode}
-                />)
-            }
-            {isShowNotification && (<ToastNotification isSuccess text={'Tree was updated!'}
-                                                       onDismiss={() => setIsShowNotification(false)}/>)}
+            {isShowTreeNotification && (<ToastNotification isSuccess text={`Tree was updated!`}
+                                                       onDismiss={() => setIsShowTreeNotification(false)}/>)}
 
             <TreeHeader onSave={() => updateCurrentTree()} isDisabledSaveButton={false}/>
             <TreeViewComponentStyled>

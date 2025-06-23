@@ -43,7 +43,7 @@ export const EditButton: React.FC<RenameButtonProps> = (props: RenameButtonProps
                 <DropdownMenuItem
                     icon={<EditIcon aria-hidden/>}
                     onClick={onClickEdit}>
-                    Edit Name & Description
+                    Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
                     icon={<DeleteIcon aria-hidden/>}

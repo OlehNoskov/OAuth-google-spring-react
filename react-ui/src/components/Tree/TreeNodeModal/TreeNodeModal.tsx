@@ -7,39 +7,52 @@ import {SelectWrapper} from "../TreeModal/TreeModalStyled.ts";
 import {TreeNodeInterface} from "../../../interfaces/TreeNodeInterface.ts";
 import {BaseModalProps} from "../../General/BaseModal.tsx";
 
-interface CreateTreeNodeModalProps extends BaseModalProps{
-    onCreateNode: (treeNode: TreeNodeInterface) => void;
+interface CreateTreeNodeModalProps extends BaseModalProps {
+    currentTreeNode?: TreeNodeInterface | null;
+    onCreateNode?: (treeNode: TreeNodeInterface) => void;
+    onUpdateNode?: (treeNode: TreeNodeInterface) => void;
 }
 
-export const CreateTreeNodeModal = (props: CreateTreeNodeModalProps) => {
-    const {isOpen, header, onClose, onCreateNode} = props;
+export const TreeNodeModal = (props: CreateTreeNodeModalProps) => {
+    const {isOpen, header, currentTreeNode, onClose, onCreateNode, onUpdateNode,} = props;
 
-    const [titleTreeNode, setTitleTreeNode] = React.useState('');
-    const [descriptionTreeNode, setDescriptionTreeNode] = React.useState('');
+    const [titleTreeNode, setTitleTreeNode] = useState<string>(currentTreeNode?.title ?? '');
+    const [descriptionTreeNode, setDescriptionTreeNode] = useState(currentTreeNode?.description ?? '');
+    const [nodeType, setNodeType] = useState<NodeType | null>(currentTreeNode?.type ?? null);
 
     const [allNodeTypes, setAllNodeTypes] = useState<NodeType[]>([]);
-    const [selectedNodeType, setSelectedNodeType] = useState<NodeType | null>(null);
-
-    const isDisabledSaveButton: boolean = titleTreeNode.length === 0 || descriptionTreeNode.length === 0 || selectedNodeType === null;
+    const isDisabledSaveButton: boolean = titleTreeNode.length === 0 || descriptionTreeNode.length === 0 || nodeType === null;
 
     useEffect(() => {
         getAllNodeTypes().then((response => setAllNodeTypes(response)));
     }, []);
 
-    const handleSave = () => {
-        if (!isDisabledSaveButton && selectedNodeType) {
+    const createNewTreeNode = () => {
+        if (!isDisabledSaveButton && nodeType && onCreateNode) {
             onCreateNode({
                 title: titleTreeNode,
                 description: descriptionTreeNode,
-                type: selectedNodeType,
+                type: nodeType,
                 depth: 1,
                 children: []
             });
-            setTitleTreeNode('');
-            setDescriptionTreeNode('');
-            setSelectedNodeType(null);
+
             onClose();
         }
+    };
+
+    const updateTreeNode = () => {
+        if (!currentTreeNode || !onUpdateNode || !nodeType) return;
+
+        const updatedTreeNode: TreeNodeInterface = {
+            ...currentTreeNode,
+            title: titleTreeNode,
+            description: descriptionTreeNode,
+            type: nodeType,
+        };
+
+        onUpdateNode(updatedTreeNode);
+        onClose();
     };
 
     return (
@@ -62,16 +75,16 @@ export const CreateTreeNodeModal = (props: CreateTreeNodeModalProps) => {
             <SelectWrapper>
                 <Select
                     labelText={'Node Type*'}
+                    selectedItem={nodeType}
                     items={allNodeTypes}
-                    onSelectedItemChange={change => setSelectedNodeType(change.selectedItem ?? {} as NodeType)}
+                    onSelectedItemChange={change => setNodeType(change.selectedItem ?? {} as NodeType)}
                 />
             </SelectWrapper>
             <ModalFooterButtons
                 handleOnCLose={onClose}
                 saveButtonDisabled={isDisabledSaveButton}
-                onSave={handleSave}
+                onSave={onCreateNode ? createNewTreeNode : updateTreeNode}
             />
         </Modal>
     );
 };
-

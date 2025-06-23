@@ -22,28 +22,28 @@ export const TreeNodeSettingsContent = (props: TreeNodeSettingsContentProps) => 
                       onClick={onCreateNewTreeNode}
                       style={{cursor: 'pointer', marginBottom: '12px'}}>
                     <IconButton
-                        aria-label="Create New Tree Node"
+                        aria-label="Add Tree Node"
                         color={ButtonColor.secondary}
                         icon={<DnsIcon/>}
                         style={{marginRight: '12px'}}
                     />
                     <Heading level={5} style={{margin: 0}} placeholder={undefined}
                              onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                        Create New Tree Node
+                        Add Tree Node
                     </Heading>
                 </Flex>
                 <Flex behavior={FlexBehavior.container} alignItems={FlexAlignItems.center}
                       onClick={onEditNameAndDescription}
                       style={{cursor: 'pointer'}}>
                     <IconButton
-                        aria-label="Edit Name and Description"
+                        aria-label="Edit"
                         color={ButtonColor.secondary}
                         icon={<DnsIcon/>}
                         style={{marginRight: '12px'}}
                     />
                     <Heading level={5} style={{margin: 0}} placeholder={undefined}
                              onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                        Edit Name and Description
+                        Edit
                     </Heading>
                 </Flex>
                 <Flex behavior={FlexBehavior.container} alignItems={FlexAlignItems.center}

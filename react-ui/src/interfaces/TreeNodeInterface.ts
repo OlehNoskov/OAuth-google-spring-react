@@ -5,6 +5,6 @@ export interface TreeNodeInterface {
     title: string;
     description: string;
     depth: number;
-    type?: NodeType;
+    type: NodeType;
     children: TreeNodeInterface[];
 }

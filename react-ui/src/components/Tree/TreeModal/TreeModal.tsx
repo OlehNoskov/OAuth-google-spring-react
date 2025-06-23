@@ -10,7 +10,7 @@ import {getCurrentUser} from "../../../services/userStorage.ts";
 import {createTree} from "../../../services/treeService.ts";
 import {useNavigate} from "react-router-dom";
 import {BaseModal, BaseModalProps} from '../../General/BaseModal';
-import {getAllLabelsOptions, getAllUsersOptions} from "../../../services/treehooks.ts";
+import {getAllLabelsOptions, getAllUsersOptions} from "../../../utils/getTreeSelectData.ts";
 
 interface CreateTreeModalProps extends BaseModalProps {
     currentTree?: TreeInterface;
@@ -77,18 +77,16 @@ export const TreeModal = (props: CreateTreeModalProps) => {
     const updateCurrentTree = () => {
         if (!currentTree || !onSave) return;
 
-        if (onSave && currentTree) {
-            const updatedTree = {
-                ...currentTree,
-                title: titleTree,
-                description: descriptionTree,
-                labels: selectedLabels,
-                owners: selectedUsers,
-            };
+        const updatedTree = {
+            ...currentTree,
+            title: titleTree,
+            description: descriptionTree,
+            labels: selectedLabels,
+            owners: selectedUsers,
+        };
 
-            onSave(updatedTree);
-            onClose();
-        }
+        onSave(updatedTree);
+        onClose();
     };
 
     return (
