@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+    AlertVariant,
     Flex,
     FlexBehavior,
     FlexJustify,
@@ -53,8 +54,11 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
     const [isOpenDeleteTreeModal, setIsOpenDeleteTreeModal] = useState<boolean>(false);
 
     const [isShowTreeNotification, setIsShowTreeNotification] = useState<boolean>(false);
+    const [isShowMaxDepthExceeded, setIsShowMaxDepthExceeded] = useState<boolean>(false);
 
-    // Helper to add a node at the same level as a target node (by id), or at root if no target
+    // console.log(currentTree);
+    console.log(currentNode);
+
     const handleCreateNode = (treeNodeData: TreeNodeInterface) => {
         setCurrentTree(prevTree => {
             if (!prevTree) return prevTree;
@@ -63,14 +67,53 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                 description: treeNodeData.description,
                 type: treeNodeData.type,
                 depth: treeNodeData.depth,
-                children: treeNodeData.children,
+                children: [],
             };
-            return {
-                ...prevTree,
-                nodes: [...prevTree.nodes, newNode],
+
+            // Helper to insert node as a child of a matching node
+            const insertAsChild = (nodes: TreeNodeInterface[], parentId: string | number): TreeNodeInterface[] => {
+                return nodes.map(node => {
+                    if (String(node.id) === String(parentId)) {
+                        if (node.depth >= 5) {
+                            setIsShowMaxDepthExceeded(true);
+                            return node;
+                        }
+                        const childNode = {
+                            ...newNode,
+                            depth: node.depth + 1,
+                        };
+
+                        console.log(childNode);
+
+                        return {
+                            ...node,
+                            children: [...(node.children || []), childNode],
+                        };
+                    } else if (node.children) {
+                        return {
+                            ...node,
+                            children: insertAsChild(node.children, parentId),
+                        };
+                    }
+                    return node;
+                });
             };
+
+            if (currentNode) {
+                const updatedNodes = insertAsChild(prevTree.nodes, currentNode?.id);
+                return {
+                    ...prevTree,
+                    nodes: updatedNodes,
+                };
+            } else {
+                return {
+                    ...prevTree,
+                    nodes: [...prevTree.nodes, {...newNode, depth: 1}],
+                };
+            }
         });
     };
+
 
     // Helper to recursively remove a node by id
     const removeNodeById = (nodes: any[], nodeId: number): any[] => {
@@ -119,7 +162,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
         }
     }
 
-    const treeItemLabel = (node: any) => {
+    const treeItemLabel = (node: TreeNodeInterface) => {
         return (
             <Flex
                 behavior={FlexBehavior.container}
@@ -143,7 +186,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
         )
     };
 
-    const renderTree = (node: any) => {
+    const renderTree = (node: TreeNodeInterface) => {
         return (
             <TreeItem
                 style={{
@@ -159,11 +202,10 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                     event.stopPropagation(); // Prevent parent nodes from being triggered
                     setCurrentNode(node);
                 }}
-                key={node.id}
+                key={node.id ? String(node.id) : Math.floor(Math.random() * 10_0000)}
                 itemId={String(node.id)}
                 icon={getFolderIcon(node)}
                 label={treeItemLabel(node)}
-                isDisabled={node.disabled}
             >
                 {node.children && node.children.length > 0 &&
                     node.children.map((child: any) => renderTree(child))}
@@ -285,11 +327,13 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                     onClose={() => setIsOpenDeleteTreeModal(false)}
                     onDelete={() => deleteCurrentTree()}/>)
             }
-            {isShowTreeNotification && (<ToastNotification isSuccess text={`Tree was updated!`}
-                                                       onDismiss={() => setIsShowTreeNotification(false)}/>)}
+            {isShowTreeNotification && (
+                <ToastNotification toastVariant={AlertVariant.success} text={`Tree was updated!`}
+                                   onDismiss={() => setIsShowTreeNotification(false)}/>)}
 
-            {isShowTreeNotification && (<ToastNotification isSuccess text={`Tree was updated!`}
-                                                       onDismiss={() => setIsShowTreeNotification(false)}/>)}
+            {isShowMaxDepthExceeded && (<ToastNotification toastVariant={AlertVariant.warning}
+                                                           text={`Max depth for tree node has been exceeded!`}
+                                                           onDismiss={() => setIsShowMaxDepthExceeded(false)}/>)}
 
             <TreeHeader onSave={() => updateCurrentTree()} isDisabledSaveButton={false}/>
             <TreeViewComponentStyled>

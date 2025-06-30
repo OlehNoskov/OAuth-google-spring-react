@@ -42,6 +42,6 @@ public class TreeNode {
     @Enumerated(EnumType.STRING)
     private NodeType type;
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     List<TreeNode> children;
 }

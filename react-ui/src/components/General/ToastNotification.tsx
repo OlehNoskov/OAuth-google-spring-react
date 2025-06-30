@@ -4,15 +4,13 @@ import {AlertVariant, Toast} from "react-magma-dom";
 interface ToastNotificationProps {
     onDismiss: () => void;
     text: string;
-    isSuccess?: boolean;
-    isWarning?: boolean;
-    isError?: boolean;
+    toastVariant?: AlertVariant;
 }
 
 export const ToastNotification = (props: ToastNotificationProps) => {
-    const {onDismiss, text} = props;
+    const {onDismiss, text, toastVariant} = props;
 
     return (
-        <Toast variant={AlertVariant.success} toastDuration={3000} onDismiss={onDismiss}>{text}</Toast>
+        <Toast variant={toastVariant} toastDuration={3000} onDismiss={onDismiss}>{text}</Toast>
     );
 };

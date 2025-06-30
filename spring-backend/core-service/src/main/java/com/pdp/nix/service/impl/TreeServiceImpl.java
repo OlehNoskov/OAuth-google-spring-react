@@ -3,10 +3,12 @@ package com.pdp.nix.service.impl;
 import com.pdp.nix.dto.LabelDto;
 import com.pdp.nix.dto.PageableResponse;
 import com.pdp.nix.dto.TreeDto;
+import com.pdp.nix.dto.TreeNodeDto;
 import com.pdp.nix.mapper.TreeMapper;
 import com.pdp.nix.mapper.TreeNodeMapper;
 import com.pdp.nix.persistence.entity.Label;
 import com.pdp.nix.persistence.entity.Tree;
+import com.pdp.nix.persistence.entity.TreeNode;
 import com.pdp.nix.persistence.repository.LabelRepository;
 import com.pdp.nix.persistence.repository.TreeRepository;
 import com.pdp.nix.service.TreeService;
@@ -20,7 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -67,7 +69,7 @@ public class TreeServiceImpl implements TreeService {
         tree.setDescription(treeDto.getDescription());
         tree.setLabels(resolveLabels(treeDto.getLabels()));
         tree.setOwners(resolveUsers(treeDto.getOwners()));
-        tree.setNodes(new ArrayList<>(treeNodeMapper.toTreeNodeEntities(treeDto.getNodes())));
+        tree.setNodes(mapTreeNodeDtosToEntities(treeDto.getNodes()));
 
         Tree updatedTree = treeRepository.save(tree);
 
@@ -129,5 +131,17 @@ public class TreeServiceImpl implements TreeService {
                                 .picture(dto.getPicture())
                                 .build())))
                 .collect(Collectors.toSet());
+    }
+
+    private List<TreeNode> mapTreeNodeDtosToEntities(List<TreeNodeDto> nodeDtos) {
+        if (nodeDtos == null) {
+            return List.of();
+        }
+
+        return nodeDtos.stream().map(dto -> {
+            TreeNode nodes = treeNodeMapper.toTreeNodeEntity(dto);
+            nodes.setChildren(mapTreeNodeDtosToEntities(dto.getChildren()));
+            return nodes;
+        }).collect(Collectors.toList());
     }
 }
