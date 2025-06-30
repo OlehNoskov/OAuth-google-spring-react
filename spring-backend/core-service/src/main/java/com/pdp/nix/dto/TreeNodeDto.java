@@ -1,6 +1,5 @@
 package com.pdp.nix.dto;
 
-import com.pdp.nix.persistence.entity.TreeNode;
 import com.pdp.nix.persistence.enums.NodeType;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;

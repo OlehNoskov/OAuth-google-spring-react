@@ -37,35 +37,35 @@ export const DEFAULT_TREE: TreeInterface[] = [{
         {
             id: 0,
             title: 'Node 1',
-            description: 'Level 0 node',
+            description: 'Level 1 node',
             depth: 1,
             type: NodeType.DEFAULT,
             children: [
                 {
                     id: 1,
                     title: 'Node 1.1',
-                    description: 'Level 1 node',
+                    description: 'Level 2 node',
                     depth: 2,
                     type: NodeType.DEFAULT,
                     children: [
                         {
                             id: 2,
                             title: 'Node 1.1.1',
-                            description: 'Level 2 node',
+                            description: 'Level 3 node',
                             depth: 3,
                             type: NodeType.DEFAULT,
                             children: [
                                 {
                                     id: 3,
                                     title: 'Node 1.1.1.1',
-                                    description: 'Level 3 node',
+                                    description: 'Level 4 node',
                                     depth: 4,
                                     type: NodeType.DEFAULT,
                                     children: [
                                         {
                                             id: 5,
                                             title: 'Node 1.1.1.1.1',
-                                            description: 'Level 4 node (max depth)',
+                                            description: 'Level 5 node (max depth)',
                                             depth: 4,
                                             type: NodeType.FLAG,
                                             children: []
