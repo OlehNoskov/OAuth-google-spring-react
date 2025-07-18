@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 export const TreeViewComponentStyled = styled.div`
     display: flex;
-    height: calc(100vh - 160px);
+    height: calc(100vh);
 `;
 
 export const LeftSideBar = styled.div`

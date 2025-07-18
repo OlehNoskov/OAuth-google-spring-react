@@ -35,6 +35,8 @@ import {useNavigate} from "react-router-dom";
 import {TreeNodeModal} from "../TreeNodeModal/TreeNodeModal.tsx";
 import {TreeModal} from "../TreeModal/TreeModal.tsx";
 
+import { v4 as uuidv4 } from 'uuid';
+
 interface TreeViewComponentProps {
     tree: TreeInterface;
 }
@@ -55,9 +57,6 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
 
     const [isShowTreeNotification, setIsShowTreeNotification] = useState<boolean>(false);
     const [isShowMaxDepthExceeded, setIsShowMaxDepthExceeded] = useState<boolean>(false);
-
-    // console.log(currentTree);
-    console.log(currentNode);
 
     const handleCreateNode = (treeNodeData: TreeNodeInterface) => {
         setCurrentTree(prevTree => {
@@ -82,8 +81,6 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                             ...newNode,
                             depth: node.depth + 1,
                         };
-
-                        console.log(childNode);
 
                         return {
                             ...node,
@@ -116,7 +113,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
 
 
     // Helper to recursively remove a node by id
-    const removeNodeById = (nodes: any[], nodeId: number): any[] => {
+    const removeNodeById = (nodes: any[], nodeId: number | undefined): any[] => {
         return nodes
             .filter(node => node.id !== nodeId)
             .map(node => ({
@@ -202,13 +199,13 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                     event.stopPropagation(); // Prevent parent nodes from being triggered
                     setCurrentNode(node);
                 }}
-                key={node.id ? String(node.id) : Math.floor(Math.random() * 10_0000)}
-                itemId={String(node.id)}
+                itemId={String(node.id) || uuidv4()} // Ensure unique itemId
                 icon={getFolderIcon(node)}
                 label={treeItemLabel(node)}
             >
                 {node.children && node.children.length > 0 &&
-                    node.children.map((child: any) => renderTree(child))}
+                    node.children.map((child: any) => renderTree(child))
+                }
             </TreeItem>
         )
     };
