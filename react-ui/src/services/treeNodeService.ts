@@ -7,7 +7,6 @@ export const getAllNodeTypes = async (): Promise<NodeType[]> => {
         const response = await axios.get(BACKEND_API.GET_ALL_NODE_TYPES, {
             withCredentials: true,
         });
-
         return response.data;
     } catch (error) {
         console.error('Error within getting node types', error);
