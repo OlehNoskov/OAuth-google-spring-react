@@ -1,4 +1,4 @@
-export enum NodeType {
+export enum NodeTypeInterface {
     DEFAULT = 'DEFAULT',
     FLAG = 'FLAG',
     LINK = 'LINK',

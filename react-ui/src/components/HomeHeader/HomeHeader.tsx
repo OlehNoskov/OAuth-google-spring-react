@@ -3,6 +3,8 @@ import {AppBar, Button} from "react-magma-dom";
 import {UserInterface} from "../../interfaces/UserInterface.ts";
 import {useNavigate} from "react-router-dom";
 import {EmailStyled, NoPhotoStyled, PhotoStyled} from "./HomeHeaderStyled.ts";
+import {useDispatch} from "react-redux";
+import {logOutUser} from "../../store/userProfileSlice";
 
 export interface HomeHeaderProps {
     user: UserInterface;
@@ -10,10 +12,11 @@ export interface HomeHeaderProps {
 
 const HomeHeader: React.FC<HomeHeaderProps> = (props) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const logOut = () => {
-        window.localStorage.clear();
-        navigate("/")
+        dispatch(logOutUser());
+        navigate("/");
     };
 
     const noPhotoLabel =

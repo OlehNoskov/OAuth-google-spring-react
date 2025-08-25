@@ -7,7 +7,8 @@ import {SearchEmptyMessageStyled, TreeCardsWrapper} from "../Tree/TreeCardDashbo
 import {EmptyDashboard} from "./EmptyDashboard/EmptyDashboard.tsx";
 import {TreeModal} from "../Tree/TreeModal/TreeModal.tsx";
 import {getAllTreeByUsername, getTreeByTitle} from "../../services/treeService.ts";
-import {getCurrentUser} from "../../services/userStorage.ts";
+import { useSelector } from 'react-redux'
+import {RootState} from "../../store/store.ts";
 
 export const HomeDashboard = () => {
     const [allTrees, setAllTrees] = React.useState<TreeInterface[]>([]);
@@ -17,7 +18,8 @@ export const HomeDashboard = () => {
     const [totalPages, setTotalPages] = useState<number>(1);
     const [searchMode, setSearchMode] = useState<boolean>(false);
     const pageSize = 10;
-    const currentUserName = getCurrentUser()?.email;
+    const user = useSelector((state: RootState) => state.userProfile);
+    const currentUserName = user?.email;
 
     const getAllTrees = (pageNum = 1) => {
         getAllTreeByUsername(currentUserName, pageNum - 1, pageSize).then(response => {

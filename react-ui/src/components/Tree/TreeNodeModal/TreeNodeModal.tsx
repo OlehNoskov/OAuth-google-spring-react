@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Input, Modal, Select, Spacer} from "react-magma-dom";
-import {NodeType} from "../../../interfaces/NodeType.ts";
+import {NodeTypeInterface} from "../../../interfaces/NodeTypeInterface.ts";
 import {getAllNodeTypes} from "../../../services/treeNodeService.ts";
 import {ModalFooterButtons} from "../../General/ModalFooterButtons.tsx";
 import {SelectWrapper} from "../TreeModal/TreeModalStyled.ts";
@@ -18,9 +18,9 @@ export const TreeNodeModal = (props: CreateTreeNodeModalProps) => {
 
     const [titleTreeNode, setTitleTreeNode] = useState<string>(currentTreeNode?.title ?? '');
     const [descriptionTreeNode, setDescriptionTreeNode] = useState(currentTreeNode?.description ?? '');
-    const [nodeType, setNodeType] = useState<NodeType | null>(currentTreeNode?.type ?? null);
+    const [nodeType, setNodeType] = useState<NodeTypeInterface | null>(currentTreeNode?.type ?? null);
 
-    const [allNodeTypes, setAllNodeTypes] = useState<NodeType[]>([]);
+    const [allNodeTypes, setAllNodeTypes] = useState<NodeTypeInterface[]>([]);
     const isDisabledSaveButton: boolean = titleTreeNode.length === 0 || descriptionTreeNode.length === 0 || nodeType === null;
 
     useEffect(() => {
@@ -77,7 +77,7 @@ export const TreeNodeModal = (props: CreateTreeNodeModalProps) => {
                     labelText={'Node Type*'}
                     selectedItem={nodeType}
                     items={allNodeTypes}
-                    onSelectedItemChange={change => setNodeType(change.selectedItem ?? {} as NodeType)}
+                    onSelectedItemChange={change => setNodeType(change.selectedItem ?? {} as NodeTypeInterface)}
                 />
             </SelectWrapper>
             <ModalFooterButtons

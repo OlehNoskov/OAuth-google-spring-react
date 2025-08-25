@@ -1,7 +1,7 @@
 import axios from "axios";
 import {BACKEND_API} from "../constants/backend-api.ts";
 import {TreeInterface} from "../interfaces/TreeInterface.ts";
-import { PageableResponse } from "../interfaces/PageableResponse";
+import { PageableResponseInterface } from "../interfaces/PageableResponseInterface.ts";
 
 export const getTreeById = async (id: string): Promise<TreeInterface> => {
     try {
@@ -60,7 +60,7 @@ export const deleteTreeById = async (id: number | undefined): Promise<void> => {
     }
 };
 
-export const getAllTreeByUsername = async (userName: string, page: number, size: number): Promise<PageableResponse<TreeInterface>> => {
+export const getAllTreeByUsername = async (userName: string, page: number, size: number): Promise<PageableResponseInterface<TreeInterface>> => {
     try {
         const response = await axios.get(`${BACKEND_API.GET_ALL_TREE_BY_USER_NAME}/${userName}`, {
             params: { page, size },
@@ -73,7 +73,7 @@ export const getAllTreeByUsername = async (userName: string, page: number, size:
     }
 };
 
-export const getTreeByTitle = async (title: string, page: number, size: number): Promise<PageableResponse<TreeInterface>> => {
+export const getTreeByTitle = async (title: string, page: number, size: number): Promise<PageableResponseInterface<TreeInterface>> => {
     try {
         const response = await axios.get(`${BACKEND_API.GET_TREE_BY_TITLE}/${title}`, {
             params: { page, size },

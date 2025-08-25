@@ -1,35 +1,22 @@
-import {CredentialResponse, GoogleLogin} from "@react-oauth/google";
-import React, {useEffect, useState} from "react";
-import {login} from "../../services/authService.ts";
-import {USER} from "../../constants/constants.ts";
-
+import {GoogleLogin} from "@react-oauth/google";
+import React, {useEffect} from "react";
 import {Card, CardBody, Paragraph, TypographyVisualStyle} from "react-magma-dom";
 import {StyledLoginFooter, StyledLoginPage} from "./LoginStyled.ts";
-import {UserInterface} from "../../interfaces/UserInterface.ts";
 import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {useLoginMutation} from "../../store/api/apiSlice.ts";
+import {RootState} from "../../store/store.ts";
 
 export const Login = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const navigate = useNavigate();
-
-    let currentUser = window.localStorage.getItem(USER);
-    const user: UserInterface = JSON.parse(currentUser ?? "{}");
-
-    const loginUser = async (credentialResponse: CredentialResponse) => {
-        const response = await login(credentialResponse);
-
-        if (response.status === 200) {
-            const user: UserInterface = {...response.data, isLoggedIn: true};
-            window.localStorage.setItem(USER, JSON.stringify(user));
-
-            setIsLoggedIn(true);
-        }
-    }
+    const user = useSelector((state: RootState) => state.userProfile);
+    const [login] = useLoginMutation();
 
     useEffect(() => {
-        if (!user.isLoggedIn) return;
-        navigate('/home');
-    }, [isLoggedIn]);
+        if (user.isLoggedIn) {
+            navigate('/home');
+        }
+    }, [user, navigate]);
 
     return (
         <>
@@ -40,7 +27,8 @@ export const Login = () => {
                             visualStyle={TypographyVisualStyle.bodyLarge}
                             style={{textAlign: 'center', marginBottom: '50px'}}
                         >Course builder app</Paragraph>
-                        <GoogleLogin onSuccess={loginUser}/>
+                        <GoogleLogin
+                            onSuccess={async (credentialResponse) => await login(credentialResponse).unwrap()}/>
                     </CardBody>
                 </Card>
             </StyledLoginPage>
@@ -53,7 +41,13 @@ export const Login = () => {
                 </Paragraph>
                 <Paragraph
                     visualStyle={TypographyVisualStyle.bodySmall}
-                    style={{textAlign: 'right', marginTop: '20px', marginRight: '50px', color: '#fff',  fontWeight: '600'}}>
+                    style={{
+                        textAlign: 'right',
+                        marginTop: '20px',
+                        marginRight: '50px',
+                        color: '#fff',
+                        fontWeight: '600'
+                    }}>
                     Author: Noskov Oleh
                 </Paragraph>
 

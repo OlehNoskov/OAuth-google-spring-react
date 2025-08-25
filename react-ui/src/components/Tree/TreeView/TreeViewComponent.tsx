@@ -20,7 +20,7 @@ import {
     TreeTitle,
     TreeViewComponentStyled
 } from "./TreeViewComponentStyled.ts";
-import {NodeType} from "../../../interfaces/NodeType.ts";
+import {NodeTypeInterface} from "../../../interfaces/NodeTypeInterface.ts";
 import {AddIcon, FlagIcon, FolderIcon, LinkIcon} from "react-magma-icons";
 import {EditButton} from "../../General/EditButton.tsx";
 import {TreeNodeInterface} from "../../../interfaces/TreeNodeInterface.ts";
@@ -150,9 +150,9 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
 
     const getFolderIcon = (node: TreeNodeInterface) => {
         switch (node.type) {
-            case NodeType.FLAG:
+            case NodeTypeInterface.FLAG:
                 return <FlagIcon aria-hidden/>;
-            case NodeType.LINK:
+            case NodeTypeInterface.LINK:
                 return <LinkIcon aria-hidden/>;
             default:
                 return <FolderIcon aria-hidden/>;

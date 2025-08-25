@@ -6,11 +6,12 @@ import {getAllLabels} from "../../../services/labelService.ts";
 import {getAllUsers} from "../../../services/userService.ts";
 import {LabelInterface, TreeInterface} from '../../../interfaces/TreeInterface.ts';
 import {UserInterface} from "../../../interfaces/UserInterface.ts";
-import {getCurrentUser} from "../../../services/userStorage.ts";
 import {createTree} from "../../../services/treeService.ts";
 import {useNavigate} from "react-router-dom";
 import {BaseModal, BaseModalProps} from '../../General/BaseModal';
 import {getAllLabelsOptions, getAllUsersOptions} from "../../../utils/getTreeSelectData.ts";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/store.ts";
 
 interface CreateTreeModalProps extends BaseModalProps {
     currentTree?: TreeInterface;
@@ -31,6 +32,7 @@ export const TreeModal = (props: CreateTreeModalProps) => {
     const [descriptionTree, setDescriptionTree] = React.useState(currentTree?.description ?? '');
     const [selectedLabelOptions, setSelectedLabelOptions] = React.useState<string[]>(preSelectedLabels);
     const [selectedUserOptions, setSelectedUserOptions] = React.useState<string[]>(preSelectedUsers);
+    const user = useSelector((state: RootState) => state.userProfile);
 
     const isDisabledSaveButton = !titleTree.length || !descriptionTree || selectedLabelOptions.length === 0;
 
@@ -55,8 +57,7 @@ export const TreeModal = (props: CreateTreeModalProps) => {
     }, []);
 
     const saveNewTree = () => {
-        const currentUser = getCurrentUser();
-        const currentUserData = currentUser && currentUser.email;
+        const currentUserData = user.email;
         const owners = selectedUsers.concat(allUsers.filter(user => user.email === currentUserData)[0]);
 
         const newTree: TreeInterface = {
@@ -70,7 +71,6 @@ export const TreeModal = (props: CreateTreeModalProps) => {
 
         createTree(newTree).then(response => {
             navigate(`/tree/${response.id}`)
-
         })
     };
 

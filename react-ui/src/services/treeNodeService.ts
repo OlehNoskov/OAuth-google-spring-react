@@ -1,8 +1,8 @@
 import axios from "axios";
 import {BACKEND_API} from "../constants/backend-api.ts";
-import {NodeType} from "../interfaces/NodeType.ts";
+import {NodeTypeInterface} from "../interfaces/NodeTypeInterface.ts";
 
-export const getAllNodeTypes = async (): Promise<NodeType[]> => {
+export const getAllNodeTypes = async (): Promise<NodeTypeInterface[]> => {
     try {
         const response = await axios.get(BACKEND_API.GET_ALL_NODE_TYPES, {
             withCredentials: true,

@@ -1,4 +1,4 @@
-import {NodeType} from "./NodeType.ts";
+import {NodeTypeInterface} from "./NodeTypeInterface.ts";
 import {TreeNodeInterface} from "./TreeNodeInterface.ts";
 import {UserInterface} from "./UserInterface.ts";
 
@@ -39,35 +39,35 @@ export const DEFAULT_TREE: TreeInterface[] = [{
             title: 'Node 1',
             description: 'Level 1 node',
             depth: 1,
-            type: NodeType.DEFAULT,
+            type: NodeTypeInterface.DEFAULT,
             children: [
                 {
                     id: 1,
                     title: 'Node 1.1',
                     description: 'Level 2 node',
                     depth: 2,
-                    type: NodeType.DEFAULT,
+                    type: NodeTypeInterface.DEFAULT,
                     children: [
                         {
                             id: 2,
                             title: 'Node 1.1.1',
                             description: 'Level 3 node',
                             depth: 3,
-                            type: NodeType.DEFAULT,
+                            type: NodeTypeInterface.DEFAULT,
                             children: [
                                 {
                                     id: 3,
                                     title: 'Node 1.1.1.1',
                                     description: 'Level 4 node',
                                     depth: 4,
-                                    type: NodeType.DEFAULT,
+                                    type: NodeTypeInterface.DEFAULT,
                                     children: [
                                         {
                                             id: 5,
                                             title: 'Node 1.1.1.1.1',
                                             description: 'Level 5 node (max depth)',
                                             depth: 4,
-                                            type: NodeType.FLAG,
+                                            type: NodeTypeInterface.FLAG,
                                             children: []
                                         }
                                     ]
@@ -83,7 +83,7 @@ export const DEFAULT_TREE: TreeInterface[] = [{
             title: 'Node 2',
             description: 'Another Level 0 node',
             depth: 0,
-            type: NodeType.FLAG,
+            type: NodeTypeInterface.FLAG,
             children: []
         }
     ]

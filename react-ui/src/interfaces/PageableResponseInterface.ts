@@ -1,5 +1,5 @@
 
-export interface PageableResponse<T> {
+export interface PageableResponseInterface<T> {
   elements: T[];
   page: number;
   size: number;
