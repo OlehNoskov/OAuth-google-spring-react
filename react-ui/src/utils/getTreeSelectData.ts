@@ -1,5 +1,5 @@
-import {LabelInterface} from "../interfaces/TreeInterface.ts";
 import {UserInterface} from "../interfaces/UserInterface.ts";
+import {LabelInterface} from "../interfaces/LabelInterface.ts";
 
 export const getAllLabelsOptions = (labels: LabelInterface[] | undefined) => {
     if (labels === undefined || labels.length === 0) {

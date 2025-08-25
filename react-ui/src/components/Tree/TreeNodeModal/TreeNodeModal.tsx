@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Input, Modal, Select, Spacer} from "react-magma-dom";
 import {NodeTypeInterface} from "../../../interfaces/NodeTypeInterface.ts";
-import {getAllNodeTypes} from "../../../services/treeNodeService.ts";
 import {ModalFooterButtons} from "../../General/ModalFooterButtons.tsx";
 import {SelectWrapper} from "../TreeModal/TreeModalStyled.ts";
 import {TreeNodeInterface} from "../../../interfaces/TreeNodeInterface.ts";
 import {BaseModalProps} from "../../General/BaseModal.tsx";
+import {useGetAllTreeNodeTypesQuery} from "../../../store/api/apiSlice.ts";
 
 interface CreateTreeNodeModalProps extends BaseModalProps {
     currentTreeNode?: TreeNodeInterface | null;
@@ -19,13 +19,8 @@ export const TreeNodeModal = (props: CreateTreeNodeModalProps) => {
     const [titleTreeNode, setTitleTreeNode] = useState<string>(currentTreeNode?.title ?? '');
     const [descriptionTreeNode, setDescriptionTreeNode] = useState(currentTreeNode?.description ?? '');
     const [nodeType, setNodeType] = useState<NodeTypeInterface | null>(currentTreeNode?.type ?? null);
-
-    const [allNodeTypes, setAllNodeTypes] = useState<NodeTypeInterface[]>([]);
     const isDisabledSaveButton: boolean = titleTreeNode.length === 0 || descriptionTreeNode.length === 0 || nodeType === null;
-
-    useEffect(() => {
-        getAllNodeTypes().then((response => setAllNodeTypes(response)));
-    }, []);
+    const { data: allNodeTypes } = useGetAllTreeNodeTypesQuery();
 
     const createNewTreeNode = () => {
         if (!isDisabledSaveButton && nodeType && onCreateNode) {

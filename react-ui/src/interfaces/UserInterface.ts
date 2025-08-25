@@ -5,11 +5,3 @@ export interface UserInterface {
     picture: string;
     isLoggedIn?: boolean;
 }
-
-export const EMPTY_USER: UserInterface = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    picture: '',
-    isLoggedIn: false,
-}

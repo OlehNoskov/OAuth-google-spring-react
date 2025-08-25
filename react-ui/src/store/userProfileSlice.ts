@@ -30,5 +30,5 @@ export const userProfileSlice = createSlice({
     },
 })
 
-export const {logInUser, logOutUser } = userProfileSlice.actions
+export const {logInUser, logOutUser} = userProfileSlice.actions
 export default userProfileSlice.reducer
