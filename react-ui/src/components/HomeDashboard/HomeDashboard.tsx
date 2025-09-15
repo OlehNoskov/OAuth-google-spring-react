@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import {HomeDashboardStyled, SearchWrapper} from "./HomeDashboardStyled.ts";
 import {Button, ButtonSize, InputSize, Pagination, Search} from "react-magma-dom";
-import {TreeInterface} from "../../interfaces/TreeInterface.ts";
 import {TreeCardDashboard} from "../Tree/TreeCardDashboard/TreeCardDashboard.tsx";
 import {SearchEmptyMessageStyled, TreeCardsWrapper} from "../Tree/TreeCardDashboard/TreeCardDashboardStyled.ts";
 import {EmptyDashboard} from "./EmptyDashboard/EmptyDashboard.tsx";
 import {TreeModal} from "../Tree/TreeModal/TreeModal.tsx";
 import {getAllTreeByUsername, getTreeByTitle} from "../../services/treeService.ts";
-import { useSelector } from 'react-redux'
+import {useSelector} from 'react-redux'
 import {RootState} from "../../store/store.ts";
+import {TreeInterface} from "../../interfaces/TreeInterface.ts";
 
 export const HomeDashboard = () => {
     const [allTrees, setAllTrees] = React.useState<TreeInterface[]>([]);

@@ -11,3 +11,13 @@ export interface TreeInterface {
     owners: UserInterface[];
     nodes: TreeNodeInterface[];
 }
+
+export const initialStateTreeInterface: TreeInterface = {
+    id: undefined,
+    createdBy: '',
+    title: '',
+    description: '',
+    labels: [],
+    owners: [],
+    nodes: [],
+}

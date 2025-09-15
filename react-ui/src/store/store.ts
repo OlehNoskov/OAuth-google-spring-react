@@ -1,7 +1,7 @@
-import { configureStore } from '@reduxjs/toolkit'
+import {configureStore} from '@reduxjs/toolkit'
 import userProfileReducer from './userProfileSlice.ts'
 import {apiSlice} from "./api/apiSlice.ts";
-import { combineReducers } from '@reduxjs/toolkit'
+import {combineReducers} from '@reduxjs/toolkit'
 
 import {
     persistStore,

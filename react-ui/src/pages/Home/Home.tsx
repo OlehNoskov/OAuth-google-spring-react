@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
-import HomeHeader from "../../components/HomeHeader/HomeHeader.tsx";
 import {useNavigate} from "react-router-dom";
 import {HomeDashboard} from "../../components/HomeDashboard/HomeDashboard.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store.ts";
+import {Header} from "../../components/Header/Header.tsx";
 
 export const Home = () => {
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ export const Home = () => {
 
     return  (
         <>
-            <HomeHeader user={user}/>
+            <Header/>
             <HomeDashboard/>
         </>
     );

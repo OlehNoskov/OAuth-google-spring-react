@@ -3,7 +3,7 @@ import {BACKEND_API} from "../constants/backend-api.ts";
 import {TreeInterface} from "../interfaces/TreeInterface.ts";
 import { PageableResponseInterface } from "../interfaces/PageableResponseInterface.ts";
 
-export const getTreeById = async (id: string): Promise<TreeInterface> => {
+export const getTreeById = async (id: string | undefined): Promise<TreeInterface> => {
     try {
         const response = await axios.get(`${BACKEND_API.GET_TREE_BY_ID}/${id}`, {
             withCredentials: true,

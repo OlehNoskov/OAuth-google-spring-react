@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     AlertVariant,
     Flex,
@@ -12,7 +12,7 @@ import {
     TypographyColor,
     TypographyVisualStyle
 } from 'react-magma-dom';
-import {TreeInterface} from "../../../interfaces/TreeInterface.ts";
+import {initialStateTreeInterface, TreeInterface} from "../../../interfaces/TreeInterface.ts";
 import {
     AddTreeNodeButtonWrapper,
     LeftSideBar,
@@ -29,7 +29,7 @@ import {TreeNodeSettingsContent} from "../TreeNodeSettings/TreeNodeSettingsConte
 import {DeleteModal} from "../DeleteModal/DeleteModal.tsx";
 import {TreeNodeEmptyCard} from "../TreeNodeEmptyCard/TreeNodeEmptyCard.tsx";
 import {TreeHeader} from "../TreeHeader/TreeHeader.tsx";
-import {deleteTreeById, updateTree} from "../../../services/treeService.ts";
+import {deleteTreeById, getTreeById, updateTree} from "../../../services/treeService.ts";
 import {ToastNotification} from "../../General/ToastNotification.tsx";
 import {useNavigate} from "react-router-dom";
 import {TreeNodeModal} from "../TreeNodeModal/TreeNodeModal.tsx";
@@ -38,14 +38,13 @@ import {TreeModal} from "../TreeModal/TreeModal.tsx";
 import { v4 as uuidv4 } from 'uuid';
 
 interface TreeViewComponentProps {
-    tree: TreeInterface;
+    treeId: string | undefined;
 }
 
 export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeViewComponentProps) => {
-    const {tree} = props;
     const navigate = useNavigate();
 
-    const [currentTree, setCurrentTree] = useState<TreeInterface>(tree);
+    const [currentTree, setCurrentTree] = useState<TreeInterface>(initialStateTreeInterface);
     const [currentNode, setCurrentNode] = useState<TreeNodeInterface | null>(null);
 
     const [isOpenEditNodeModal, setIsOpenEditNodeModal] = useState<boolean>(false);
@@ -57,6 +56,12 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
 
     const [isShowTreeNotification, setIsShowTreeNotification] = useState<boolean>(false);
     const [isShowMaxDepthExceeded, setIsShowMaxDepthExceeded] = useState<boolean>(false);
+
+    useEffect(() => {
+        getTreeById(props.treeId).then(response => {
+            setCurrentTree(response);
+        });
+    }, []);
 
     const handleCreateNode = (treeNodeData: TreeNodeInterface) => {
         setCurrentTree(prevTree => {

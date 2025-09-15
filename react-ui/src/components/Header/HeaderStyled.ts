@@ -26,3 +26,9 @@ export const NoPhotoStyled = styled.div`
     font-size: 14px;
     color: #1A1E51;
 `;
+
+export const ImageStyled = styled.img`
+    display: block;
+    maxWidth: 100%;
+    height: auto;
+`;

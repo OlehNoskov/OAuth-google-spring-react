@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Input, Modal, Select, Spacer} from "react-magma-dom";
 import {NodeTypeInterface} from "../../../interfaces/NodeTypeInterface.ts";
 import {ModalFooterButtons} from "../../General/ModalFooterButtons.tsx";
@@ -8,7 +8,7 @@ import {BaseModalProps} from "../../General/BaseModal.tsx";
 import {useGetAllTreeNodeTypesQuery} from "../../../store/api/apiSlice.ts";
 
 interface CreateTreeNodeModalProps extends BaseModalProps {
-    currentTreeNode?: TreeNodeInterface | null;
+    currentTreeNode?: TreeNodeInterface;
     onCreateNode?: (treeNode: TreeNodeInterface) => void;
     onUpdateNode?: (treeNode: TreeNodeInterface) => void;
 }
