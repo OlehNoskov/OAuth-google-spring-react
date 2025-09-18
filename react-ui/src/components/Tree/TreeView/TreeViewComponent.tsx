@@ -45,7 +45,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
     const navigate = useNavigate();
 
     const [currentTree, setCurrentTree] = useState<TreeInterface>(initialStateTreeInterface);
-    const [currentNode, setCurrentNode] = useState<TreeNodeInterface | null>(null);
+    const [currentNode, setCurrentNode] = useState<TreeNodeInterface | undefined>(undefined);
 
     const [isOpenEditNodeModal, setIsOpenEditNodeModal] = useState<boolean>(false);
     const [isOpenDeleteNodeModal, setIsOpenDeleteNodeModal] = useState<boolean>(false);
@@ -136,7 +136,7 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                 nodes: removeNodeById(prevTree.nodes, currentNode.id)
             };
         });
-        setCurrentNode(null);
+        setCurrentNode(undefined);
         setIsOpenDeleteNodeModal(false);
     };
 

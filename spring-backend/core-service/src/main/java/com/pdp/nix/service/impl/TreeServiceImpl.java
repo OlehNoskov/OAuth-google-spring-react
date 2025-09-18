@@ -53,9 +53,6 @@ public class TreeServiceImpl implements TreeService {
     @Override
     public TreeDto getTreeNodeById(long treeId) {
         Tree tree = treeRepository.findById(treeId).orElseThrow(() -> new RuntimeException("Tree wasn't found by id " + treeId));
-
-        log.info("Get Tree by id: '{}'", treeId);
-
         return treeMapper.toTreeDto(tree);
     }
 

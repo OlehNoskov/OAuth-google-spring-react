@@ -35,15 +35,9 @@ export const Login = () => {
             <StyledLoginFooter>
                 <Paragraph
                     visualStyle={TypographyVisualStyle.bodySmall}
-                    style={{textAlign: 'center', marginTop: '25px', color: '#fff', fontWeight: '600'}}
-                >
-                    This app is built with React, TypeScript, and React Magma Library.
-                </Paragraph>
-                <Paragraph
-                    visualStyle={TypographyVisualStyle.bodySmall}
                     style={{
                         textAlign: 'right',
-                        marginTop: '20px',
+                        marginTop: '50px',
                         marginRight: '50px',
                         color: '#fff',
                         fontWeight: '600'

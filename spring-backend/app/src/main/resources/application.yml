@@ -1,7 +1,7 @@
 spring:
   application:
     name: "OAuth-2.0-Google"
-    jwtSecret: Aslkdjalwidjaslmdnmcnvxleflisdjflskejflidsjflskjefasdsadsadasdqweqewqe123asdsadzxczcadw
+    jwtSecret: ${JWT_SECRET}
   security:
     oauth2:
       client:
@@ -31,4 +31,4 @@ server:
   port: 8080
 
 ui-config:
-  url: http://localhost:3000/
+  url: ${FRONTEND_URL}
