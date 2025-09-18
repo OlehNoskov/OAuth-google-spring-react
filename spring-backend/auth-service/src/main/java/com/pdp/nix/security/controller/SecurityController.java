@@ -3,7 +3,7 @@ package com.pdp.nix.security.controller;
 import com.google.common.net.HttpHeaders;
 import com.pdp.nix.security.config.JWTUtils;
 import com.pdp.nix.security.dto.UserDto;
-import com.pdp.nix.security.dto.IdTokenRequestDto;
+import com.pdp.nix.security.dto.TokenRequestDto;
 import com.pdp.nix.security.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -20,8 +20,8 @@ public class SecurityController {
     private final JWTUtils jwtUtils;
 
     @PostMapping("/auth")
-    public ResponseEntity loginWithGoogleOauth2(@RequestBody IdTokenRequestDto idTokenRequestDto, HttpServletResponse response) {
-        UserDto userDto = userService.loginOAuthGoogle(idTokenRequestDto);
+    public ResponseEntity loginWithGoogleOauth2(@RequestBody TokenRequestDto tokenRequestDto, HttpServletResponse response) {
+        UserDto userDto = userService.loginOAuthGoogle(tokenRequestDto);
 
         final ResponseCookie cookie = ResponseCookie.from("AUTH-TOKEN", jwtUtils.createToken(userDto))
                 .httpOnly(true)

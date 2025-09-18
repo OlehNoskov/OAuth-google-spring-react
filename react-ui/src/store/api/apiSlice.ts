@@ -17,7 +17,7 @@ export const apiSlice = createApi({
             query: (credentialResponse: CredentialResponse) => ({
                 url: BACKEND_API.LOG_IN,
                 method: 'POST',
-                body: {idToken: credentialResponse.credential},
+                body: {token: credentialResponse.credential},
                 keepUnusedDataFor: 60 * 60, // Cache for 1 hour, default value
             }),
             async onQueryStarted(_arg, {dispatch, queryFulfilled}) {

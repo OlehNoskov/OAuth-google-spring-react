@@ -4,7 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.pdp.nix.security.dto.IdTokenRequestDto;
+import com.pdp.nix.security.dto.TokenRequestDto;
 import com.pdp.nix.security.dto.UserDto;
 import com.pdp.nix.security.mapper.UserMapper;
 import com.pdp.nix.security.persistence.entity.User;
@@ -33,8 +33,8 @@ public class UserService {
 
     }
 
-    public UserDto loginOAuthGoogle(IdTokenRequestDto requestBody) {
-        User user = verifyIdToken(requestBody.getIdToken());
+    public UserDto loginOAuthGoogle(TokenRequestDto requestBody) {
+        User user = verifyIdToken(requestBody.getToken());
         if (user == null) {
             throw new IllegalArgumentException();
         }

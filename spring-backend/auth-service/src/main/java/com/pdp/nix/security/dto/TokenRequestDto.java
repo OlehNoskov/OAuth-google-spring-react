@@ -7,7 +7,6 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class IdTokenRequestDto {
-
-    private String idToken;
+public class TokenRequestDto {
+    private String token;
 }
