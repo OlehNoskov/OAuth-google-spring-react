@@ -1,4 +1,5 @@
 # OAuth-google-spring-react
+
 Backend:
 - Spring-boot
 - Oauth-2.0-Google
@@ -23,11 +24,19 @@ To launch this react application you should use version of node like 16.20.2 app
 - npm run dev
 
 Pass env variable in env variables for these variables:
-CLIENT_ID, CLIENT_SECRET, JWT_SECRET, DATABASE_PASSWORD, PROJECT_ID, and FRONTEND_URL.
+- CLIENT_ID
+- CLIENT_SECRET
+- JWT_SECRET
+- DATABASE_PASSWORD
+- PROJECT_ID
+- FRONTEND_URL.
 
 To work with this application you should: 
 - create a project in Google Cloud Platform and enable OAuth 2.0 credentials.
 - install the gcloud CLI https://cloud.google.com/sdk/docs/install
 - set up ADC (Application Default Credential) for a local development environment https://cloud.google.com/docs/authentication/set-up-adc-local-dev-environment
-- get all need info from Google Cloud Platform and pass it in env variables (CLIENT_ID, CLIENT_SECRET, PROJECT_ID).
+- get all required information from Google Cloud Platform and pass it in env variables:
+--- CLIENT_ID
+--- CLIENT_SECRET
+--- PROJECT_ID.
 
