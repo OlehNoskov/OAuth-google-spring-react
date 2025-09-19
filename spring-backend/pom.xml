@@ -28,6 +28,8 @@
         <spring-data-jpa.version>3.4.3</spring-data-jpa.version>
         <mysql.version>8.0.33</mysql.version>
         <mapstruct.version>1.6.3</mapstruct.version>
+        <google-auth-library-oauth2-http.version>1.39.0</google-auth-library-oauth2-http.version>
+        <google-cloud-resourcemanager.version>1.76.0</google-cloud-resourcemanager.version>
     </properties>
 
     <modules>

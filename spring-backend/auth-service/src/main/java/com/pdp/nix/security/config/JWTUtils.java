@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class JWTUtils {
 
-    private static final long TOKEN_VALIDITY = 86400000L;
+    private static final long TOKEN_VALIDITY = 24 * 60 * 60 * 1000; // 24 hours
     private final Key key;
 
     public JWTUtils(@Value("${spring.application.jwtSecret}") String secret) {
@@ -31,10 +31,12 @@ public class JWTUtils {
         long now = (new Date()).getTime();
 
         return Jwts.builder()
-                .subject(account.getFirstName())
+                .subject(account.getEmail())
                 .issuedAt(new Date())
                 .expiration(new Date(now + TOKEN_VALIDITY))
                 .signWith(key, SignatureAlgorithm.HS512)
+                // Added it to handle permission for different endpoints @PreAuthorize("hasRole('OWNER')")
+                .claim("role", "ROLE_" + account.getRole().name())
                 .compact();
     }
 

@@ -3,6 +3,7 @@ package com.pdp.nix.controller;
 import com.pdp.nix.dto.TreeDto;
 import com.pdp.nix.service.TreeService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ public class TreeController {
 
     private TreeService treeService;
 
+    @PreAuthorize("hasAnyRole('OWNER', 'EDITOR')")
     @PostMapping
     @RequestMapping("/create")
     public TreeDto create(@RequestBody TreeDto treeDto) {
@@ -34,12 +36,14 @@ public class TreeController {
         return treeService.getTreeNodeById(treeId);
     }
 
+    @PreAuthorize("hasAnyRole('OWNER', 'EDITOR')")
     @PutMapping
     @RequestMapping("/update")
     public TreeDto update(@RequestBody TreeDto treeDto) {
         return treeService.update(treeDto);
     }
 
+    @PreAuthorize("hasAnyRole('OWNER', 'EDITOR')")
     @DeleteMapping
     @RequestMapping("/delete/{treeId}")
     public void delete(@PathVariable("treeId") Long treeId) {
@@ -47,7 +51,7 @@ public class TreeController {
     }
 
     @GetMapping
-    @RequestMapping("/getAll/{username}")
+    @RequestMapping("/get-all/{username}")
     public PageableResponse<TreeDto> getAllByUser(@PathVariable("username") String username,
                                            @RequestParam(name = "page", defaultValue = "0") int page,
                                            @RequestParam(name = "size", defaultValue = "10") int size) {
@@ -61,4 +65,11 @@ public class TreeController {
                                              @RequestParam(name = "size", defaultValue = "10") int size) {
         return treeService.getTreeNodeByTitle(title, PageRequest.of(page, size));
     }
+
+  @PreAuthorize("hasRole('OWNER')")
+  @RequestMapping("/get-all")
+  public PageableResponse<TreeDto> getAll(@RequestParam(name = "page", defaultValue = "0") int page,
+                                          @RequestParam(name = "size", defaultValue = "10") int size) {
+    return treeService.getAllTrees(PageRequest.of(page, size));
+  }
 }

@@ -7,6 +7,7 @@ export const initialState: UserInterface = {
     email: '',
     picture: '',
     isLoggedIn: false,
+    role: null,
 }
 
 export const userProfileSlice = createSlice({
@@ -19,6 +20,7 @@ export const userProfileSlice = createSlice({
             state.email = action.payload.email;
             state.picture = action.payload.picture;
             state.isLoggedIn = true;
+            state.role = action.payload.role;
         },
         logOutUser: (state) => {
             state.firstName = initialState.firstName;
@@ -26,6 +28,7 @@ export const userProfileSlice = createSlice({
             state.email = initialState.email;
             state.picture = initialState.picture;
             state.isLoggedIn = initialState.isLoggedIn;
+            state.role = initialState.role;
         },
     },
 })

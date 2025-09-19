@@ -7,7 +7,7 @@ export const BACKEND_API = {
     GET_ALL_USERS: `${BASE_API_URL}/users/all`,
 
     // TREE
-    GET_ALL_TREE_BY_USER_NAME: `${BASE_API_URL}/tree/getAll`,
+    GET_ALL_TREE: `${BASE_API_URL}/tree/get-all`,
     GET_TREE_BY_ID: `${BASE_API_URL}/tree/get`,
     GET_TREE_BY_TITLE: `${BASE_API_URL}/tree/get/title`,
     CREATE_TREE: `${BASE_API_URL}/tree/create`,

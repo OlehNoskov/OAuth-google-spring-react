@@ -62,7 +62,7 @@ export const deleteTreeById = async (id: number | undefined): Promise<void> => {
 
 export const getAllTreeByUsername = async (userName: string, page: number, size: number): Promise<PageableResponseInterface<TreeInterface>> => {
     try {
-        const response = await axios.get(`${BACKEND_API.GET_ALL_TREE_BY_USER_NAME}/${userName}`, {
+        const response = await axios.get(`${BACKEND_API.GET_ALL_TREE}/${userName}`, {
             params: { page, size },
             withCredentials: true,
         });
@@ -82,6 +82,19 @@ export const getTreeByTitle = async (title: string, page: number, size: number):
         return response.data;
     } catch (error) {
         console.error(`Error within getting paged trees by title: ${title}`, error);
+        throw error;
+    }
+};
+
+export const getAllTreesByAdmin = async (page: number, size: number): Promise<PageableResponseInterface<TreeInterface>> => {
+    try {
+        const response = await axios.get(`${BACKEND_API.GET_ALL_TREE}`, {
+            params: { page, size },
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error within getting paged all trees.`, error);
         throw error;
     }
 };

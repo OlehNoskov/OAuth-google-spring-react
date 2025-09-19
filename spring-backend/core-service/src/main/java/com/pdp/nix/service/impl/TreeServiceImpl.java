@@ -20,6 +20,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -84,21 +86,20 @@ public class TreeServiceImpl implements TreeService {
 
     @Override
     public PageableResponse<TreeDto> getAllTreeByUser(String username, Pageable pageable) {
-        Page<Tree> trees = treeRepository.findByCreatedBy(username, pageable);
-
-        return PageableResponse.<TreeDto>builder()
-                .elements(trees.map(treeMapper::toTreeDto).getContent())
-                .page(trees.getNumber())
-                .size(trees.getSize())
-                .totalElements(trees.getTotalElements())
-                .totalPages(trees.getTotalPages())
-                .build();
+        return getPageableResponse(treeRepository.findByCreatedBy(username, pageable));
     }
 
     @Override
     public PageableResponse<TreeDto> getTreeNodeByTitle(String title, Pageable pageable) {
-        Page<Tree> trees = treeRepository.findByTitleLike(title, pageable);
+        return getPageableResponse(treeRepository.findByTitleLike(title, pageable));
+    }
 
+  @Override
+  public PageableResponse<TreeDto> getAllTrees(Pageable pageable) {
+    return getPageableResponse(treeRepository.findAll(pageable));
+  }
+
+  private PageableResponse<TreeDto> getPageableResponse(Page<Tree> trees) {
         return PageableResponse.<TreeDto>builder()
                 .elements(trees.map(treeMapper::toTreeDto).getContent())
                 .page(trees.getNumber())
@@ -108,7 +109,7 @@ public class TreeServiceImpl implements TreeService {
                 .build();
     }
 
-    private Set<Label> resolveLabels(Set<LabelDto> labelDtos) {
+  private Set<Label> resolveLabels(Set<LabelDto> labelDtos) {
         return labelDtos.stream()
                 .map(dto -> labelRepository.findLabelByLabelKey(dto.getLabelKey())
                         .orElseGet(() -> Label.builder()

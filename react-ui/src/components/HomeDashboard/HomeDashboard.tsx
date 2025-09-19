@@ -5,10 +5,11 @@ import {TreeCardDashboard} from "../Tree/TreeCardDashboard/TreeCardDashboard.tsx
 import {SearchEmptyMessageStyled, TreeCardsWrapper} from "../Tree/TreeCardDashboard/TreeCardDashboardStyled.ts";
 import {EmptyDashboard} from "./EmptyDashboard/EmptyDashboard.tsx";
 import {TreeModal} from "../Tree/TreeModal/TreeModal.tsx";
-import {getAllTreeByUsername, getTreeByTitle} from "../../services/treeService.ts";
+import {getAllTreeByUsername, getAllTreesByAdmin, getTreeByTitle} from "../../services/treeService.ts";
 import {useSelector} from 'react-redux'
 import {RootState} from "../../store/store.ts";
 import {TreeInterface} from "../../interfaces/TreeInterface.ts";
+import {hasEditPermissions, isOwner} from "../../utils/getTreeSelectData.ts";
 
 export const HomeDashboard = () => {
     const [allTrees, setAllTrees] = React.useState<TreeInterface[]>([]);
@@ -19,14 +20,20 @@ export const HomeDashboard = () => {
     const [searchMode, setSearchMode] = useState<boolean>(false);
     const pageSize = 10;
     const user = useSelector((state: RootState) => state.userProfile);
-    const currentUserName = user?.email;
+    const hasPermissions = hasEditPermissions(user.role);
+
+    function handleTreeResponse(response: any) {
+        setAllTrees(response.elements);
+        setTotalPages(response.totalPages);
+        setSearchMode(false);
+    }
 
     const getAllTrees = (pageNum = 1) => {
-        getAllTreeByUsername(currentUserName, pageNum - 1, pageSize).then(response => {
-            setAllTrees(response.elements);
-            setTotalPages(response.totalPages);
-            setSearchMode(false);
-        });
+        const promise = isOwner(user.role)
+            ? getAllTreesByAdmin(pageNum - 1, pageSize)
+            : getAllTreeByUsername(user.email, pageNum - 1, pageSize);
+
+        promise.then(handleTreeResponse);
     };
 
     React.useEffect(() => {
@@ -70,12 +77,14 @@ export const HomeDashboard = () => {
                             onClear={getAllTrees}
                     />
                 </SearchWrapper>
-                <Button
-                    size={ButtonSize.large}
-                    style={{marginRight: '195px'}}
-                    onClick={() => setIsOpenCreateTreeModal(true)}>
-                    Create tree
-                </Button>
+                {hasPermissions &&
+                    <Button
+                        size={ButtonSize.large}
+                        style={{marginRight: '195px'}}
+                        onClick={() => setIsOpenCreateTreeModal(true)}>
+                        Create tree
+                    </Button>
+                }
             </HomeDashboardStyled>
             {
                 allTrees.length === 0 ?
