@@ -36,7 +36,7 @@ To work with this application you should:
 - install the gcloud CLI https://cloud.google.com/sdk/docs/install
 - set up ADC (Application Default Credential) for a local development environment https://cloud.google.com/docs/authentication/set-up-adc-local-dev-environment
 - get all required information from Google Cloud Platform and pass it in env variables:
---- CLIENT_ID
---- CLIENT_SECRET
---- PROJECT_ID.
+  - CLIENT_ID
+  - CLIENT_SECRET
+  - PROJECT_ID.
 
