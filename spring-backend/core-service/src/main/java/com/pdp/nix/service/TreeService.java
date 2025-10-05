@@ -2,6 +2,7 @@ package com.pdp.nix.service;
 
 import com.pdp.nix.dto.PageableResponse;
 import com.pdp.nix.dto.TreeDto;
+import com.pdp.nix.persistence.entity.DocumentTree;
 import org.springframework.data.domain.Pageable;
 
 public interface TreeService {
@@ -14,9 +15,9 @@ public interface TreeService {
 
     void delete(long treeId);
 
-    PageableResponse<TreeDto> getAllTreeByUser(String username, Pageable pageable);
+    PageableResponse<DocumentTree> getAllTreeByUser(String username, Pageable pageable);
 
     PageableResponse<TreeDto> getTreeNodeByTitle(String title, Pageable pageable);
 
-    PageableResponse<TreeDto> getAllTrees(Pageable pageable);
+    PageableResponse<DocumentTree> getAllTrees(Pageable pageable);
 }

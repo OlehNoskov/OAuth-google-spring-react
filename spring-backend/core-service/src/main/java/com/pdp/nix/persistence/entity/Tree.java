@@ -7,6 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -17,7 +20,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
@@ -53,12 +55,22 @@ public class Tree {
     @Column(length = 1000)
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+          name = "tree_labels",
+          joinColumns = @JoinColumn(name = "tree_id"),
+          inverseJoinColumns = @JoinColumn(name = "labels_id")
+    )
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Label> labels;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+          name = "tree_owners",
+          joinColumns = @JoinColumn(name = "tree_id"),
+          inverseJoinColumns = @JoinColumn(name = "owners_id")
+    )
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @Column(nullable = false)

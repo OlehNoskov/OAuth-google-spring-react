@@ -2,7 +2,7 @@ package com.pdp.nix.service.impl;
 
 import com.pdp.nix.dto.LabelDto;
 import com.pdp.nix.mapper.LabelMapper;
-import com.pdp.nix.persistence.repository.LabelRepository;
+import com.pdp.nix.persistence.repository.jpa.LabelRepository;
 import com.pdp.nix.service.LabelService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

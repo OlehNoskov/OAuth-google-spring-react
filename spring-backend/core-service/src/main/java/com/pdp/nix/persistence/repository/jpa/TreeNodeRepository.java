@@ -1,4 +1,4 @@
-package com.pdp.nix.persistence.repository;
+package com.pdp.nix.persistence.repository.jpa;
 
 import com.pdp.nix.persistence.entity.TreeNode;
 import org.springframework.data.jpa.repository.JpaRepository;

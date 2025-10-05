@@ -60,7 +60,7 @@ export const deleteTreeById = async (id: number | undefined): Promise<void> => {
     }
 };
 
-export const getAllTreeByUsername = async (userName: string, page: number, size: number): Promise<PageableResponseInterface<TreeInterface>> => {
+export const getAllTreeByUsername = async (userName: string, page: number, size: number): Promise<PageableResponseInterface<DocumentTreeInterface>> => {
     try {
         const response = await axios.get(`${BACKEND_API.GET_ALL_TREE}/${userName}`, {
             params: { page, size },
@@ -86,7 +86,7 @@ export const getTreeByTitle = async (title: string, page: number, size: number):
     }
 };
 
-export const getAllTreesByAdmin = async (page: number, size: number): Promise<PageableResponseInterface<TreeInterface>> => {
+export const getAllTreesByAdmin = async (page: number, size: number): Promise<PageableResponseInterface<DocumentTreeInterface>> => {
     try {
         const response = await axios.get(`${BACKEND_API.GET_ALL_TREE}`, {
             params: { page, size },

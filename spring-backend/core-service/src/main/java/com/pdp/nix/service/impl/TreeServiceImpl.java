@@ -6,11 +6,13 @@ import com.pdp.nix.dto.TreeDto;
 import com.pdp.nix.dto.TreeNodeDto;
 import com.pdp.nix.mapper.TreeMapper;
 import com.pdp.nix.mapper.TreeNodeMapper;
+import com.pdp.nix.persistence.entity.DocumentTree;
 import com.pdp.nix.persistence.entity.Label;
 import com.pdp.nix.persistence.entity.Tree;
 import com.pdp.nix.persistence.entity.TreeNode;
-import com.pdp.nix.persistence.repository.LabelRepository;
-import com.pdp.nix.persistence.repository.TreeRepository;
+import com.pdp.nix.persistence.repository.elasticsearch.TreeElasticSearchRepository;
+import com.pdp.nix.persistence.repository.jpa.LabelRepository;
+import com.pdp.nix.persistence.repository.jpa.TreeRepository;
 import com.pdp.nix.service.TreeService;
 import com.pdp.nix.security.dto.UserDto;
 import com.pdp.nix.security.persistence.entity.User;
@@ -20,8 +22,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,19 +37,22 @@ public class TreeServiceImpl implements TreeService {
     private TreeRepository treeRepository;
     private LabelRepository labelRepository;
     private UserRepository userRepository;
+    private TreeElasticSearchRepository treeElasticSearchRepository;
 
     @Override
     public TreeDto create(TreeDto treeDto) {
         Set<Label> labels = resolveLabels(treeDto.getLabels());
         Set<User> owners = resolveUsers(treeDto.getOwners());
-        Tree treeNode = treeMapper.toTreeEntity(treeDto);
-        treeNode.setLabels(labels);
-        treeNode.setOwners(owners);
-        treeRepository.save(treeNode);
+        Tree tree = treeMapper.toTreeEntity(treeDto);
+        tree.setLabels(labels);
+        tree.setOwners(owners);
 
-        log.info("Tree with name: '{}' was created.", treeNode.getTitle());
+        treeRepository.save(tree);
+        treeElasticSearchRepository.save(treeMapper.toDocumentTree(tree));
 
-        return treeMapper.toTreeDto(treeNode);
+        log.info("Tree with name: '{}' was created.", tree.getTitle());
+
+        return treeMapper.toTreeDto(tree);
     }
 
     @Override
@@ -71,6 +74,7 @@ public class TreeServiceImpl implements TreeService {
         tree.setNodes(mapTreeNodeDtosToEntities(treeDto.getNodes()));
 
         Tree updatedTree = treeRepository.save(tree);
+        treeElasticSearchRepository.save(treeMapper.toDocumentTree(updatedTree));
 
         log.info("Tree with id: '{}' was updated.", treeDto.getId());
 
@@ -80,26 +84,27 @@ public class TreeServiceImpl implements TreeService {
     @Override
     public void delete(long treeId) {
         treeRepository.deleteById(treeId);
+        treeElasticSearchRepository.deleteById(treeId);
 
         log.info("Tree with id: '{}' was deleted.", treeId);
     }
 
     @Override
-    public PageableResponse<TreeDto> getAllTreeByUser(String username, Pageable pageable) {
-        return getPageableResponse(treeRepository.findByCreatedBy(username, pageable));
+    public PageableResponse<DocumentTree> getAllTreeByUser(String username, Pageable pageable) {
+      return getPageableResponse(treeElasticSearchRepository.findByCreatedBy(username, pageable));
     }
 
     @Override
     public PageableResponse<TreeDto> getTreeNodeByTitle(String title, Pageable pageable) {
-        return getPageableResponse(treeRepository.findByTitleLike(title, pageable));
+        return getPageableResponse2(treeRepository.findByTitleLike(title, pageable));
     }
 
   @Override
-  public PageableResponse<TreeDto> getAllTrees(Pageable pageable) {
-    return getPageableResponse(treeRepository.findAll(pageable));
+  public PageableResponse<DocumentTree> getAllTrees(Pageable pageable) {
+    return getPageableResponse(treeElasticSearchRepository.findAll(pageable));
   }
 
-  private PageableResponse<TreeDto> getPageableResponse(Page<Tree> trees) {
+  private PageableResponse<TreeDto> getPageableResponse2(Page<Tree> trees) {
         return PageableResponse.<TreeDto>builder()
                 .elements(trees.map(treeMapper::toTreeDto).getContent())
                 .page(trees.getNumber())
@@ -108,6 +113,16 @@ public class TreeServiceImpl implements TreeService {
                 .totalPages(trees.getTotalPages())
                 .build();
     }
+
+  private PageableResponse<DocumentTree> getPageableResponse(Page<DocumentTree> trees) {
+    return PageableResponse.<DocumentTree>builder()
+            .elements(trees.getContent())
+            .page(trees.getNumber())
+            .size(trees.getSize())
+            .totalElements(trees.getTotalElements())
+            .totalPages(trees.getTotalPages())
+            .build();
+  }
 
   private Set<Label> resolveLabels(Set<LabelDto> labelDtos) {
         return labelDtos.stream()

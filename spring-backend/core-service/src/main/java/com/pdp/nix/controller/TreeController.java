@@ -1,6 +1,7 @@
 package com.pdp.nix.controller;
 
 import com.pdp.nix.dto.TreeDto;
+import com.pdp.nix.persistence.entity.DocumentTree;
 import com.pdp.nix.service.TreeService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,9 +53,9 @@ public class TreeController {
 
     @GetMapping
     @RequestMapping("/get-all/{username}")
-    public PageableResponse<TreeDto> getAllByUser(@PathVariable("username") String username,
-                                           @RequestParam(name = "page", defaultValue = "0") int page,
-                                           @RequestParam(name = "size", defaultValue = "10") int size) {
+    public PageableResponse<DocumentTree> getAllByUser(@PathVariable("username") String username,
+                                                       @RequestParam(name = "page", defaultValue = "0") int page,
+                                                       @RequestParam(name = "size", defaultValue = "10") int size) {
         return treeService.getAllTreeByUser(username, PageRequest.of(page, size));
     }
 
@@ -68,7 +69,7 @@ public class TreeController {
 
   @PreAuthorize("hasRole('OWNER')")
   @RequestMapping("/get-all")
-  public PageableResponse<TreeDto> getAll(@RequestParam(name = "page", defaultValue = "0") int page,
+  public PageableResponse<DocumentTree> getAll(@RequestParam(name = "page", defaultValue = "0") int page,
                                           @RequestParam(name = "size", defaultValue = "10") int size) {
     return treeService.getAllTrees(PageRequest.of(page, size));
   }

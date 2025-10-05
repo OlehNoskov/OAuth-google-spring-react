@@ -1,4 +1,4 @@
-package com.pdp.nix.persistence.repository;
+package com.pdp.nix.persistence.repository.jpa;
 
 import com.pdp.nix.persistence.entity.Tree;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,8 +13,6 @@ public interface TreeRepository extends JpaRepository<Tree, Long> {
 
     @Query("SELECT DISTINCT t FROM Tree t JOIN t.labels l WHERE l.labelKey IN :labelKeys")
     List<Tree> findByLabelKeys(@Param("labelKeys") List<String> labelKeys);
-
-    Page<Tree> findByCreatedBy(String username, Pageable pageable);
 
     @Query("SELECT t FROM Tree t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :titlePart, '%'))")
     Page<Tree> findByTitleLike(@Param("titlePart") String titlePart, Pageable pageable);

@@ -8,11 +8,11 @@ import {TreeModal} from "../Tree/TreeModal/TreeModal.tsx";
 import {getAllTreeByUsername, getAllTreesByAdmin, getTreeByTitle} from "../../services/treeService.ts";
 import {useSelector} from 'react-redux'
 import {RootState} from "../../store/store.ts";
-import {TreeInterface} from "../../interfaces/TreeInterface.ts";
+import {DocumentTreeInterface} from "../../interfaces/DocumentTreeInterface.ts";
 import {hasEditPermissions, isOwner} from "../../utils/getTreeSelectData.ts";
 
 export const HomeDashboard = () => {
-    const [allTrees, setAllTrees] = React.useState<TreeInterface[]>([]);
+    const [allTrees, setAllTrees] = React.useState<DocumentTreeInterface[]>([]);
     const [isOpenCreateTreeModal, setIsOpenCreateTreeModal] = useState<boolean>(false);
     const [searchTitle, setSearchTitle] = useState<string>('');
     const [page, setPage] = useState<number>(1);

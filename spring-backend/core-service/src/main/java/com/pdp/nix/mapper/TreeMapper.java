@@ -1,8 +1,10 @@
 package com.pdp.nix.mapper;
 
 import com.pdp.nix.dto.TreeDto;
+import com.pdp.nix.persistence.entity.DocumentTree;
 import com.pdp.nix.persistence.entity.Tree;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -14,4 +16,7 @@ public interface TreeMapper {
     TreeDto toTreeDto(Tree tree);
 
     List<TreeDto> toTreeDtoList(List<Tree> trees);
+
+    @Mapping(target = "labels", expression = "java(tree.getLabels() != null ? tree.getLabels().stream().map(label -> label.getValue()).collect(java.util.stream.Collectors.toSet()) : null)")
+    DocumentTree toDocumentTree(Tree tree);
 }

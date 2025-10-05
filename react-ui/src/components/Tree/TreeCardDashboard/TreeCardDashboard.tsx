@@ -1,10 +1,10 @@
 import React from 'react';
 import {Card, CardAlignment, CardBody, Hyperlink, Paragraph, TypographyColor} from "react-magma-dom";
-import {TreeInterface} from "../../../interfaces/TreeInterface.ts";
+import {DocumentTreeInterface} from "../../../interfaces/DocumentTreeInterface.ts";
 import styled from "@emotion/styled";
 
 interface TreeCardProps {
-    tree: TreeInterface
+    tree: DocumentTreeInterface;
 }
 
 const LabelWrapper = styled.div`
@@ -25,22 +25,22 @@ const LabelsWrapper = styled.div`
 `;
 
 export const TreeCardDashboard = (props: TreeCardProps) => {
-    const labels = props.tree.labels;
+    const tree = props.tree;
 
     return (
         <Card align={CardAlignment.left} hasDropShadow style={{minHeight: '180px'}} width={250}>
             <CardBody style={{display: 'flex', flexDirection: 'column'}}>
                 <Hyperlink style={{color: 'black', fontWeight: '600', textDecoration: 'none'}}
                            to={`/tree/${props.tree.id}`}>
-                    {props.tree.title}
+                    {tree.title}
                 </Hyperlink>
                 <Paragraph noBottomMargin noTopMargin color={TypographyColor.subdued}>
-                    {props.tree.createdBy}
+                    {tree.createdBy}
                 </Paragraph>
                 <LabelsWrapper>
                     {
-                        labels.map(label => (
-                            <LabelWrapper key={label.value}>{label.value}</LabelWrapper>
+                        tree.labels.map(label => (
+                            <LabelWrapper key={label}>{label}</LabelWrapper>
                         ))
                     }
                 </LabelsWrapper>
