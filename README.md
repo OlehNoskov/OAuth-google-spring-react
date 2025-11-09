@@ -1,6 +1,7 @@
 # OAuth-google-spring-react
 
-Backend:
+## Backend:
+
 - Spring-boot
 - Oauth-2.0-Google
 - Spring-security
@@ -9,7 +10,8 @@ Backend:
 - Java 21
 - Google Cloud Platform
 
-Front-end
+## Front-end
+
 - React
 - Vite
 - React Magma as UI library
@@ -17,13 +19,15 @@ Front-end
 - React Router Dom
 - Axios
 
-To launch this react application you should use version of node like 16.20.2 app execute this command:
+### To launch this react application you should use version of node like 16.20.2 app execute this command:
+
 - node nvm use 16.20.2
 - npm install --force (or --legacy-peer-deps)
 - npm run build
 - npm run dev
 
-Pass env variable in env variables for these variables:
+### Pass env variable in env variables for these variables:
+
 - CLIENT_ID
 - CLIENT_SECRET
 - JWT_SECRET
@@ -34,32 +38,157 @@ Pass env variable in env variables for these variables:
 - ELASTICSEARCH_USERNAME
 - ELASTICSEARCH_PASSWORD
 
-To work with this application you should: 
+To work with this application you should:
+
 - create a project in Google Cloud Platform and enable OAuth 2.0 credentials.
 - install the gcloud CLI https://cloud.google.com/sdk/docs/install
-- set up ADC (Application Default Credential) for a local development environment https://cloud.google.com/docs/authentication/set-up-adc-local-dev-environment
+- set up ADC (Application Default Credential) for a local development
+  environment https://cloud.google.com/docs/authentication/set-up-adc-local-dev-environment
 - get all required information from Google Cloud Platform and pass it in env variables:
-  - CLIENT_ID
-  - CLIENT_SECRET
-  - PROJECT_ID.
+    - CLIENT_ID
+    - CLIENT_SECRET
+    - PROJECT_ID.
+
+### MYSQL:
 
 To communicate with MySQL and Elasticsearch databases you can use these commands:
 
-MYSQL:
+- data.sql automatically populates database with test data
 - docker exec -it mysql-database mysql -u root -p
 - SHOW DATABASES;
 - USE your_database_name;
 - SHOW TABLES;
+- SELECT * FROM your_table_name;
 - type exit to exit from MySQL CLI;
 
-Elasticsearch:
-- Go to http://localhost:9200/ or
-- docker exec -it elasticsearch-database bash or
-- curl -u elastic:password/password http://localhost:9200/_cat/indices?v or
-- curl -u elastic:password/password -X GET "http://localhost:9200/tree/_search?pretty" -H 'Content-Type: application/json' -d'
-  {
-  "query": {
-  "match_all": {}
-  }
+### Elasticsearch:
+
+#### Create and populate Elasticsearch database with test data:
+
+- Create a new index:
+
+```sh 
+curl -X PUT "localhost:9200/tree" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "mappings": {
+      "properties": {
+        "title": {
+          "type": "search_as_you_type"
+        }
+      }
+    }
   }'
-- type exit to exit from bash;
+```
+
+- To populate Elasticsearch database launch this command:
+
+```sh 
+/bin/bash create_trees.sh
+```
+
+- Check that data is populated:
+
+```sh
+curl -X GET "localhost:9200/tree/_search"
+```
+
+or go to http://localhost:9200/tree/_search?pretty
+
+- Refresh index:
+
+```sh
+curl -X POST "localhost:9200/tree/_refresh"
+````
+
+#### Suggestion feature request:
+
+```sh
+curl -X POST "localhost:9200/tree/_search?pretty" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "_source": [
+    "title"
+  ],
+  "query": {
+    "multi_match": {
+      "query": "Py",
+      "type": "bool_prefix",
+      "fields": [
+        "title",
+        "title._2gram",
+        "title._3gram"
+      ]
+    }
+  }
+}
+'
+```
+
+- Search document by id:
+  http://localhost:9200/tree/_doc/id
+- Delete item in the document:
+
+```sh
+curl -X DELETE "http://127.0.0.1:9200/tree/_doc/id"
+```
+
+- Delete index completely:
+
+```sh
+curl -X DELETE "http://localhost:9200/tree"
+```
+
+
+#### Kibana
+
+- Go to http://localhost:5601/
+- Go to Elasticsearch -> Console
+- Create a new index with search_as_you_type field for title for autocomplete feature:
+
+```sh 
+PUT /tree
+{
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "search_as_you_type"
+      }
+    }
+  }
+}
+```
+
+- Verify that the index is created:
+
+```sh
+GET /tree/_mapping
+```
+
+- To populate Elasticsearch database launch this command:
+
+```sh
+/bin/bash create_trees.sh
+```
+
+- Suggestion feature request:
+  
+```sh
+POST /tree/_search
+{
+  "_source": [
+    "title"
+  ],
+  "query": {
+    "multi_match": {
+      "query": "Py",
+      "type": "bool_prefix",
+      "fields": [
+        "title",
+        "title._2gram", 
+        "title._3gram"
+      ]
+    }
+  }
+}
+```
