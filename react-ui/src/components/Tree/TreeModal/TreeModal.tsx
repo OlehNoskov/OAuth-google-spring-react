@@ -10,6 +10,7 @@ import {getAllLabelsOptions, getAllUsersOptions} from "../../../utils/getTreeSel
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/store.ts";
 import {useGetAllLabelsQuery, useGetAllUsersQuery} from "../../../store/api/apiSlice.ts";
+import { UserInterface } from '../../../interfaces/UserInterface.ts';
 
 interface CreateTreeModalProps extends BaseModalProps {
     currentTree?: TreeInterface;
@@ -48,6 +49,17 @@ export const TreeModal = (props: CreateTreeModalProps) => {
     const saveNewTree = () => {
         const currentUserData = user.email;
         const owners = selectedUsers.concat(allUsers.filter(user => user.email === currentUserData)[0]).filter(Boolean);
+
+        const creatorTree: UserInterface = {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            picture: user.picture,
+            isLoggedIn: user.isLoggedIn,
+            role: user.role
+        }
+
+        owners.push(creatorTree);
 
         const newTree: TreeInterface = {
             createdBy: currentUserData,

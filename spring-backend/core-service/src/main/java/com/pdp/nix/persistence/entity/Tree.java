@@ -69,7 +69,7 @@ public class Tree {
     @JoinTable(
           name = "tree_owners",
           joinColumns = @JoinColumn(name = "tree_id"),
-          inverseJoinColumns = @JoinColumn(name = "owners_id")
+          inverseJoinColumns = @JoinColumn(name = "owner_id")
     )
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

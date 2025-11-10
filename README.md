@@ -101,23 +101,33 @@ or go to http://localhost:9200/tree/_search?pretty
 curl -X POST "localhost:9200/tree/_refresh"
 ````
 
-#### Suggestion feature request:
+#### Multi search request by title field:
 
 ```sh
 curl -X POST "localhost:9200/tree/_search?pretty" \
   -H "Content-Type: application/json" \
   -d '{
-  "_source": [
-    "title"
-  ],
   "query": {
-    "multi_match": {
-      "query": "Py",
-      "type": "bool_prefix",
-      "fields": [
-        "title",
-        "title._2gram",
-        "title._3gram"
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "owners.keyword": "OWNER_EMAIL_VALUE"
+          }
+        }
+      ],
+      "must": [
+        {
+          "multi_match": {
+            "query": "TITLE_VALUE",
+            "type": "bool_prefix",
+            "fields": [
+              "title",
+              "title._2gram",
+              "title._3gram"
+            ]
+          }
+        }
       ]
     }
   }
@@ -171,22 +181,32 @@ GET /tree/_mapping
 /bin/bash create_trees.sh
 ```
 
-- Suggestion feature request:
+- Multi search request by title field:
   
 ```sh
 POST /tree/_search
 {
-  "_source": [
-    "title"
-  ],
   "query": {
-    "multi_match": {
-      "query": "Py",
-      "type": "bool_prefix",
-      "fields": [
-        "title",
-        "title._2gram", 
-        "title._3gram"
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "owners.keyword": "OWNER_EMAIL_VALUE"
+          }
+        }
+      ],
+      "must": [
+        {
+          "multi_match": {
+            "query": "TITLE_VALUE",
+            "type": "bool_prefix",
+            "fields": [
+              "title",
+              "title._2gram",
+              "title._3gram"
+            ]
+          }
+        }
       ]
     }
   }

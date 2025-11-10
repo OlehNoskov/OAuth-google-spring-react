@@ -47,8 +47,8 @@ public class TreeServiceImpl implements TreeService {
         tree.setLabels(labels);
         tree.setOwners(owners);
 
-        treeRepository.save(tree);
-        treeElasticSearchRepository.save(treeMapper.toDocumentTree(tree));
+        Tree createdTree = treeRepository.save(tree);
+        treeElasticSearchRepository.save(treeMapper.toDocumentTree(createdTree));
 
         log.info("Tree with name: '{}' was created.", tree.getTitle());
 
@@ -94,25 +94,11 @@ public class TreeServiceImpl implements TreeService {
       return getPageableResponse(treeElasticSearchRepository.findByCreatedBy(username, pageable));
     }
 
-    @Override
-    public PageableResponse<TreeDto> getTreeNodeByTitle(String title, Pageable pageable) {
-        return getPageableResponse2(treeRepository.findByTitleLike(title, pageable));
-    }
-
   @Override
   public PageableResponse<DocumentTree> getAllTrees(Pageable pageable) {
     return getPageableResponse(treeElasticSearchRepository.findAll(pageable));
   }
 
-  private PageableResponse<TreeDto> getPageableResponse2(Page<Tree> trees) {
-        return PageableResponse.<TreeDto>builder()
-                .elements(trees.map(treeMapper::toTreeDto).getContent())
-                .page(trees.getNumber())
-                .size(trees.getSize())
-                .totalElements(trees.getTotalElements())
-                .totalPages(trees.getTotalPages())
-                .build();
-    }
 
   private PageableResponse<DocumentTree> getPageableResponse(Page<DocumentTree> trees) {
     return PageableResponse.<DocumentTree>builder()

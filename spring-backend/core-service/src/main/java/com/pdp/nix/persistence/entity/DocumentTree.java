@@ -17,7 +17,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class DocumentTree {
   @Id
   @GeneratedValue(strategy = IDENTITY)
-  private Long id;
+  private String id;
 
   @Column(name = "created_by")
   private String createdBy;
@@ -27,4 +27,6 @@ public class DocumentTree {
   private String description;
 
   private Set<String> labels;
+
+  private Set<String> owners;
 }

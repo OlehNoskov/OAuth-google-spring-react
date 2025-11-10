@@ -17,7 +17,5 @@ public interface TreeService {
 
     PageableResponse<DocumentTree> getAllTreeByUser(String username, Pageable pageable);
 
-    PageableResponse<TreeDto> getTreeNodeByTitle(String title, Pageable pageable);
-
     PageableResponse<DocumentTree> getAllTrees(Pageable pageable);
 }

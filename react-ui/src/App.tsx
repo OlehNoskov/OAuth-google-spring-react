@@ -15,7 +15,7 @@ function App() {
             <GlobalStyles/>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/" element={<Login/>}/>
                     <Route path="/" element={<PrivateRoute/>}> // Secured routes
                         <Route path="/home" element={<Home/>}/>
                         <Route path="/tree/:id" element={<TreeDashboard/>}/>

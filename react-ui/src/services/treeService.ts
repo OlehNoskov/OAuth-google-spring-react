@@ -2,6 +2,7 @@ import axios from "axios";
 import {BACKEND_API} from "../constants/backend-api.ts";
 import {TreeInterface} from "../interfaces/TreeInterface.ts";
 import { PageableResponseInterface } from "../interfaces/PageableResponseInterface.ts";
+import { DocumentTreeInterface } from "../interfaces/DocumentTreeInterface.ts";
 
 export const getTreeById = async (id: string | undefined): Promise<TreeInterface> => {
     try {

@@ -59,14 +59,6 @@ public class TreeController {
         return treeService.getAllTreeByUser(username, PageRequest.of(page, size));
     }
 
-    @GetMapping
-    @RequestMapping("/get/title/{title}")
-    public PageableResponse<TreeDto> getTreeByTitle(@PathVariable("title") String title,
-                                             @RequestParam(name = "page", defaultValue = "0") int page,
-                                             @RequestParam(name = "size", defaultValue = "10") int size) {
-        return treeService.getTreeNodeByTitle(title, PageRequest.of(page, size));
-    }
-
   @PreAuthorize("hasRole('OWNER')")
   @RequestMapping("/get-all")
   public PageableResponse<DocumentTree> getAll(@RequestParam(name = "page", defaultValue = "0") int page,

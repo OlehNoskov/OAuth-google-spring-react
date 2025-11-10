@@ -18,5 +18,6 @@ public interface TreeMapper {
     List<TreeDto> toTreeDtoList(List<Tree> trees);
 
     @Mapping(target = "labels", expression = "java(tree.getLabels() != null ? tree.getLabels().stream().map(label -> label.getValue()).collect(java.util.stream.Collectors.toSet()) : null)")
+    @Mapping(target = "owners", expression = "java(tree.getOwners() != null ? tree.getOwners().stream().map(owner -> owner.getEmail()).collect(java.util.stream.Collectors.toSet()) : null)")
     DocumentTree toDocumentTree(Tree tree);
 }
