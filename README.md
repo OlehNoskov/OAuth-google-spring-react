@@ -9,6 +9,8 @@
 - Maven
 - Java 21
 - Google Cloud Platform
+- ElasticSearch
+- Kibana
 
 ## Front-end
 
