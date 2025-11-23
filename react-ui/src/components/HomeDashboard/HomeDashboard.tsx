@@ -71,7 +71,7 @@ export const HomeDashboard = () => {
             <HomeDashboardStyled>
                 <SearchWrapper>
                       <Combobox
-                        id="serch-combobox"
+                        id="search-combo-box"
                         labelText="Search by title"
                         onInputValueChange={fetchSuggestions}
                         items={suggestions.map((suggestion) => suggestion.title)}
