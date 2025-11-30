@@ -22,9 +22,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,15 +60,19 @@ public class TreeServiceImpl implements TreeService {
 
     @Override
     public TreeDto getTreeNodeById(long treeId) {
-        Tree tree = treeRepository.findById(treeId).orElseThrow(() -> new RuntimeException("Tree wasn't found by id " + treeId));
+        Tree tree = getTreeByIdByOwner(treeId);
+
         return treeMapper.toTreeDto(tree);
     }
 
     @Override
     @Transactional
     public TreeDto update(TreeDto treeDto) {
-        Tree tree = treeRepository.findById(treeDto.getId())
-                .orElseThrow(() -> new RuntimeException("Tree wasn't found by id " + treeDto.getId()));
+        Tree tree = getTreeByIdByOwner(treeDto.getId());
+
+        if (tree.getOwners() == null || tree.getOwners().isEmpty()) {
+          return treeMapper.toTreeDto(tree);
+        }
 
         tree.setTitle(treeDto.getTitle());
         tree.setDescription(treeDto.getDescription());
@@ -83,8 +90,13 @@ public class TreeServiceImpl implements TreeService {
 
     @Override
     public void delete(long treeId) {
-        treeRepository.deleteById(treeId);
-        treeElasticSearchRepository.deleteById(treeId);
+      Tree tree = getTreeByIdByOwner(treeId);
+        if (tree.getOwners() == null || tree.getOwners().isEmpty()) {
+            throw new RuntimeException("You don't have permissions to delete this tree by id " + treeId);
+        }
+
+      treeRepository.deleteById(treeId);
+      treeElasticSearchRepository.deleteById(treeId);
 
         log.info("Tree with id: '{}' was deleted.", treeId);
     }
@@ -142,5 +154,28 @@ public class TreeServiceImpl implements TreeService {
             nodes.setChildren(mapTreeNodeDtosToEntities(dto.getChildren()));
             return nodes;
         }).collect(Collectors.toList());
+    }
+
+    private Tree getTreeByIdByOwner(long treeId) {
+      Tree tree = treeRepository.findById(treeId).orElseThrow(() -> new RuntimeException("Tree wasn't found by id " + treeId));
+      Set<String> owners = tree.getOwners().stream()
+              .map(User::getEmail)
+              .collect(Collectors.toSet());
+
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      String currentPrincipalName = authentication.getName();
+
+      Optional<String> currentOwner = owners.stream().filter(owner -> owner.equals(currentPrincipalName)).findFirst();
+
+      if (currentOwner.isPresent()) {
+        return tree;
+      }
+
+      return Tree.builder()
+              .title("")
+              .description("")
+              .nodes(List.of())
+              .labels(Set.of())
+              .build();
     }
 }
