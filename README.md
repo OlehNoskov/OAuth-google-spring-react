@@ -36,7 +36,7 @@
 - DATABASE_PASSWORD
 - PROJECT_ID
 - FRONTEND_URL
-- ELASTICSEARCH_URL
+- ELASTICSEARCH_HOSTS
 - ELASTICSEARCH_USERNAME
 - ELASTICSEARCH_PASSWORD
 
@@ -213,4 +213,15 @@ POST /tree/_search
     }
   }
 }
+```
+You can run this app via Docker compose: Go to the root folder and run:
+
+```sh
+docker-compose up --build
+```
+
+or run only databases: Go to backend folder and run:
+
+```sh
+docker-compose up --build
 ```
