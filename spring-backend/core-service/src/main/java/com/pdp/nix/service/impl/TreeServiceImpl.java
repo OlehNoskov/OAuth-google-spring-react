@@ -103,7 +103,7 @@ public class TreeServiceImpl implements TreeService {
 
     @Override
     public PageableResponse<DocumentTree> getAllTreeByUser(String username, Pageable pageable) {
-      return getPageableResponse(treeElasticSearchRepository.findByCreatedBy(username, pageable));
+      return getPageableResponse(treeElasticSearchRepository.findByOwners(username, pageable));
     }
 
   @Override

@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 public interface TreeElasticSearchRepository extends ElasticsearchRepository<DocumentTree, Long> {
-  Page<DocumentTree> findByCreatedBy(String createdBy, Pageable pageable);
+  Page<DocumentTree> findByOwners(String createdBy, Pageable pageable);
 }
