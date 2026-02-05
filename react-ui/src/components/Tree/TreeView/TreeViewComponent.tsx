@@ -101,8 +101,8 @@ export const TreeViewComponent: React.FC<TreeViewComponentProps> = (props: TreeV
                 });
             };
 
-            if (currentNode) {
-                const updatedNodes = insertAsChild(prevTree.nodes, currentNode?.id);
+            if (currentNode && currentNode?.id !== undefined) {
+                const updatedNodes = insertAsChild(prevTree.nodes, currentNode.id);
                 return {
                     ...prevTree,
                     nodes: updatedNodes,

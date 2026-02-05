@@ -42,7 +42,7 @@ export const HomeDashboard = () => {
         getAllTrees(page);
     }, [page]);
 
-    function handlePageChange(event, pageNumber: number) {
+    function handlePageChange(_event: any, pageNumber: number) {
         setPage(pageNumber);
     }
 

@@ -4,6 +4,7 @@ import {UserInterface} from "../../interfaces/UserInterface.ts";
 import {CredentialResponse} from "@react-oauth/google";
 import {logInUser} from "../userProfileSlice.ts";
 import {LabelInterface} from "../../interfaces/LabelInterface.ts";
+import {NodeTypeInterface} from "../../interfaces/NodeTypeInterface.ts";
 
 // RTK Query - fetching and caching tool.
 export const apiSlice = createApi({
@@ -44,7 +45,7 @@ export const apiSlice = createApi({
             }),
         }),
 
-        getAllTreeNodeTypes: builder.query<UserInterface[], void>({
+        getAllTreeNodeTypes: builder.query<NodeTypeInterface[], void>({
             query: () => ({
                 url: BACKEND_API.GET_ALL_NODE_TYPES,
                 method: 'GET',

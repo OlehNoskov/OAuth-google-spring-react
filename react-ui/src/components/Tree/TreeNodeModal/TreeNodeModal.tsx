@@ -71,8 +71,15 @@ export const TreeNodeModal = (props: CreateTreeNodeModalProps) => {
                 <Select
                     labelText={'Node Type*'}
                     selectedItem={nodeType}
-                    items={allNodeTypes}
-                    onSelectedItemChange={change => setNodeType(change.selectedItem ?? {} as NodeTypeInterface)}
+                    items={allNodeTypes ?? []}
+                    onSelectedItemChange={change => {
+                        const value = change.selectedItem;
+                        if (value && Object.values(NodeTypeInterface).includes(value as NodeTypeInterface)) {
+                            setNodeType(value as NodeTypeInterface);
+                        } else {
+                            setNodeType(null);
+                         }
+                    }}
                 />
             </SelectWrapper>
             <ModalFooterButtons
