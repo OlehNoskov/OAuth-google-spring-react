@@ -19,7 +19,7 @@ services:
     container_name: elasticsearch-database
     environment:
       discovery.type: 'single-node'
-      xpack.security.enabled: 'false'
+      xpack.security.enabled: 'true'
       ELASTIC_PASSWORD: ${ELASTICSEARCH_PASSWORD}
       ES_JAVA_OPTS: '-Xmx2g -Xms2g'
     ports:
