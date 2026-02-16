@@ -7,7 +7,7 @@ import {RootState} from "../../store/store.ts";
 
 export const NotFound = () => {
     const user = useSelector((state: RootState) => state.userProfile);
-    const routeLink = user.isLoggedIn ? "/home" : "/login";
+    const routeLink = user.isLoggedIn ? "/home" : "/";
 
     return (
         <NotFoundStyled>
