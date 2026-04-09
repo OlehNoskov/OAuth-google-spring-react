@@ -18,8 +18,7 @@ public class TreeNodeController {
     private TreeNodeService treeNodeService;
 
     @PreAuthorize("hasAnyRole('OWNER', 'EDITOR')")
-    @GetMapping
-    @RequestMapping("/types/all")
+    @GetMapping("/types/all")
     public List<NodeType> getAllTypes() {
         return treeNodeService.getAllNodeTypes();
     }

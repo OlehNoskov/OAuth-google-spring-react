@@ -18,8 +18,7 @@ public class LabelController {
     private final LabelService labelService;
 
     @PreAuthorize("hasAnyRole('OWNER', 'EDITOR')")
-    @GetMapping
-    @RequestMapping("/all")
+    @GetMapping("/all")
     public List<LabelDto> getAllLabels() {
         return labelService.getAllLabels();
     }

@@ -25,34 +25,29 @@ public class TreeController {
     private TreeService treeService;
 
     @PreAuthorize("hasAnyRole('OWNER', 'EDITOR')")
-    @PostMapping
-    @RequestMapping("/create")
+    @PostMapping("/create")
     public TreeDto create(@RequestBody TreeDto treeDto) {
         return treeService.create(treeDto);
     }
 
-    @GetMapping
-    @RequestMapping("/get/{treeId}")
+    @GetMapping("/get/{treeId}")
     public TreeDto getTreeById(@PathVariable("treeId") Long treeId) {
         return treeService.getTreeNodeById(treeId);
     }
 
     @PreAuthorize("hasAnyRole('OWNER', 'EDITOR')")
-    @PutMapping
-    @RequestMapping("/update")
+    @PutMapping("/update")
     public TreeDto update(@RequestBody TreeDto treeDto) {
         return treeService.update(treeDto);
     }
 
     @PreAuthorize("hasAnyRole('OWNER', 'EDITOR')")
-    @DeleteMapping
-    @RequestMapping("/delete/{treeId}")
+    @DeleteMapping("/delete/{treeId}")
     public void delete(@PathVariable("treeId") Long treeId) {
         treeService.delete(treeId);
     }
 
-    @GetMapping
-    @RequestMapping("/get-all/{username}")
+    @GetMapping("/get-all/{username}")
     public PageableResponse<DocumentTree> getAllByUser(@PathVariable("username") String username,
                                                        @RequestParam(name = "page", defaultValue = "0") int page,
                                                        @RequestParam(name = "size", defaultValue = "10") int size) {
@@ -60,7 +55,7 @@ public class TreeController {
     }
 
   @PreAuthorize("hasRole('OWNER')")
-  @RequestMapping("/get-all")
+  @GetMapping("/get-all")
   public PageableResponse<DocumentTree> getAll(@RequestParam(name = "page", defaultValue = "0") int page,
                                           @RequestParam(name = "size", defaultValue = "10") int size) {
     return treeService.getAllTrees(PageRequest.of(page, size));
